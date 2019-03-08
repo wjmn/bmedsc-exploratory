@@ -61,6 +61,18 @@ normed_kernel = kernel / max(max(kernel));
 %% Setting the video player
 videoPlayer = vision.VideoPlayer;
 
+
+%% Settings
+
+modes = {"Intensity", "Edges"};
+
+[i_mode,tf] = listdlg('ListString', modes);
+
+if tf
+    mode_selected = modes(i_mode);
+    mode = mode_selected{1,1};
+end
+
 %% Processing loop
 while true
    raw = snapshot(cam);
@@ -70,9 +82,15 @@ while true
    downsampled = imresize(raw, down_rate);
    flattened = im2bw(downsampled);
    
-   % Mask
+   % Process flattened array
+   if mode == "Intensity"
+       processed = flattened;
+   elseif mode == "Edges"
+       processed = edge(flattened, 'canny');
+   end
+   
    %processed = arrayfun(@(o, m) o .* m, flattened, mask);
-   base(map) = flattened .* intensity_noise;
+   base(map) = processed .* intensity_noise;
    
    % Display the image.
    videoPlayer(conv2(transpose(base), normed_kernel));
