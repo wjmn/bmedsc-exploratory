@@ -9,7 +9,7 @@ preview(cam);
 
 
 %% Downsampling
-down_rate = 0.1;
+down_rate = 0.05;
 camdims = str2double(split(cam.Resolution, "x"));
 
 dims = camdims * down_rate;
@@ -22,17 +22,30 @@ ys = transpose(repmat(1:ydim, [xdim, 1])) - (ydim / 2);
 
 [thetas, rs] = cart2pol(xs, ys);
 
-up_rate = 3;
+% Processing radius
+%rs = rs .^ 1.5;
+
+up_rate = 4;
 
 [x_render, y_render] = pol2cart(thetas, rs);
 x_shifted = 1 + round(up_rate * (x_render + abs(min(min(x_render)))));
 y_shifted = 1 + round(up_rate * (y_render + abs(min(min(y_render)))));
 
-render_size = 1 + max(max(x_shifted));
-map = sub2ind([render_size, render_size], x_shifted, y_shifted);
+% Output dimension (max)
+render_size_x = 1 + max(max(x_shifted));
+render_size_y = 1 + max(max(y_shifted));
 
-base = zeros(render_size, render_size);
+% Phosphene map (with output dimensions)
+map = sub2ind([render_size_x, render_size_y], x_shifted, y_shifted);
+
+% Base matrix with output dimensions for rendering
+base = zeros(render_size_x, render_size_y);
+
 %mask = transpose((rs < 20));
+
+% Covolution kernel for phosphene rendering
+kernel = [0 1 2 1 0; 1 2 4 2 1; 0 1 2 1 0];
+normed_kernel = kernel / max(max(kernel));
 
 
 %% Setting the video player
@@ -52,5 +65,5 @@ while true
    base(map) = flattened;
    
    % Display the image.
-   videoPlayer(transpose(base));
+   videoPlayer(conv2(transpose(base), normed_kernel));
 end
