@@ -16,7 +16,7 @@ dims = camdims * down_rate;
 xdim = dims(1);
 ydim = dims(2);
 
-%% Convert to polar and back
+%% Making a base phosphene map 
 xs = repmat(1:xdim, [ydim, 1]) - (xdim / 2);
 ys = transpose(repmat(1:ydim, [xdim, 1])) - (ydim / 2);
 
@@ -25,8 +25,17 @@ ys = transpose(repmat(1:ydim, [xdim, 1])) - (ydim / 2);
 % Processing radius
 %rs = rs .^ 1.5;
 
+% Circular mask
+%rs(~(rs < (max(max(rs))*0.6))) = 0;
+
+% Positional noise
+thetas = thetas + (thetas .* (rand(ydim,xdim) - 0.5) * 0.02);
+rs = rs + (rs .* (rand(ydim, xdim) - 0.5) * 0.02);
+
+% Upscaling for rendering
 up_rate = 4;
 
+% Convert polar coordinates to cartesian
 [x_render, y_render] = pol2cart(thetas, rs);
 x_shifted = 1 + round(up_rate * (x_render + abs(min(min(x_render)))));
 y_shifted = 1 + round(up_rate * (y_render + abs(min(min(y_render)))));
@@ -41,7 +50,8 @@ map = sub2ind([render_size_x, render_size_y], x_shifted, y_shifted);
 % Base matrix with output dimensions for rendering
 base = zeros(render_size_x, render_size_y);
 
-%mask = transpose((rs < 20));
+% Intensity noise
+intensity_noise = sqrt(rand(ydim, xdim));
 
 % Covolution kernel for phosphene rendering
 kernel = [0 1 2 1 0; 1 2 4 2 1; 0 1 2 1 0];
@@ -62,7 +72,7 @@ while true
    
    % Mask
    %processed = arrayfun(@(o, m) o .* m, flattened, mask);
-   base(map) = flattened;
+   base(map) = flattened .* intensity_noise;
    
    % Display the image.
    videoPlayer(conv2(transpose(base), normed_kernel));
