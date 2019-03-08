@@ -13,17 +13,26 @@ down_rate = 0.1;
 camdims = str2double(split(cam.Resolution, "x"));
 
 dims = camdims * down_rate;
-ydim = dims(1);
-xdim = dims(2);
+xdim = dims(1);
+ydim = dims(2);
 
-%% Conver to polar and create mask
+%% Convert to polar and back
 xs = repmat(1:xdim, [ydim, 1]) - (xdim / 2);
 ys = transpose(repmat(1:ydim, [xdim, 1])) - (ydim / 2);
 
-thetas = arrayfun(@(x,y) asin(y/x), xs, ys);
-rs = arrayfun(@(x,y) sqrt(x^2 + y^2), xs, ys);
+[thetas, rs] = cart2pol(xs, ys);
 
-mask = transpose((rs < 20));
+up_rate = 3;
+
+[x_render, y_render] = pol2cart(thetas, rs);
+x_shifted = 1 + round(up_rate * (x_render + abs(min(min(x_render)))));
+y_shifted = 1 + round(up_rate * (y_render + abs(min(min(y_render)))));
+
+render_size = 1 + max(max(x_shifted));
+map = sub2ind([render_size, render_size], x_shifted, y_shifted);
+
+base = zeros(render_size, render_size);
+%mask = transpose((rs < 20));
 
 
 %% Setting the video player
@@ -39,8 +48,9 @@ while true
    flattened = im2bw(downsampled);
    
    % Mask
-   processed = arrayfun(@(o, m) o .* m, flattened, mask);
+   %processed = arrayfun(@(o, m) o .* m, flattened, mask);
+   base(map) = flattened;
    
    % Display the image.
-   videoPlayer(processed);
+   videoPlayer(transpose(base));
 end
