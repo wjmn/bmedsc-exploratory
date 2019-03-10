@@ -65,7 +65,7 @@ videoPlayer = vision.VideoPlayer;
 %% Settings
 
 % Add new modes here
-modes = {"Intensity", "Edges"};
+modes = {"Intensity", "Edges", "Reading"};
 
 [i_mode,tf] = listdlg('ListString', modes);
 
@@ -78,6 +78,8 @@ if mode == "Intensity"
     process = @(flat) flat;
 elseif mode == "Edges"
     process = @(flat) edge(flattened, 'canny');
+elseif mode == "Read"
+    process = @(flat) ocrlabel(flat);
 end
 
 
@@ -99,4 +101,12 @@ while true
    
    % Display the image.
    videoPlayer(conv2(transpose(base), normed_kernel));
+end
+
+
+%% Processing Functions
+
+function labelled = ocrlabel(flat)
+    ocr_result = ocr(flat);
+    labelled = flat;
 end
