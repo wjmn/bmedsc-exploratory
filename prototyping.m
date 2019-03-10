@@ -61,7 +61,6 @@ normed_kernel = kernel / max(max(kernel));
 %% Setting the video player
 videoPlayer = vision.VideoPlayer;
 
-
 %% Settings
 
 % Add new modes here
@@ -75,11 +74,11 @@ if tf
 end
 
 if mode == "Intensity"
-    process = @(flat) flat;
+    process = @(raw) process_intensity(raw);
 elseif mode == "Edges"
-    process = @(flat) edge(flattened, 'canny');
-elseif mode == "Read"
-    process = @(flat) ocrlabel(flat);
+    process = @(raw) process_edges(raw);
+elseif mode == "Reading"
+    process = @(raw) process_reading(raw);
 end
 
 
@@ -87,14 +86,8 @@ end
 while true
    raw = snapshot(cam);
    
-   % Downsample
-
-   downsampled = imresize(raw, down_rate);
-   flattened = im2bw(downsampled);
-   
-   % Process flattened array by mode
-   % TODO - anyway to move the control flow out?
-   processed = process(flattened);
+   % Process
+   processed = process(raw);
    
    %processed = arrayfun(@(o, m) o .* m, flattened, mask);
    base(map) = processed .* intensity_noise;
@@ -106,7 +99,30 @@ end
 
 %% Processing Functions
 
-function labelled = ocrlabel(flat)
-    ocr_result = ocr(flat);
-    labelled = flat;
+function processed = process_reading(raw)
+    global down_rate
+    ocr_result = ocr(raw);
+    downsampled = imresize(raw, down_rate);
+    flattened = im2bw(downsampled);
+    processed = flattened;
 end
+
+function processed = process_intensity(raw)
+   % Need this to be global down_rate
+   down_rate = 0.05;
+   
+   downsampled = imresize(raw, down_rate);
+   flattened = im2bw(downsampled);
+   processed = flattened;
+end
+
+function processed = process_edges(raw)
+   % Gobal down_rate
+   down_rate = 0.05;
+   
+   downsampled = imresize(raw, down_rate);
+   flattened = im2bw(downsampled);   
+   detected = edge(flattened, 'canny');
+   processed = detected;
+end
+
