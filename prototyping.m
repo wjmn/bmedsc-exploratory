@@ -23,7 +23,7 @@ ys = transpose(repmat(1:ydim, [xdim, 1])) - (ydim / 2);
 [thetas, rs] = cart2pol(xs, ys);
 
 % Processing radius
-%rs = rs .^ 1.5;
+rs = rs .^ 1.2;
 
 % Circular mask
 %rs(~(rs < (max(max(rs))*0.6))) = 0;
@@ -64,6 +64,7 @@ videoPlayer = vision.VideoPlayer;
 
 %% Settings
 
+% Add new modes here
 modes = {"Intensity", "Edges"};
 
 [i_mode,tf] = listdlg('ListString', modes);
@@ -72,6 +73,13 @@ if tf
     mode_selected = modes(i_mode);
     mode = mode_selected{1,1};
 end
+
+if mode == "Intensity"
+    process = @(flat) flat;
+elseif mode == "Edges"
+    process = @(flat) edge(flattened, 'canny');
+end
+
 
 %% Processing loop
 while true
@@ -82,12 +90,9 @@ while true
    downsampled = imresize(raw, down_rate);
    flattened = im2bw(downsampled);
    
-   % Process flattened array
-   if mode == "Intensity"
-       processed = flattened;
-   elseif mode == "Edges"
-       processed = edge(flattened, 'canny');
-   end
+   % Process flattened array by mode
+   % TODO - anyway to move the control flow out?
+   processed = process(flattened);
    
    %processed = arrayfun(@(o, m) o .* m, flattened, mask);
    base(map) = processed .* intensity_noise;
