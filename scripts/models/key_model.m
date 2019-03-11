@@ -1,4 +1,4 @@
-trainingDataPath = "./key_network.m";
+trainingDataPath = "./data/labels/key_labels.mat";
 
 trainingData = objectDetectorTrainingData(gTruth);
 

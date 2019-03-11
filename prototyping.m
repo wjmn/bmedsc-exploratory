@@ -63,7 +63,7 @@ videoPlayer = vision.VideoPlayer;
 
 %% Loading pre-trained models
 
-keyModel = "./key_detector.mat";
+keyModel = "./data/detectors/key_detector.mat";
 load(keyModel);
 
 %% Settings
@@ -144,8 +144,8 @@ function processed = process_keys(raw, detector)
     
     downsampled = imresize(raw, down_rate_1);
     [bboxes,~] = detect(detector, downsampled);
+    downsampled(:, :, :) = 0;
     if size(bboxes) == [1 4]
-        downsampled(:, :, :) = 0;
         downsampled(bboxes(2):bboxes(2) + bboxes(4), bboxes(1):bboxes(1) + bboxes(3), :) = 255;
     end
     resized = imresize(downsampled, down_rate_2);
