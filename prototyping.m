@@ -9,10 +9,10 @@ preview(cam);
 
 
 %% Downsampling
-down_rate = 0.05;
+down_rate = 0.02;
 camdims = str2double(split(cam.Resolution, "x"));
 
-dims = camdims * down_rate;
+dims = round(camdims * down_rate);
 xdim = dims(1);
 ydim = dims(2);
 
@@ -29,8 +29,8 @@ rs = rs .^ 1.2;
 %rs(~(rs < (max(max(rs))*0.6))) = 0;
 
 % Positional noise
-thetas = thetas + (thetas .* (rand(ydim,xdim) - 0.5) * 0.02);
-rs = rs + (rs .* (rand(ydim, xdim) - 0.5) * 0.02);
+thetas = thetas + (thetas .* (rand(ydim,xdim) - 0.5) * 0.1);
+rs = rs + (rs .* (rand(ydim, xdim) - 0.5) * 0.1);
 
 % Upscaling for rendering
 up_rate = 4;
@@ -51,7 +51,7 @@ map = sub2ind([render_size_x, render_size_y], x_shifted, y_shifted);
 base = zeros(render_size_x, render_size_y);
 
 % Intensity noise
-intensity_noise = sqrt(rand(ydim, xdim));
+intensity_noise = (rand(ydim, xdim));
 
 % Covolution kernel for phosphene rendering
 kernel = [0 1 2 1 0; 1 2 4 2 1; 0 1 2 1 0];
@@ -61,10 +61,15 @@ normed_kernel = kernel / max(max(kernel));
 %% Setting the video player
 videoPlayer = vision.VideoPlayer;
 
+%% Loading pre-trained models
+
+keyModel = "./key_detector.mat";
+load(keyModel);
+
 %% Settings
 
 % Add new modes here
-modes = {"Intensity", "Edges", "Reading"};
+modes = {"Intensity", "Edges", "Reading", "Keys"};
 
 [i_mode,tf] = listdlg('ListString', modes);
 
@@ -79,7 +84,10 @@ elseif mode == "Edges"
     process = @(raw) process_edges(raw);
 elseif mode == "Reading"
     process = @(raw) process_reading(raw);
+elseif mode == "Keys"
+    process = @(raw) process_keys(raw, detector);
 end
+
 
 
 %% Processing loop
@@ -99,30 +107,48 @@ end
 
 %% Processing Functions
 
+% TODO
 function processed = process_reading(raw)
-    global down_rate
-    ocr_result = ocr(raw);
-    downsampled = imresize(raw, down_rate);
-    flattened = im2bw(downsampled);
-    processed = flattened;
+    down_rate = 0.02;
+    corrected = imtophat(raw, strel('disk', 15));
+    bw = im2bw(corrected);
+    ocr_result = ocr(bw);
+    downsampled = imresize(bw, down_rate);
+    processed = downsampled;
 end
 
 function processed = process_intensity(raw)
    % Need this to be global down_rate
-   down_rate = 0.05;
+   down_rate_1 = 0.2;
+   down_rate_2 = 0.1;
    
-   downsampled = imresize(raw, down_rate);
+   downsampled = imresize(raw, down_rate_1 * down_rate_2);
    flattened = im2bw(downsampled);
    processed = flattened;
 end
 
 function processed = process_edges(raw)
    % Gobal down_rate
-   down_rate = 0.05;
+   down_rate_1 = 0.2;
+   down_rate_2 = 0.1;
    
-   downsampled = imresize(raw, down_rate);
+   downsampled = imresize(raw, down_rate_1);
    flattened = im2bw(downsampled);   
    detected = edge(flattened, 'canny');
-   processed = detected;
+   processed = imresize(detected, down_rate_2);
 end
 
+function processed = process_keys(raw, detector)
+    down_rate_1 = 0.25;
+    down_rate_2 = 0.08;
+    
+    downsampled = imresize(raw, down_rate_1);
+    [bboxes,~] = detect(detector, downsampled);
+    if size(bboxes) == [1 4]
+        downsampled(:, :, :) = 0;
+        downsampled(bboxes(2):bboxes(2) + bboxes(4), bboxes(1):bboxes(1) + bboxes(3), :) = 255;
+    end
+    resized = imresize(downsampled, down_rate_2);
+    flattened = im2bw(resized);
+    processed = flattened;
+end
