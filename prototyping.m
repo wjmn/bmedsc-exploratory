@@ -102,6 +102,8 @@ while true
    
    % Display the image.
    videoPlayer(conv2(transpose(base), normed_kernel));
+   %I = montage({raw, (conv2(transpose(base), normed_kernel))});
+   %imwrite(I.CData, "./graphics/keys/" + i + ".jpg");
 end
 
 
