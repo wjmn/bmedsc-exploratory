@@ -24,39 +24,39 @@ prediction = predict(mnistModel, imInput);
 if nX * scale > 3
     outputXdim = 5;
     outputYdim = 5;
-    digitToBraille = {};
-    digitToBraille{'1'} = [0 0 1 0 0; 0 0 1 0 0; 0 0 1 0 0; 0 0 1 0 0; 0 0 1 0 0];
-    digitToBraille{'2'} = [1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1; 1 0 0 0 0; 1 1 1 1 1];
-    digitToBraille{'3'} = [1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1];
-    digitToBraille{'4'} = [1 0 0 0 1; 1 0 0 0 1; 1 1 1 1 1; 0 0 0 0 1; 0 0 0 0 1];
-    digitToBraille{'5'} = [1 1 1 1 1; 1 0 0 0 0; 1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1];
-    digitToBraille{'6'} = [1 1 1 1 1; 1 0 0 0 0; 1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1];
-    digitToBraille{'7'} = [1 1 1 1 1; 0 0 0 0 1; 0 0 0 0 1; 0 0 0 0 1; 0 0 0 0 1];
-    digitToBraille{'8'} = [1 1 1 1 1; 1 0 0 0 1; 1 1 1 1 1; 1 0 0 0 1; 1 1 1 1 1];
-    digitToBraille{'9'} = [1 1 1 1 1; 1 0 0 0 1; 1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1];
-    digitToBraille{'0'} = [1 1 1 1 1; 1 0 0 0 1; 1 1 1 1 1; 1 0 0 0 1; 1 1 1 1 1];
+    digitToMimic = {};
+    digitToMimic{'1'} = [0 0 1 0 0; 0 0 1 0 0; 0 0 1 0 0; 0 0 1 0 0; 0 0 1 0 0];
+    digitToMimic{'2'} = [1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1; 1 0 0 0 0; 1 1 1 1 1];
+    digitToMimic{'3'} = [1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1];
+    digitToMimic{'4'} = [1 0 0 0 1; 1 0 0 0 1; 1 1 1 1 1; 0 0 0 0 1; 0 0 0 0 1];
+    digitToMimic{'5'} = [1 1 1 1 1; 1 0 0 0 0; 1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1];
+    digitToMimic{'6'} = [1 1 1 1 1; 1 0 0 0 0; 1 1 1 1 1; 1 0 0 0 1; 1 1 1 1 1];
+    digitToMimic{'7'} = [1 1 1 1 1; 0 0 0 0 1; 0 0 0 0 1; 0 0 0 0 1; 0 0 0 0 1];
+    digitToMimic{'8'} = [1 1 1 1 1; 1 0 0 0 1; 1 1 1 1 1; 1 0 0 0 1; 1 1 1 1 1];
+    digitToMimic{'9'} = [1 1 1 1 1; 1 0 0 0 1; 1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1];
+    digitToMimic{'0'} = [1 1 1 1 1; 1 0 0 0 1; 1 0 0 0 1; 1 0 0 0 1; 1 1 1 1 1];
 else
 
     outputXdim = 3;
     outputYdim = 3;
     % Cell array of digits to braille
     % Can this be moved outside of function for optimisation?
-    digitToBraille = {};
-    digitToBraille{'1'} = [0 1 0; 0 1 0; 0 1 0];
-    digitToBraille{'2'} = [1 1 1; 0 1 0; 1 1 1];
-    digitToBraille{'3'} = [1 1 1; 0 1 1; 1 1 1];
-    digitToBraille{'4'} = [1 0 1; 1 1 1; 0 0 1];
-    digitToBraille{'5'} = [0 1 1; 0 1 1; 1 1 1];
-    digitToBraille{'6'} = [1 0 0; 1 1 1; 1 1 1];
-    digitToBraille{'7'} = [1 1 1; 0 0 1; 0 0 1];
-    digitToBraille{'8'} = [1 1 1; 1 1 1; 1 1 1];
-    digitToBraille{'9'} = [1 1 1; 1 1 1; 0 0 1];
-    digitToBraille{'0'} = [1 1 1; 1 0 1; 1 1 1];
+    digitToMimic = {};
+    digitToMimic{'1'} = [0 1 0; 0 1 0; 0 1 0];
+    digitToMimic{'2'} = [1 1 1; 0 1 0; 1 1 1];
+    digitToMimic{'3'} = [1 1 1; 0 1 1; 1 1 1];
+    digitToMimic{'4'} = [1 0 1; 1 1 1; 0 0 1];
+    digitToMimic{'5'} = [0 1 1; 0 1 1; 1 1 1];
+    digitToMimic{'6'} = [1 0 0; 1 1 1; 1 1 1];
+    digitToMimic{'7'} = [1 1 1; 0 0 1; 0 0 1];
+    digitToMimic{'8'} = [1 1 1; 1 1 1; 1 1 1];
+    digitToMimic{'9'} = [1 1 1; 1 1 1; 0 0 1];
+    digitToMimic{'0'} = [1 1 1; 1 0 1; 1 1 1];
 end
 
 % Rescale
 
-imOutput = digitToBraille{num2str(prediction)};
+imOutput = digitToMimic{num2str(prediction)};
 
 % Upscale back, assuming nX == nY, to a binary image
 processed = imresize(imOutput, ((nX * scale) / outputXdim), "nearest");
