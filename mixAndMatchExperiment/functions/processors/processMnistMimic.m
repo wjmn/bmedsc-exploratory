@@ -17,21 +17,40 @@ imInput = reshape(imOriginal, [1, nX * nY]);
 % Predict
 prediction = predict(mnistModel, imInput);
 
-% Cell array of digits to braille
-% Can this be moved outside of function for optimisation?
-digitToBraille = {};
-digitToBraille{'1'} = [0 1 0; 0 1 0; 0 1 0];
-digitToBraille{'2'} = [1 1 1; 0 1 0; 1 1 1];
-digitToBraille{'3'} = [1 1 1; 0 1 1; 1 1 1];
-digitToBraille{'4'} = [1 0 1; 1 1 1; 0 0 1];
-digitToBraille{'5'} = [0 1 1; 0 1 1; 1 1 1];
-digitToBraille{'6'} = [1 0 0; 1 1 1; 1 1 1];
-digitToBraille{'7'} = [1 1 1; 0 0 1; 0 0 1];
-digitToBraille{'8'} = [1 1 1; 1 1 1; 1 1 1];
-digitToBraille{'9'} = [1 1 1; 1 1 1; 0 0 1];
-digitToBraille{'0'} = [1 1 1; 1 0 1; 1 1 1];
 
-% Output image as a 2x2 matrix
+% Choose digit representation if 3x3 or 5x5
+
+% Assume nX == nY
+if nX * scale > 3
+    digitToBraille = {};
+    digitToBraille{'1'} = [0 0 1 0 0; 0 0 1 0 0; 0 0 1 0 0; 0 0 1 0 0; 0 0 1 0 0];
+    digitToBraille{'2'} = [1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1; 1 0 0 0 0; 1 1 1 1 1];
+    digitToBraille{'3'} = [1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1];
+    digitToBraille{'4'} = [1 0 0 0 1; 1 0 0 0 1; 1 1 1 1 1; 0 0 0 0 1; 0 0 0 0 1];
+    digitToBraille{'5'} = [1 1 1 1 1; 1 0 0 0 0; 1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1];
+    digitToBraille{'6'} = [1 1 1 1 1; 1 0 0 0 0; 1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1];
+    digitToBraille{'7'} = [1 1 1 1 1; 0 0 0 0 1; 0 0 0 0 1; 0 0 0 0 1; 0 0 0 0 1];
+    digitToBraille{'8'} = [1 1 1 1 1; 1 0 0 0 1; 1 1 1 1 1; 1 0 0 0 1; 1 1 1 1 1];
+    digitToBraille{'9'} = [1 1 1 1 1; 1 0 0 0 1; 1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1];
+    digitToBraille{'0'} = [1 1 1 1 1; 1 0 0 0 1; 1 1 1 1 1; 1 0 0 0 1; 1 1 1 1 1];
+else
+
+    % Cell array of digits to braille
+    % Can this be moved outside of function for optimisation?
+    digitToBraille = {};
+    digitToBraille{'1'} = [0 1 0; 0 1 0; 0 1 0];
+    digitToBraille{'2'} = [1 1 1; 0 1 0; 1 1 1];
+    digitToBraille{'3'} = [1 1 1; 0 1 1; 1 1 1];
+    digitToBraille{'4'} = [1 0 1; 1 1 1; 0 0 1];
+    digitToBraille{'5'} = [0 1 1; 0 1 1; 1 1 1];
+    digitToBraille{'6'} = [1 0 0; 1 1 1; 1 1 1];
+    digitToBraille{'7'} = [1 1 1; 0 0 1; 0 0 1];
+    digitToBraille{'8'} = [1 1 1; 1 1 1; 1 1 1];
+    digitToBraille{'9'} = [1 1 1; 1 1 1; 0 0 1];
+    digitToBraille{'0'} = [1 1 1; 1 0 1; 1 1 1];
+end
+
+% Rescale
 outputXdim = 3;
 outputYdim = 3;
 imOutput = digitToBraille{num2str(prediction)};
