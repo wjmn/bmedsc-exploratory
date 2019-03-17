@@ -6,10 +6,10 @@ This repository contains exploratory code written during my Honours year, mostly
 in Matlab.
 
 All prose (weeklies, literature reviews, thesis) is kept in a separate
-repository. My "proper" lab notebook is kept in Dropbox, though the section
-below ([[Log]]) provides some short context on each directory in this repository and
-will be updated as it changes (timestamps show last updated). Prior states of
-this repository can be explored via the Git history.
+repository. My "proper" lab notebook is kept in Dropbox, though the Log section
+below provides some short context on each directory in this repository and will
+be updated as it changes (timestamps show last updated). Prior states of this
+repository can be explored via the Git history.
 
 * Log
 
