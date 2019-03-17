@@ -1,10 +1,13 @@
-function rendered = renderIrregular(processed, upscale)
+function rendered = renderIrregular(processed, upscale, thetaNoise, rNoise, intensityNoise)
 %RENDERIRREGULAR Renders a processed binary image on an irregular phosphene
 %grid with circular phosphenes.
 %   rendered = RENDERIRREGULAR(processed, upscale) takes a (height, width)
 %   binary processed image and renders it to a (height*upscale,
 %   width*upscale) binary image (upscale above 1) with irregular size and
 %   irregular intensity.
+%   To keep the noise consistent, takes the thetaNoise, rNoise and
+%   intensityNoise as inputs, all as matrices of dimensions (ydim, xdim)
+%   where ydim and xdim are the dimensions of the input (processed) image.
 
 
 [ydim, xdim] = size(processed);
@@ -22,8 +25,10 @@ ys = transpose(repmat(1:ydim, [xdim, 1]));
 %rs(~(rs < (max(max(rs))*0.6))) = 0;
 
 % Positional noise
-thetas = thetas + (thetas .* (rand(ydim,xdim) - 0.5) * 0.1);
-rs = rs + (rs .* (rand(ydim, xdim) - 0.5) * 0.1);
+% thetaNoise = rand(ydim, xdim)
+% rNoise = rand(ydim, xdim)
+thetas = thetas + (thetas .* ((thetaNoise - 0.5) * 0.1));
+rs = rs + (rs .* ((rNoise - 0.5) * 0.1));
 
 
 
@@ -43,7 +48,7 @@ base = zeros(renderYdim, renderXdim);
 map = sub2ind([renderYdim, renderXdim], shiftedY, shiftedX);
 
 % Intensity noise
-intensityNoise = (rand(ydim, xdim));
+% intensityNoise = (rand(ydim, xdim));
 
 base(map) = processed .* intensityNoise;
 

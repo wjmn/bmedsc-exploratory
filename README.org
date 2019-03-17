@@ -1,0 +1,77 @@
+#+TITLE: README
+
+* Context
+
+This repository contains exploratory code written during my Honours year, mostly
+in Matlab.
+
+All prose (weeklies, literature reviews, thesis) is kept in a separate
+repository. My "proper" lab notebook is kept in Dropbox, though the section
+below ([[Log]]) provides some short context on each directory in this repository and
+will be updated as it changes (timestamps show last updated). Prior states of
+this repository can be explored via the Git history.
+
+* Log
+
+** [2019-03-13 Wed] `realtimeProcessingPrototype`
+
+This directory contains some code for a small webcam-based real-time phosphene
+renderer. There are currently three modes - intensity-based processing,
+edge-based processing and key-detection (which was trained only on my keys for a
+quick-and-dirty demo and /won't/ recognise anyone else's keys, for better or
+worse).
+
+It's not well optimised, but is functional; the intensity-based processor
+doesn't lag noticeably on my Macbook Air, though the latency becomes noticeable
+with the key detector.
+
+Renders on an irregular phosphene grid, though this is modifiable in the
+=prototype.m= script.
+
+Has a number of dependencies on Matlab's Computer Vision and Deep Learning
+toolboxes (TODO - explicitly define dependencies).
+
+** [2019-03-17 Sun] `mixAndMatchExperiment`
+
+This directory contains code for "mixing and matching" image processors and
+renderers, with the eventual goal to compare the classification accuracy of
+different combinations from the rendered images.
+
+#+begin_src ditaa
+
+      +---------+     +----------+    +------------+
+      |Processor|---->| Renderer |--->| Evaluation |
+      +---------+     +----------+    +------------+
+          ^                                   ^
+  no label|                                   | check label
+          |   +-------------------------+     |
+          +---+ Input Image (with Label)|-----+
+              +-------------------------+
+
+#+end_src
+
+All the processors produce a binary image, which is then fed to the renderer to
+produce an "effectively binary" phosphene rendering (non-binary as the
+phosphenes are rendered as dots convoluted with a Gaussian kernel to simulate
+feathering at the edges).
+
+Currently uses the MNIST handwritten digit data as the images to be processed.
+
+Processors include:
+
+| Processor     | Explanation                                                             |
+|---------------+-------------------------------------------------------------------------|
+| Intensity     | Intensity-based                                                         |
+| Edge          | Edge-detection based                                                    |
+| MNIST Braille | Classifies digit using SVM, then outputs clean Braille representation   |
+| MNIST Mimic   | Classifies digit using SVM, then outputs clean  mimicked representation |
+
+Renderers include:
+
+| Renderer  | Explanation                                                             |
+|-----------+-------------------------------------------------------------------------|
+| Regular   | Renders on a regular phosphene grid                                     |
+| Irregular | Renders on an irregular (in both position and intensity) phosphene grid |
+
+
+Not optimised for real-time - intended to produce some static graphics only.

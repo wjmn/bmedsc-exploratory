@@ -5,7 +5,15 @@ function processed = processIntensity(imOriginal,scale)
 %   (height, width, 3) image and a float scale (between 0 and 1) and 
 %   returns a (height/scale, width/scale) binary image.
 
-binarised = imbinarize(rgb2gray(imOriginal));
+dims = size(imOriginal);
+
+% If has colour channelges
+if size(dims(2)) == 3
+    binarised = imbinarize(rgb2gray(imOriginal));
+else
+    binarised = imbinarize(imOriginal);
+end
+
 processed = imresize(binarised, scale);
 end
 

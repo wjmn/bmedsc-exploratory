@@ -5,5 +5,8 @@ tmp/
 
 *.m~
 
-data/training/
-graphics/videos/
+training/
+mnistOriginal/
+mnistPreprocessed/
+
+keys_demo.mp4
