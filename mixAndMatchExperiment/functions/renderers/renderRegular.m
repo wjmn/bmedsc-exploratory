@@ -12,10 +12,10 @@ function rendered = renderRegular(processed, upscale)
 xs = repmat(1:xdim, [ydim, 1]);
 ys = transpose(repmat(1:ydim, [xdim, 1]));
 
-renderXdim = xdim * upscale;
-renderYdim = ydim * upscale;
-renderXs = (xs * upscale);
-renderYs = (ys * upscale);
+renderXdim = floor((xdim - 1) * upscale) + 1;
+renderYdim = floor((ydim - 1) * upscale) + 1;
+renderXs = floor(((xs - 1) * upscale) + 1);
+renderYs = floor(((ys - 1) * upscale) + 1);
 
 % Base matrix with output dimensions for rendering
 base = zeros(renderYdim, renderXdim);
@@ -35,5 +35,10 @@ kernel = arrayfun(@(x, y) gauss2d(x, y, 0, 0, 0.3*kwidth, 0.3*kwidth), kernelX, 
 scaledKernel = kernel / (max(max(kernel)));
 
 rendered = conv2(base, scaledKernel);
+
+% Resize to ensure dimensions are predictable
+resultYdim = round(ydim * upscale);
+resultXdim = round(xdim * upscale);
+rendered = imresize(rendered, [resultYdim, resultXdim]);
 end
 
