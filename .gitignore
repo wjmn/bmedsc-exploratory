@@ -10,3 +10,5 @@ mnistOriginal/
 mnistPreprocessed/
 
 keys_demo.mp4
+
+renderedForTraining/

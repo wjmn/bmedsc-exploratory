@@ -48,19 +48,19 @@ scales = [3, 5, 10];
 % use only the first thousand images to reduce training time
 nImages = 1000;
 
-for ip = 1%:nProcessors
+for ip = 1:nProcessors
     
     processorStruct = processors{ip};
     processor = processorStruct.processor;
     processorName = processorStruct.name;
     
-    for ir = 1%:nRenderers
+    for ir = 1:nRenderers
         
         rendererStruct = renderers{ir};
         renderer = rendererStruct.renderer;
         rendererName = rendererStruct.name;
         
-        for scale = 3%scales
+        for scale = scales
             
             % Scale factor
             scaleFactor = scale / inSideLength;
@@ -68,7 +68,7 @@ for ip = 1%:nProcessors
             % Assuming square inputs and outputs
             renderedImages = zeros([nImages, renderFactor * inSideLength, renderFactor * inSideLength]);
             
-            for ii = 1:10%nImages
+            for ii = 1:nImages
                 
             imInput = squeeze(inTrainingImages(ii, :, :));
 
