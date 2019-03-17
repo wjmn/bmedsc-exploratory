@@ -22,6 +22,8 @@ prediction = predict(mnistModel, imInput);
 
 % Assume nX == nY
 if nX * scale > 3
+    outputXdim = 5;
+    outputYdim = 5;
     digitToBraille = {};
     digitToBraille{'1'} = [0 0 1 0 0; 0 0 1 0 0; 0 0 1 0 0; 0 0 1 0 0; 0 0 1 0 0];
     digitToBraille{'2'} = [1 1 1 1 1; 0 0 0 0 1; 1 1 1 1 1; 1 0 0 0 0; 1 1 1 1 1];
@@ -35,6 +37,8 @@ if nX * scale > 3
     digitToBraille{'0'} = [1 1 1 1 1; 1 0 0 0 1; 1 1 1 1 1; 1 0 0 0 1; 1 1 1 1 1];
 else
 
+    outputXdim = 3;
+    outputYdim = 3;
     % Cell array of digits to braille
     % Can this be moved outside of function for optimisation?
     digitToBraille = {};
@@ -51,8 +55,7 @@ else
 end
 
 % Rescale
-outputXdim = 3;
-outputYdim = 3;
+
 imOutput = digitToBraille{num2str(prediction)};
 
 % Upscale back, assuming nX == nY, to a binary image
