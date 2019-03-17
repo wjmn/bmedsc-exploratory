@@ -50,8 +50,34 @@ for iFile = 1:nFiles
     clear("result");
     clear("model");
     clear("renderedImages");
+    clear("predictions");
 end
 
+%% Comparison for the MNIST SVM classifiers
+
+mnistModelPath = "./data/models/mnistModel.mat";
+load(mnistModelPath); %mnistModel variable
+
+testImagesPath = "./data/mnistPreprocessed/inTestImages.mat";
+load(testImagesPath); % inTestImages variable
+
+[~, nY, nX] = size(inTestImages);
+
+% Assume nTest is same for all
+testImages = inTestImages(1:nTest, :, :);
+testImagesFlat = reshape(testImages, [nTest, (nY * nX)]);
+
+predictions = predict(mnistModel, testImagesFlat);
+
+nCorrect = sum(predictions == labels(1:nTest));
+propCorrect = nCorrect / nTest;
+
+result.processor = "Original";
+result.renderer = "Original";
+result.size = "Original";
+result.accuracy = propCorrect;
+
+results{iFile + 1} = result;
 %% Save
 
 save(savePath + "accuracyResults.mat", "results");

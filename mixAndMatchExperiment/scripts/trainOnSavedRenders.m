@@ -18,8 +18,6 @@ for iFile = 1:nFiles
     datafile = datafiles(iFile);
     filePath = datafile.folder + "/" + datafile.name;
     
-
-    
     load(filePath) % renderedImages variable
     
     [nTraining, nY, nX] = size(renderedImages);

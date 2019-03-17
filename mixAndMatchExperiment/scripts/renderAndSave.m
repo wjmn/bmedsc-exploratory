@@ -2,14 +2,22 @@
 
 %% Load data/models and Other Paths
 
-% Input Images
-load("./data/mnistPreprocessed/inTrainingImages.mat") % inTrainingImages
+% FOR TRAINING SET
+%load("./data/mnistPreprocessed/inTrainingImages.mat") % inTrainingImages
+%savePath = "./data/renderedForTraining/";
+%images = inTrainingImages;
+%clear("inTrainingImages");
+% nImages = 2000; % use only the first two thousand images to reduce training time
+
+% FOR TESTING SET
+load("./data/mnistPreprocessed/inTestImages.mat") % inTestImages
+savePath = "./data/renderedForTesting/";
+images = inTestImages;
+clear("inTestImages");
+nImages = 500; % test on 500 images
 
 % Models
 load("./data/models/mnistModel.mat") % mnistModel
-
-% Save path
-savePath = "./data/renderedForTraining/";
 
 %% PROCESSORS
 % Modify here to add processors for the pipeline.
@@ -45,8 +53,7 @@ scales = [3, 5, 10];
 [~, nProcessors] = size(processors);
 [~, nRenderers] = size(renderers);
 
-% use only the first thousand images to reduce training time
-nImages = 1000;
+
 
 for ip = 1:nProcessors
     
@@ -70,7 +77,7 @@ for ip = 1:nProcessors
             
             for ii = 1:nImages
                 
-            imInput = squeeze(inTrainingImages(ii, :, :));
+            imInput = squeeze(images(ii, :, :));
 
             processed = processor(imInput, scaleFactor);
             rendered = renderer(processed, 1/scaleFactor * renderFactor);
