@@ -13,7 +13,7 @@ this repository can be explored via the Git history.
 
 * Log
 
-** [2019-03-13 Wed] `realtimeProcessingPrototype`
+** [2019-03-13 Wed] =realtimeProcessingPrototype=
 
 This directory contains some code for a small webcam-based real-time phosphene
 renderer. There are currently three modes - intensity-based processing,
@@ -31,7 +31,7 @@ Renders on an irregular phosphene grid, though this is modifiable in the
 Has a number of dependencies on Matlab's Computer Vision and Deep Learning
 toolboxes (TODO - explicitly define dependencies).
 
-** [2019-03-17 Sun] `mixAndMatchExperiment`
+** [2019-03-17 Sun] =mixAndMatchExperiment=
 
 This directory contains code for "mixing and matching" image processors and
 renderers, with the eventual goal to compare the classification accuracy of
