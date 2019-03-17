@@ -63,8 +63,8 @@ scaledKernel = kernel / (max(max(kernel)));
 rendered = conv2(base, scaledKernel);
 
 
-resultXdim = floor((xdim - 1) * upscale) + 1;
-resultYdim = floor((ydim - 1) * upscale) + 1;
+resultYdim = round(ydim * upscale);
+resultXdim = round(xdim * upscale);
 
 rendered = imresize(rendered, [resultYdim, resultXdim]);
 end
