@@ -14,6 +14,6 @@ else
     binarised = imbinarize(imOriginal);
 end
 
-processed = imresize(binarised, scale);
+processed = imresize(binarised, scale, "nearest");
 end
 
