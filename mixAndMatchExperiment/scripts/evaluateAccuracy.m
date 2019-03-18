@@ -80,4 +80,22 @@ result.accuracy = propCorrect;
 results{iFile + 1} = result;
 %% Save
 
-save(savePath + "accuracyResults.mat", "results");
+% Flatten
+
+flattened = {};
+
+for i = 1:(nFiles + 1)
+    data = results{i};
+    flattened{i, 1} = data.processor;
+    flattened{i, 2} = data.renderer;
+    flattened{i, 3} = data.size;
+    flattened{i, 4} = data.accuracy;
+end
+
+% Convert to table
+
+columns = {'Processor', 'Renderer', 'Size', 'Accuracy'};
+accuracies = cell2table(flattened, 'VariableNames', columns);
+
+save(savePath + "accuracies.mat", "accuracies", "-v7.3");
+writetable(accuracies, savePath + "accuracies.csv")

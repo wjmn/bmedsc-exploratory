@@ -14,3 +14,5 @@ keys_demo.mp4
 renderedForTraining/
 renderedForTesting/
 models/
+
+.ipynb_checkpoints/
