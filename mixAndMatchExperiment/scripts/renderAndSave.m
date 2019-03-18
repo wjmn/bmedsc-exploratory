@@ -7,7 +7,7 @@
 %savePath = "./data/renderedForTraining/";
 %images = inTrainingImages;
 %clear("inTrainingImages");
-% nImages = 2000; % use only the first two thousand images to reduce training time
+%nImages = 2000; % use only the first two thousand images to reduce training time
 
 % FOR TESTING SET
 load("./data/mnistPreprocessed/inTestImages.mat") % inTestImages
@@ -34,6 +34,7 @@ processors{4} = struct("processor", @(i, s) processMnistMimic(i, s, mnistModel),
 renderers = {};
 renderers{1} = struct("renderer", @renderRegular, "name", "Regular");
 renderers{2} = struct("renderer", @renderIrregular, "name", "Irregular");
+renderers{3} = struct("renderer", @renderIrregularChanging, "name", "IrregularChanging");
 
 %% SCALES
 % Modify here to change scales of renderer phosphene map
