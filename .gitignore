@@ -15,4 +15,8 @@ renderedForTraining/
 renderedForTesting/
 models/
 
+renderedForTrainingLandoltc/
+renderedForTestingLandoltc/
+modelsLandoltc
+
 .ipynb_checkpoints/

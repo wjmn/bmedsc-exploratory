@@ -1,17 +1,24 @@
 %% Locations and Paths
 
-renderedGlob = "./data/renderedForTesting/*.mat";
-testLabelsPath = "./data/mnistPreprocessed/inTestLabels.mat";
+%MNIST
+%renderedGlob = "./data/renderedForTesting/*.mat";
+%testLabelsPath = "./data/mnistPreprocessed/inTestLabels.mat";
+%modelsPath = "./data/models/";
 
-modelsPath = "./data/models/";
+%LANDOLTC
+renderedGlob = "./data/renderedForTestingLandoltc/*.mat";
+testLabelsPath = "./data/landoltcPreprocessed/labelsTest.mat";
+modelsPath = "./data/modelsLandoltc/";
 
 savePath = "./data/";
 
 %% RUN
 
 load(testLabelsPath); %inTestLabels
-labels = inTestLabels;
-clear("inTestLabels");
+
+% FOR MNIST ONLY
+%labels = inTestLabels;
+%clear("inTestLabels");
 
 datafiles = dir(renderedGlob);
 
@@ -55,11 +62,19 @@ end
 
 %% Comparison for the MNIST SVM classifiers
 
-mnistModelPath = "./data/models/mnistModel.mat";
-load(mnistModelPath); %mnistModel variable
+%MNIST
+%mnistModelPath = "./data/models/mnistModel.mat";
+%load(mnistModelPath); %mnistModel variable
+%testImagesPath = "./data/mnistPreprocessed/inTestImages.mat";
+%load(testImagesPath); % inTestImages variable
+%model = mnistModel;
 
-testImagesPath = "./data/mnistPreprocessed/inTestImages.mat";
-load(testImagesPath); % inTestImages variable
+%LANDOLTC
+modelPath = "./data/modelsLandoltc/landoltcModel.mat";
+load(modelPath);
+testImagesPath = "./data/landoltcPreprocessed/imagesTest.mat";
+load(testImagesPath);
+inTestImages = images;
 
 [~, nY, nX] = size(inTestImages);
 
@@ -67,7 +82,7 @@ load(testImagesPath); % inTestImages variable
 testImages = inTestImages(1:nTest, :, :);
 testImagesFlat = reshape(testImages, [nTest, (nY * nX)]);
 
-predictions = predict(mnistModel, testImagesFlat);
+predictions = predict(model, testImagesFlat);
 
 nCorrect = sum(predictions == labels(1:nTest));
 propCorrect = nCorrect / nTest;
@@ -97,5 +112,11 @@ end
 columns = {'Processor', 'Renderer', 'Size', 'Accuracy'};
 accuracies = cell2table(flattened, 'VariableNames', columns);
 
-save(savePath + "accuracies.mat", "accuracies", "-v7.3");
-writetable(accuracies, savePath + "accuracies.csv")
+
+%MNIST
+%save(savePath + "accuracies.mat", "accuracies", "-v7.3");
+%writetable(accuracies, savePath + "accuracies.csv")
+
+% LANDOLTC
+save(savePath + "accuraciesLandoltc.mat", "accuracies", "-v7.3");
+writetable(accuracies, savePath + "accuraciesLandoltc.csv")

@@ -2,15 +2,19 @@
 
 %% Load data/models and Other Paths
 
+% MNIST
 % FOR TRAINING SET
-load("./data/mnistPreprocessed/inTrainingImages.mat") % inTrainingImages
-images = inTrainingImages;
-clear("inTrainingImages");
-
+%load("./data/mnistPreprocessed/inTrainingImages.mat") % inTrainingImages
+%images = inTrainingImages;
+%clear("inTrainingImages");
 % Models
-load("./data/models/mnistModel.mat") % mnistModel
+%load("./data/models/mnistModel.mat") % mnistModel
 
-savePath = "./graphics/";
+% LANDOLTC
+load("./data/landoltcPreprocessed/imagesTraining.mat");
+load("./data/modelsLandoltc/landoltcModel.mat");
+
+savePath = "./graphics/landoltc_";
 
 %% PROCESSORS
 % Modify here to add processors for the pipeline.
@@ -18,8 +22,9 @@ savePath = "./graphics/";
 processors = {};
 processors{1} = struct("processor", @processIntensity, "name", "Intensity");
 processors{2} = struct("processor", @processEdge, "name", "Edges");
-processors{3} = struct("processor", @(i, s) processMnistBraille(i, s, mnistModel), "name", "MnistBraille");
-processors{4} = struct("processor", @(i, s) processMnistMimic(i, s, mnistModel), "name", "MnistMimic");
+processors{3} = struct("processor", @(i, s) processLandoltMimic(i, s, model), "name", "LandoltMimic");
+%processors{3} = struct("processor", @(i, s) processMnistBraille(i, s, mnistModel), "name", "MnistBraille");
+%processors{4} = struct("processor", @(i, s) processMnistMimic(i, s, mnistModel), "name", "MnistMimic");
 
 %% RENDERERS
 % Modify here to add renderers to the pipeline.
@@ -47,7 +52,7 @@ scales = [3, 5, 10];
 [~, nProcessors] = size(processors);
 [~, nRenderers] = size(renderers);
 
-imInput = squeeze(images(4, :, :));
+imInput = squeeze(images(3, :, :)) / 255;
 
 % scale
 imwrite(imInput, savePath + "original.png");
@@ -81,7 +86,7 @@ for scale = scales
         end
     end
     
-    montageImage = montage(montageCells, 'Size', [nProcessors, nRenderers + 1]);
+    montageImage = montage(montageCells, 'BorderSize', 5, 'BackgroundColor', [0.5 0.5 0.5], 'Size', [nProcessors, nRenderers + 1]);
     montageAxes = getframe(gca);
     imwrite(montageAxes.cdata, savePath + "s" + scale + ".png");
     clear("montageCells");

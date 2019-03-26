@@ -2,22 +2,34 @@
 
 %% Load data/models and Other Paths
 
-% FOR TRAINING SET
+% FOR TRAINING SET MNIST
 %load("./data/mnistPreprocessed/inTrainingImages.mat") % inTrainingImages
 %savePath = "./data/renderedForTraining/";
 %images = inTrainingImages;
 %clear("inTrainingImages");
 %nImages = 2000; % use only the first two thousand images to reduce training time
 
-% FOR TESTING SET
-load("./data/mnistPreprocessed/inTestImages.mat") % inTestImages
-savePath = "./data/renderedForTesting/";
-images = inTestImages;
-clear("inTestImages");
-nImages = 500; % test on 500 images
+% FOR TESTING SET MNIST
+%load("./data/mnistPreprocessed/inTestImages.mat") % inTestImages
+%savePath = "./data/renderedForTesting/";
+%images = inTestImages;
+%clear("inTestImages");
+%nImages = 500; % test on 500 images
+
+% FOR TRAINING SET LANDOLTC
+% Ensure image files are one path.
+%load("./data/landoltcPreprocessed/imagesTraining.mat");
+%nImages = 200;
+%savePath = "./data/renderedForTrainingLandoltc/";
+
+% FOR TESTING SET LANDOLTC
+load("./data/landoltcPreprocessed/imagesTest.mat");
+nImages = 500;
+savePath = "./data/renderedForTestingLandoltc/";
 
 % Models
-load("./data/models/mnistModel.mat") % mnistModel
+%load("./data/models/mnistModel.mat") % mnistModel
+load("./data/modelsLandoltc/landoltcModel.mat");
 
 %% PROCESSORS
 % Modify here to add processors for the pipeline.
@@ -25,8 +37,13 @@ load("./data/models/mnistModel.mat") % mnistModel
 processors = {};
 processors{1} = struct("processor", @processIntensity, "name", "Intensity");
 processors{2} = struct("processor", @processEdge, "name", "Edges");
-processors{3} = struct("processor", @(i, s) processMnistBraille(i, s, mnistModel), "name", "MnistBraille");
-processors{4} = struct("processor", @(i, s) processMnistMimic(i, s, mnistModel), "name", "MnistMimic");
+
+% For landolt c
+processors{3} = struct("processor", @(i, s) processLandoltMimic(i, s, model), "name", "LandoltMimic");
+
+% For MNIST
+%processors{3} = struct("processor", @(i, s) processMnistBraille(i, s, mnistModel), "name", "MnistBraille");
+%processors{4} = struct("processor", @(i, s) processMnistMimic(i, s, mnistModel), "name", "MnistMimic");
 
 %% RENDERERS
 % Modify here to add renderers to the pipeline.
@@ -78,11 +95,11 @@ for ip = 1:nProcessors
             
             for ii = 1:nImages
                 
-            imInput = squeeze(images(ii, :, :));
-
-            processed = processor(imInput, scaleFactor);
-            rendered = renderer(processed, 1/scaleFactor * renderFactor);
-            renderedImages(ii, :, :) = rendered;
+                % FOR MNIST
+                imInput = squeeze(images(ii, :, :));
+                processed = processor(imInput, scaleFactor);
+                rendered = renderer(processed, 1/scaleFactor * renderFactor);
+                renderedImages(ii, :, :) = rendered;
             
             end
             

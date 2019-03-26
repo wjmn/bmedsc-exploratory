@@ -1,13 +1,22 @@
 %% Locations and Paths
 
-renderedGlob = "./data/renderedForTraining/*.mat";
-trainingLabelsPath = "./data/mnistPreprocessed/inTrainingLabels.mat";
+% MNIST
+%renderedGlob = "./data/renderedForTraining/*.mat";
+%trainingLabelsPath = "./data/mnistPreprocessed/inTrainingLabels.mat";
+%savePath = "./data/models/";
 
-savePath = "./data/models/";
+% LANDOLT C
+renderedGlob = "./data/renderedForTrainingLandoltc/*.mat";
+trainingLabelsPath = "./data/landoltcPreprocessed/labelsTraining.mat";
+savePath = "./data/modelsLandoltc/";
 
 %% RUN
 
+
 load(trainingLabelsPath); %inTrainingLabels
+
+% MNIST
+%labels = inTrainingLabels;
 
 datafiles = dir(renderedGlob);
 
@@ -23,7 +32,7 @@ for iFile = 1:nFiles
     [nTraining, nY, nX] = size(renderedImages);
     
     trainingImages = reshape(renderedImages, [nTraining, (nY * nX)]);
-    trainingLabels = inTrainingLabels(1:nTraining);
+    trainingLabels = labels(1:nTraining);
     
     % Reshape to 1D vector
     model = fitcecoc(trainingImages, trainingLabels);
