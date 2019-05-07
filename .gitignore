@@ -20,3 +20,5 @@ renderedForTestingLandoltc/
 modelsLandoltc
 
 .ipynb_checkpoints/
+
+__pycache__/
