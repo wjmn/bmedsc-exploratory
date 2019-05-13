@@ -122,6 +122,8 @@ if __name__ == "__main__":
             win.flip()
             event.waitKeys()
 
+            mouse.setPos((0,0))
+
             xpos, ypos = 0.5, 0.5
 
             for i in range(nframes):
