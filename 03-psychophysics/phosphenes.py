@@ -6,7 +6,7 @@ from scipy.ndimage import gaussian_filter
 
 # CONSTANTS
 
-XSIZE = 640
+XSIZE = 480
 YSIZE = 480
 PBASE = 3
 SCALE = 80
@@ -27,7 +27,7 @@ class Electrode:
 
         self.rendered = self.render()
 
-    def render(self, xsize=640, ysize=480):
+    def render(self, xsize=YSIZE, ysize=XSIZE):
         xmin, xmax = safebound(XSIZE*self.x, self.size, 0, XSIZE)
         ymin, ymax = safebound(YSIZE*self.y, self.size, 0, YSIZE)
 
