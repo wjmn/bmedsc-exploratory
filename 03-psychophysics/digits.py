@@ -8,13 +8,13 @@
 import numpy as np
 from psychopy import visual, core, gui, data, event
 
-# from psychopy.sound.backend_pygame import SoundPygame
+from psychopy.sound.backend_pygame import SoundPygame
 from psychopy.tools.filetools import fromFile, toFile
 from scipy.misc import imresize
 from skimage import color
 from imageio import imread
 from phosphenes import RegularGrid, safebound
-from random import randint
+from random import sample
 
 ################################################################################
 # CONSTANTS
@@ -22,7 +22,7 @@ from random import randint
 
 XSIZE = 480
 YSIZE = 480
-SCALE = 30
+SCALE = 48
 EXSIZE = XSIZE // SCALE
 EYSIZE = YSIZE // SCALE
 
@@ -86,8 +86,7 @@ if __name__ == "__main__":
         core.quit()
 
     # Clocks
-    clockglobal = core.Clock()
-
+    clocksession = core.Clock()
     clocktrial = core.Clock()
 
     # Window
@@ -96,15 +95,45 @@ if __name__ == "__main__":
     ntrials = 30
     ncues = 20
 
+    outfileName = f"./data/{details['participant']}_{details['date']}_session.txt"
+    outfile = open(outfileName, 'w+')
+    outfile.write('digit,keypress,trialtime,sessiontime\n')
+
+    correctSound = SoundPygame(value='G', secs=0.1)
+    incorrectSound = SoundPygame(value='Csh', secs=0.1)
+
+
     for trial in range(ntrials):
+
+        clocktrial.reset()
+
+        cross = visual.TextStim(win, text="+", bold=True, pos=(XSIZE/2, YSIZE/2))
+        win.flip()
+        event.waitKeys(clearEvents=True)
+
+        # TODO Maybe make less predictable
+        streamlists = [sample(range(10), 10) for i in range(ncues // 10)]
+        stream = [i for s in streamlists for i in s]
 
         for cue in range(ncues):
 
-            digit = randint(0, 9)
+            digit = stream.pop()
             stimulus = Stimulus(digit)
             rendered = grid.render(stimulus.vector)
 
             imstim = visual.ImageStim(win, image=rendered, size=(2, 2))
             imstim.draw()
             win.flip()
-            event.waitKeys()
+            keypress, *_ = event.waitKeys(timeStamped=clocktrial,
+                                      clearEvents=True,
+                                      keyList=[str(x) for x in range(10)])
+            print(keypress)
+            correct = digit == int(keypress[0])
+            outfile.write('f{str(digit)},{keypress[0]},{keypress[1]},{keypress[1]+clocksession.getTime()}\n')
+
+            if correct:
+                correctSound.play()
+            else:
+                incorrectSound.play()
+
+    close(outfile)

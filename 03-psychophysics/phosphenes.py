@@ -55,3 +55,6 @@ class RegularGrid:
         summed = sum(product)
         summax = np.max(summed)
         return (summed / summax) * 2 - 1
+
+class PolarRegularGrid:
+    pass
