@@ -15,6 +15,7 @@ from skimage import color
 from imageio import imread
 from phosphenes import RegularGrid, IrregularGrid, safebound
 from random import sample
+from PIL import Image
 
 ################################################################################
 # CONSTANTS
@@ -37,12 +38,7 @@ imagesize = np.shape(
 )  # assume all images the same size as image 0
 imagescale = EXSIZE / imagesize[0]  # assuming a square image
 stimuli = [
-    np.fliplr(
-        imresize(
-            color.rgb2gray(imread(datadir + str(digit) + dataext)).transpose(),
-            imagescale,
-        )
-    )
+    np.fliplr(np.array(Image.fromarray(color.rgb2gray(imread(datadir + str(digit) + dataext)).transpose()).resize((EXSIZE, EYSIZE))))
     for digit in range(10)
 ]
 
@@ -70,8 +66,8 @@ if __name__ == "__main__":
     ############################################################################
 
     # Expensive preparations
-    # grid = RegularGrid(exsize=EXSIZE, eysize=EYSIZE)
-    grid = IrregularGrid(exsize=EXSIZE, eysize=EYSIZE, randomPos=60)
+    grid = RegularGrid(exsize=EXSIZE, eysize=EYSIZE)
+    # grid = IrregularGrid(exsize=EXSIZE, eysize=EYSIZE, randomPos=60)
 
     # Experiment details
     details = {"date": data.getDateStr(), "participant": ""}
@@ -98,8 +94,13 @@ if __name__ == "__main__":
 
     outfileName = f"./data/{details['participant']}_{details['date']}_session.txt"
 
+    
+    # Sounds
     correctSound = SoundPygame(value='G', secs=0.1)
     incorrectSound = SoundPygame(value='Csh', secs=0.1)
+    digitSoundTemplate = './data/digit-voice/{}-alt.wav'
+    digitSounds = [SoundPygame(value=digitSoundTemplate.format(digit)) for digit in range(10)]
+    [s.setVolume(3) for s in digitSounds]
 
 
     with open(outfileName, 'w+') as outfile:
@@ -110,7 +111,8 @@ if __name__ == "__main__":
 
             clocktrial.reset()
 
-            cross = visual.TextStim(win, text="+", bold=True, pos=(XSIZE/2, YSIZE/2))
+            cross = visual.TextStim(win, text="Press any key when ready.")
+            cross.draw()
             win.flip()
             event.waitKeys(clearEvents=True)
 
@@ -136,5 +138,14 @@ if __name__ == "__main__":
 
                 if correct:
                     correctSound.play()
+                    digitSounds[digit].play()
                 else:
                     incorrectSound.play()
+                    incorrectSound.play()
+                    digitSounds[digit].play()
+                    
+        # Last screen.
+        end = visual.TextStim(win, text="Thank you. Press any key to exit.")
+        end.draw()
+        win.flip()
+        event.waitKeys(clearEvents=True)
