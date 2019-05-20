@@ -1,51 +1,115 @@
 #!/usr/bin/env python
+"""
+This script runs a digit recognition psychophysics session.
+"""
 
-################################################################################
-# SETUP
-################################################################################
+# # Setup
 
-# Imports
 import numpy as np
-from psychopy import visual, core, gui, data, event
-
+import json
+from datetime import datetime
+from argparse import ArgumentParser
+from psychopy import visual, core, gui, event
+from box import Box
 from psychopy.sound.backend_pygame import SoundPygame
 from psychopy.tools.filetools import fromFile, toFile
-from scipy.misc import imresize
 from skimage import color
 from imageio import imread
-from phosphenes import RegularGrid, IrregularGrid, safebound
+from phosphenes import RegularGrid, IrregularGrid
 from random import sample
 from PIL import Image
 
-################################################################################
-# CONSTANTS
-################################################################################
+# I'm setting up a config dictionary with dot-syntax so it can be serialised 
+# and saved with the session. I prefer explicitly keeping track of state.
 
-XSIZE = 480
-YSIZE = 480
-SCALE = 48
-EXSIZE = XSIZE // SCALE
-EYSIZE = YSIZE // SCALE
+config = Box({})
 
-################################################################################
-# STIMULUS
-################################################################################
+# Parsing the command line arguments, especially for testing.
+parser = ArgumentParser(description='Digit recognition task.')
 
-datadir = "data/digit-images/"
-dataext = ".png"
-imagesize = np.shape(
-    imread(datadir + str(0) + dataext)
-)  # assume all images the same size as image 0
-imagescale = EXSIZE / imagesize[0]  # assuming a square image
-stimuli = [
-    np.fliplr(np.array(Image.fromarray(color.rgb2gray(imread(datadir + str(digit) + dataext)).transpose()).resize((EXSIZE, EYSIZE))))
+# Define command line arguments.
+argspec = {
+    'test': {
+        'action': 'store_const',
+        'const': True,
+        'default': False,
+        'dest': 'testing',
+        'help': 'Test the experiment and save the data.'
+    },
+    'ntrials': {
+        'type': int,
+        'nargs': '?',
+        'default': 30,
+        'help': 'Number of trials for the experiment.'
+    },
+    'ncues': {
+        'type': int,
+        'nargs': '?',
+        'default': 20,
+        'help': 'Number of cues per trial. Should be a multiple of 10 (for now) for digit stream.'
+    },
+    'grid': {
+        'type': str,
+        'nargs': '?',
+        'default': 'regular',
+        'help': 'The grid type for rendering. One of regular or irregular.'
+    }
+}
+
+# Add arguments to the parser.
+[parser.add_argument(f'--{k}', **v) for k, v in argspec.items()]
+
+# Parse the arguments and save into config.
+args = parser.parse_args()
+config.TESTING   = args.testing
+config.NTRIALS   = args.ntrials
+config.NCUES     = args.ncues
+config.GRID_TYPE = args.grid
+
+
+# First, we define the constants for the window size of the experiment.
+# `XSIZE` and `YSIZE` refer to the size of the window on the screen.
+# `EXSIZE` and `EYSIZE` refer to the size of the image data (i.e. how many 
+# electrodes there are). 
+# `SCALE` links the two. 
+
+config.XSIZE  = 480
+config.YSIZE  = 480
+config.SCALE  = 48
+config.EXSIZE = config.XSIZE // config.SCALE
+config.EYSIZE = config.YSIZE // config.SCALE
+
+# Next, we load the stimulus. Opening the image files can be expensive
+# so we're doing at this at the very start and loading them into a 
+# variable. 
+
+# `IMAGE_TEMPLATE` is a string of the filepath of the stimulus digit images.
+config.IMAGE_TEMPLATE = './data/digit-images/{}.png'
+
+# `IMAGE_SIZE` is an (int, int) tuple of the image size of the first image.
+# We assume that each image is of the same size as the image labelled "0"
+config.IMAGE_SIZE = np.shape(imread(config.IMAGE_TEMPLATE.format(0)))  
+
+# `IMAGE_SCALE` is an int describing the ratio of electrode size to image size.
+# It assumes that EXSIZE == EYSIZE and the input images are square.
+# This may need changing later. 
+config.IMAGE_SCALE = config.EXSIZE / config.IMAGE_SIZE[0]  
+
+# `STIMULI` contains a list of numpy arrays.
+# Each element in the list holds the image data (in greyscale at the moment) 
+# for the digit equal to its index.
+config.STIMULI = [
+    np.fliplr(np.array(Image.fromarray(
+        color.rgb2gray(imread(config.IMAGE_TEMPLATE.format(digit))).transpose())\
+        .resize((config.EXSIZE, config.EYSIZE))))
     for digit in range(10)
 ]
 
-
+# Here, we define the processing method used to convert the stimulus to 
+# a brightness vector for the electrodes. 
 class Stimulus:
-    def __init__(self, digit):
-        self.image = stimuli[digit]
+    def __init__(self, image):
+        self.image = image
         self.vector = self.process()
 
     def process(self):
@@ -55,103 +119,160 @@ class Stimulus:
         return flattened
 
 
-################################################################################
-# PSYCHOPY
-################################################################################
+# We initiate a grid of electrodes.
+grids = {
+    'regular':  RegularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE),
+    'irregular': IrregularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE, randomPos=60)
+}
 
+config.GRID = grids[config.GRID_TYPE]
+
+
+# Templates for data paths.
+config.DATETIME_FORMAT       = '%Y-%m-%d_%H-%M-%S'
+config.DIGIT_SOUND_TEMPLATE  = './data/digit-voice/{}-alt.wav'
+
+if config.TESTING:
+    config.CONFIG_FILE_TEMPLATE  = './data/sessions/tests/{}_{}_config.json'
+    config.SESSION_FILE_TEMPLATE = './data/sessions/tests/{}_{}_session.csv'
+else:
+    config.CONFIG_FILE_TEMPLATE  = './data/sessions/participants/{}_{}_config.json'
+    config.SESSION_FILE_TEMPLATE = './data/sessions/participants/{}_{}_session.csv'
+
+# Parameters for sound.
+config.CORRECT_NOTE   = 'G'
+config.INCORRECT_NOTE = 'Csh'
+config.NOTE_DURATION  = 0.1
+config.NOTE_VOLUME    = 0.5
+
+# Session data.
+config.SESSION_VARS = ['trial', 'cue', 'digit', 'keypress', 'cuetime', 'trialtime', 'sessiontime']
+
+# Output templates based on session data.
+config.SESSION_HEADER       = ','.join(config.SESSION_VARS) + '\n'
+config.SESSION_ROW_TEMPLATE = ','.join(['{' + word + '}' for word in config.SESSION_VARS]) + '\n'
+
+# Text.
+config.PROMPT_TEXT = "{}% complete.\n\nPress any key when ready."
+config.END_TEXT    = "Thank you. \n\nPress any key to exit."
+
+# Keypress during a trial.
+config.KEY_LIST = ["num_" + str(x) for x in range(10)]
+
+# When saving the config, excluding some variables due to size.
+config.EXCLUDED = ['STIMULI', 'GRID']
+
+# Here, we make our main experiment, only if called from the command line.
 if __name__ == "__main__":
-
-    ############################################################################
-    #  SETUP
-    ############################################################################
-
-    # Expensive preparations
-    grid = RegularGrid(exsize=EXSIZE, eysize=EYSIZE)
-    # grid = IrregularGrid(exsize=EXSIZE, eysize=EYSIZE, randomPos=60)
-
-    # Experiment details
-    details = {"date": data.getDateStr(), "participant": ""}
-
-    # Initial user dialog
-    dialog = gui.DlgFromDict(details, title="PROTOTYPE", fixed=["date"])
+    
+    # We initiate the user details and present a dialog to the user to get those details.
+    config.details = {"datetime": datetime.strftime(datetime.now(), config.DATETIME_FORMAT), "participant": ""}
+    dialog         = gui.DlgFromDict(config.details, title="PROTOTYPE", fixed=["datetime"])
+    
+    # We interpret the dialog actions and initiate data files if proceeding.
     if dialog.OK:
-        datafile = "./data/sessions/{}_{}_details.pickle".format(
-            details["participant"], details["date"]
-        )
-        toFile(datafile, details)
+        config.configFile  = config.CONFIG_FILE_TEMPLATE.format(config.details["participant"], config.details["datetime"])
+        config.sessionFile = config.SESSION_FILE_TEMPLATE.format(config.details["participant"], config.details["datetime"])
     else:
         core.quit()
 
-    # Clocks
-    clocksession = core.Clock()
-    clocktrial = core.Clock()
-    clockdigit = core.Clock()
+    # Clocks that keep track of the experiment.
+    clockSession = core.Clock()
+    clockTrial   = core.Clock()
+    clockCue     = core.Clock()
 
-    # Window
-    win = visual.Window([XSIZE, YSIZE])
-
-    ntrials = 30
-    ncues = 20
-
-    outfileName = f"./data/sessions/{details['participant']}_{details['date']}_session.csv"
-
+    # We initiate some generic sounds for correct and incorrect.
+    correctSound   = SoundPygame(value=config.CORRECT_NOTE, secs=config.NOTE_DURATION)
+    incorrectSound = SoundPygame(value=config.INCORRECT_NOTE, secs=config.NOTE_DURATION)
     
-    # Sounds
-    correctSound = SoundPygame(value='G', secs=0.1)
-    correctSound.setVolume(0.5)
-    incorrectSound = SoundPygame(value='Csh', secs=0.1)
-    incorrectSound.setVolume(0.5)
-    digitSoundTemplate = './data/digit-voice/{}-alt.wav'
-    digitSounds = [SoundPygame(value=digitSoundTemplate.format(digit)) for digit in range(10)]
-    [s.setVolume(3) for s in digitSounds]
+    correctSound.setVolume(config.NOTE_VOLUME)
+    incorrectSound.setVolume(config.NOTE_VOLUME)
+    
+    # And we initiate the sounds for each digit.
+    digitSounds = [SoundPygame(value=config.DIGIT_SOUND_TEMPLATE.format(digit)) for digit in range(10)]
+    
+    # Now we save the config for this session.
+    with open(config.configFile, 'w+') as configFile:
+        json.dump({k:v for k, v in config.items() if k not in config.EXCLUDED}, configFile)
+        
+    # We make a window for the experiment.
+    win = visual.Window([config.XSIZE, config.YSIZE])
+    
+    # We also initiate a testing window. 
+    # testwin = visual.Window([XSIZE, YSIZE])
 
+    # We now start the experiment loop.
+    with open(config.sessionFile, 'w+') as outfile:
 
-    with open(outfileName, 'w+') as outfile:
+        # We first write the header of the csv file.
+        outfile.write(config.SESSION_HEADER)
 
-        outfile.write('trial,cue,digit,keypress,cuetime,trialtime,sessiontime\n')
+        # Start the trial loop.
+        for trial in range(config.NTRIALS):
 
-        for trial in range(ntrials):
+            # Set the trial clock to 0.
+            # This clock will start counting from the wait screen, so includes that time..
+            clockTrial.reset()
 
-            # Includes wait time on wait screen.
-            clocktrial.reset()
+            # Show a prompt at the beginning of the trial and wait for a keypress.
+            prompt = visual.TextStim(win, text=config.PROMPT_TEXT.format(trial * 100 // config.NTRIALS))
+            prompt.draw(); win.flip(); event.waitKeys(clearEvents=True)
 
-            cross = visual.TextStim(win, text="Press any key when ready.")
-            cross.draw()
-            win.flip()
-            event.waitKeys(clearEvents=True)
+            # Create a stream of digits of length NCUES for the trial.
+            # At the moment, the stream is made of randomly-ordered 10-digit blocks
+            # I need to think of a better way to do this to prevent duplicate digits
+            # while making it more random thatn it is now.
+            streamlists = [sample(range(10), 10) for i in range(config.NCUES // 10)]
+            stream      = [i for s in streamlists for i in s]
 
-            # TODO Maybe make less predictable
-            streamlists = [sample(range(10), 10) for i in range(ncues // 10)]
-            stream = [i for s in streamlists for i in s]
-
-            for cue in range(ncues):
+            # Star the cue loop.
+            for cue in range(config.NCUES):
                 
-                clockdigit.reset()
+                # Set the cue clock to 0.
+                clockCue.reset()
 
-                digit = stream.pop()
-                stimulus = Stimulus(digit)
-                rendered = grid.render(stimulus.vector)
+                # Get a digit from the stream, make it into a stimulus and render it on the grid. 
+                digit    = stream.pop()
+                stimulus = Stimulus(config.STIMULI[digit])
+                rendered = config.GRID.render(stimulus.vector)
 
+                # Create an image stimulus out of the rendered image.
+                # Size (2,2) ensures the the image takes up the whole window.
+                # (Where the window is like a Cartesian plane with x and y domain [-1,1])
+                # Then show the stimulus.
                 imstim = visual.ImageStim(win, image=rendered, size=(2, 2))
-                imstim.draw()
-                win.flip()
-                keypress, *_ = event.waitKeys(timeStamped=clocktrial,
-                                        clearEvents=True,
-                                        keyList=["num_"+str(x) for x in range(10)])
-                print(keypress)
-                correct = digit == int(keypress[0].strip("num_"))
-                outfile.write(f'{trial},{cue},{str(digit)},{keypress[0].strip("num_")},{clockdigit.getTime()},{clocktrial.getTime()},{clocksession.getTime()}\n')
+                imstim.draw(); win.flip()
 
-                if correct:
-                    correctSound.play()
-                    digitSounds[digit].play()
-                else:
-                    incorrectSound.play()
-                    incorrectSound.play()
-                    digitSounds[digit].play()
+                # Wait for a keypress. 
+                # We only need the first keypress, and want the key input from the numpage.
+                keypressRaw, *_ = event.waitKeys(clearEvents=True, keyList=config.KEY_LIST)
+                
+                # Check if their input was correct. 
+                # Numpad keys are prepended with 'num_', so we strip it out.
+                keypress = keypressRaw.strip('num_')
+                correct  = (digit == int(keypress))
+                
+                # Create the data line.
+                row = config.SESSION_ROW_TEMPLATE.format(
+                    trial=trial,
+                    cue=cue,
+                    digit=digit,
+                    keypress=keypress, 
+                    cuetime=clockCue.getTime(),
+                    trialtime=clockTrial.getTime(),
+                    sessiontime=clockSession.getTime(),
+                )
+                
+                # Write the data line to the session file.
+                outfile.write(row)
+
+                # Play the feedback sound.
+                correctSound.play() if correct else incorrectSound.play()
+
+                # Play the digit sound.
+                digitSounds[digit].play()
                     
-        # Last screen.
-        end = visual.TextStim(win, text="Thank you. Press any key to exit.")
-        end.draw()
-        win.flip()
-        event.waitKeys(clearEvents=True)
+        # At the end of all the trials, show an end screen and wait for key press
+        # to exit.
+        end = visual.TextStim(win, text=config.END_TEXT)
+        end.draw(); win.flip(); event.waitKeys(clearEvents=True)
