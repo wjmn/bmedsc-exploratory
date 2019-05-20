@@ -90,7 +90,7 @@ if __name__ == "__main__":
     # Window
     win = visual.Window([XSIZE, YSIZE])
 
-    ntrials = 1 #30
+    ntrials = 30
     ncues = 20
 
     outfileName = f"./data/sessions/{details['participant']}_{details['date']}_session.csv"
@@ -108,7 +108,7 @@ if __name__ == "__main__":
 
     with open(outfileName, 'w+') as outfile:
 
-        outfile.write('digit,keypress,digittime,trialtime,sessiontime\n')
+        outfile.write('trial,cue,digit,keypress,cuetime,trialtime,sessiontime\n')
 
         for trial in range(ntrials):
 
@@ -140,7 +140,7 @@ if __name__ == "__main__":
                                         keyList=["num_"+str(x) for x in range(10)])
                 print(keypress)
                 correct = digit == int(keypress[0].strip("num_"))
-                outfile.write(f'{str(digit)},{keypress[0].strip("num_")},{clockdigit.getTime()},{clocktrial.getTime()},{clocksession.getTime()}\n')
+                outfile.write(f'{trial},{cue},{str(digit)},{keypress[0].strip("num_")},{clockdigit.getTime()},{clocktrial.getTime()},{clocksession.getTime()}\n')
 
                 if correct:
                     correctSound.play()
