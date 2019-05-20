@@ -75,7 +75,7 @@ if __name__ == "__main__":
     # Initial user dialog
     dialog = gui.DlgFromDict(details, title="PROTOTYPE", fixed=["date"])
     if dialog.OK:
-        datafile = "./data/{}_{}_details.pickle".format(
+        datafile = "./data/sessions/{}_{}_details.pickle".format(
             details["participant"], details["date"]
         )
         toFile(datafile, details)
@@ -85,6 +85,7 @@ if __name__ == "__main__":
     # Clocks
     clocksession = core.Clock()
     clocktrial = core.Clock()
+    clockdigit = core.Clock()
 
     # Window
     win = visual.Window([XSIZE, YSIZE])
@@ -92,12 +93,14 @@ if __name__ == "__main__":
     ntrials = 1 #30
     ncues = 20
 
-    outfileName = f"./data/{details['participant']}_{details['date']}_session.txt"
+    outfileName = f"./data/sessions/{details['participant']}_{details['date']}_session.csv"
 
     
     # Sounds
     correctSound = SoundPygame(value='G', secs=0.1)
+    correctSound.setVolume(0.5)
     incorrectSound = SoundPygame(value='Csh', secs=0.1)
+    incorrectSound.setVolume(0.5)
     digitSoundTemplate = './data/digit-voice/{}-alt.wav'
     digitSounds = [SoundPygame(value=digitSoundTemplate.format(digit)) for digit in range(10)]
     [s.setVolume(3) for s in digitSounds]
@@ -105,10 +108,11 @@ if __name__ == "__main__":
 
     with open(outfileName, 'w+') as outfile:
 
-        outfile.write('digit,keypress,trialtime,sessiontime\n')
+        outfile.write('digit,keypress,digittime,trialtime,sessiontime\n')
 
         for trial in range(ntrials):
 
+            # Includes wait time on wait screen.
             clocktrial.reset()
 
             cross = visual.TextStim(win, text="Press any key when ready.")
@@ -121,6 +125,8 @@ if __name__ == "__main__":
             stream = [i for s in streamlists for i in s]
 
             for cue in range(ncues):
+                
+                clockdigit.reset()
 
                 digit = stream.pop()
                 stimulus = Stimulus(digit)
@@ -131,10 +137,10 @@ if __name__ == "__main__":
                 win.flip()
                 keypress, *_ = event.waitKeys(timeStamped=clocktrial,
                                         clearEvents=True,
-                                        keyList=[str(x) for x in range(10)])
+                                        keyList=["num_"+str(x) for x in range(10)])
                 print(keypress)
-                correct = digit == int(keypress[0])
-                outfile.write(f'{str(digit)},{keypress[0]},{keypress[1]},{keypress[1]+clocksession.getTime()}\n')
+                correct = digit == int(keypress[0].strip("num_"))
+                outfile.write(f'{str(digit)},{keypress[0].strip("num_")},{clockdigit.getTime()},{clocktrial.getTime()},{clocksession.getTime()}\n')
 
                 if correct:
                     correctSound.play()
