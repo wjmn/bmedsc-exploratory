@@ -18,3 +18,8 @@ for digit in range(10):
     saveName = str(digit)
     saveExtension = "png"
     baseImage.save(f"../data/digit-images/{saveName}.{saveExtension}")
+
+# Blank white
+baseImage = Image.new("RGB", (baseSizeY, baseSizeX), (255,255,255))
+base = ImageDraw.Draw(baseImage)
+baseImage.save(f'../data/digit-images/blank.{saveExtension}')

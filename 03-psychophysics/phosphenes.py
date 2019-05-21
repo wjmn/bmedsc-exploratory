@@ -70,14 +70,14 @@ class UniqueElectrode:
     """
     This class implements electrodes with unique characteristics such as colour and shape.
     """
-    def __init__(self, x: float, y: float, randomPos: float = 0.01):
+    def __init__(self, x: float, y: float, randomPos: float = 0.001):
         self.x = bound(x + (random.random() - 0.5) * randomPos, 0, 1)
         self.y = bound(y + (random.random() - 0.5) * randomPos, 0, 1)
         self.size = PBASE * (0.5 + (4 * np.sqrt((self.x - 0.5) ** 2 + (self.y - 0.5) ** 2)) ** 2)
         self.colour = np.random.random(3)
         # xmod and ymod modify the shape of the phosphene
-        self.xmod = 1 + random.random() * 5
-        self.ymod = 1 + random.random() * 5
+        self.xmod = 1 + (random.random()-0.5) * 2.5
+        self.ymod = 1 + (random.random()-0.5) * 2.5
 
         self.rendered = self.render()
 
@@ -112,7 +112,8 @@ class RegularGrid:
         product = [v * e.rendered for (v, e) in zip(values, self.grid)]
         summed = sum(product)
         summax = np.max(summed)
-        return (summed / summax) * 2 - 1
+        return np.clip(summed, 0, 1) * 2 - 1
+        # return (summed / summax) * 2 - 1
 
 class IrregularGrid:
     def __init__(self, randomPos=2, exsize=EXSIZE, eysize=EYSIZE, ):
@@ -128,7 +129,8 @@ class IrregularGrid:
         product = [v * e.rendered for (v, e) in zip(values, self.grid)]
         summed = sum(product)
         summax = np.max(summed)
-        return (summed / summax) * 2 - 1
+        return np.clip(summed, 0, 1) * 2 - 1
+        # return (summed / summax) * 2 - 1
 
 class PolarRegularGrid:
     def __init__(self, nrho, ntheta):
@@ -147,7 +149,8 @@ class PolarRegularGrid:
         product = [v * e.rendered for (v, e) in zip(values, self.grid)]
         summed = sum(product)
         summax = np.max(summed)
-        return (summed / summax) * 2 - 1
+        return np.clip(summed, 0, 1) * 2 - 1
+        # return (summed / summax) * 2 - 1
 
 class PolarRegularUniqueGrid:
     def __init__(self, nrho, ntheta):
@@ -166,4 +169,5 @@ class PolarRegularUniqueGrid:
         product = [v * e.rendered for (v, e) in zip(values, self.grid)]
         summed = sum(product)
         summax = np.max(summed)
-        return (summed / summax) * 2 - 1
+        return np.clip(summed, 0, 1)
+        # return (summed / summax) * 2 - 1
