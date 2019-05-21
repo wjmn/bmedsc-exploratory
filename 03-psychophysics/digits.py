@@ -119,6 +119,7 @@ grids = {
     'regular':   phosphenes.RegularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE),
     'irregular': phosphenes.IrregularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE, randomPos=0.5),
     'polarRegular': phosphenes.PolarRegularGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE),
+    'polarRegularUnique': phosphenes.PolarRegularUniqueGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE),
 }
 
 config.GRID = grids[config.GRID_TYPE]
