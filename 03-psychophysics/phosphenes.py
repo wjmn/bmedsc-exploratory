@@ -3,6 +3,7 @@
 import numpy as np
 from scipy.ndimage import gaussian_filter
 import random
+import math
 
 # from scipy.ndimages.filters import convolve
 
@@ -75,7 +76,7 @@ class RegularGrid:
         self.exsize = EXSIZE
         self.eysize = EYSIZE
         self.grid = [
-            Electrode(y / eysize, x / exsize)
+            Electrode(x / exsize, y / eysize)
             for x in range(exsize)
             for y in range(eysize)
         ]
@@ -91,9 +92,28 @@ class IrregularGrid:
         self.exsize = EXSIZE
         self.eysize = EYSIZE
         self.grid = [
-            Electrode(y / eysize, x / exsize, randomPos=randomPos )
+            Electrode(x / exsize, y / eysize, randomPos=randomPos )
             for x in range(exsize)
             for y in range(eysize)
+        ]
+
+    def render(self, values):
+        product = [v * e.rendered for (v, e) in zip(values, self.grid)]
+        summed = sum(product)
+        summax = np.max(summed)
+        return (summed / summax) * 2 - 1
+
+class PolarRegularGrid:
+    def __init__(self, nrho, ntheta):
+        self.nrho   = nrho
+        self.ntheta = ntheta
+        self.grid = [
+            # Need to think of better way to scale.
+            Electrode(((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.cos(2 * math.pi * theta / ntheta)) + 1) / 2,
+                      ((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.sin(2 * math.pi * theta / ntheta)) + 1) / 2,)
+            # Ensure the central electrodes are actually visible by adding 1 to zero.
+            for rho in range(1, nrho+1)
+            for theta in range(ntheta)
         ]
 
     def render(self, values):

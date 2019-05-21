@@ -7,6 +7,7 @@ This script runs a digit recognition psychophysics session.
 
 import numpy as np
 import json
+import phosphenes
 from datetime import datetime
 from argparse import ArgumentParser
 from psychopy import visual, core, gui, event
@@ -15,7 +16,6 @@ from psychopy.sound.backend_pygame import SoundPygame
 from psychopy.tools.filetools import fromFile, toFile
 from skimage import color
 from imageio import imread
-from phosphenes import RegularGrid, IrregularGrid, safebound
 from random import sample
 from PIL import Image
 
@@ -52,7 +52,7 @@ argspec = {
         'type': str,
         'nargs': '?',
         'default': 'regular',
-        'help': 'The grid type for rendering. One of regular or irregular.'
+        'help': 'The grid type for rendering. One of regular, irregular or regularPolar.'
     }
 }
 
@@ -108,8 +108,9 @@ config.STIMULI = [
 
 # We initiate a grid of electrodes.
 grids = {
-    'regular':   RegularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE),
-    'irregular': IrregularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE, randomPos=0.5)
+    'regular':   phosphenes.RegularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE),
+    'irregular': phosphenes.IrregularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE, randomPos=0.5),
+    'polarRegular': phosphenes.PolarRegularGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE),
 }
 
 config.GRID = grids[config.GRID_TYPE]
