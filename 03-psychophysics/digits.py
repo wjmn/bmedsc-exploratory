@@ -15,7 +15,7 @@ from psychopy.sound.backend_pygame import SoundPygame
 from psychopy.tools.filetools import fromFile, toFile
 from skimage import color
 from imageio import imread
-from phosphenes import RegularGrid, IrregularGrid
+from phosphenes import RegularGrid, IrregularGrid, safebound
 from random import sample
 from PIL import Image
 
@@ -106,28 +106,31 @@ config.STIMULI = [
     for image in config.IMAGES
 ]
 
+# We initiate a grid of electrodes.
+grids = {
+    'regular':   RegularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE),
+    'irregular': IrregularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE, randomPos=0.5)
+}
+
+config.GRID = grids[config.GRID_TYPE]
+
 # Here, we define the processing method used to convert the stimulus to 
 # a brightness vector for the electrodes. 
 class Stimulus:
-    def __init__(self, image):
+    def __init__(self, image, grid):
         self.image = image
+        self.shape = self.image.shape
+        self.grid = grid
         self.vector = self.process()
 
     def process(self):
         """ Converts the stimulus into a brightness vector for the
         """
-        flattened = self.image.flatten(order="C")
-        return flattened
-
-
-# We initiate a grid of electrodes.
-grids = {
-    'regular':  RegularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE),
-    'irregular': IrregularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE, randomPos=60)
-}
-
-config.GRID = grids[config.GRID_TYPE]
-
+        params = [self.image[min(self.shape[0] - 1, int(self.shape[0] * e.y)),
+                             min(self.shape[1] - 1, int(self.shape[1] * e.x))] 
+                             for e in self.grid.grid]
+        #flattened = self.image.flatten(order="C")
+        return params
 
 # Templates for data paths.
 config.DATETIME_FORMAT       = '%Y-%m-%d_%H-%M-%S'
@@ -240,7 +243,7 @@ if __name__ == "__main__":
 
                 # Get a digit from the stream, make it into a stimulus and render it on the grid. 
                 digit    = stream.pop()
-                stimulus = Stimulus(config.STIMULI[digit])
+                stimulus = Stimulus(config.STIMULI[digit], config.GRID)
                 rendered = config.GRID.render(stimulus.vector)
                 
                 # If this is a testing run, also draw the original image.

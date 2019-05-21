@@ -16,25 +16,47 @@ EXSIZE = XSIZE // SCALE
 EYSIZE = YSIZE // SCALE
 
 
-def safebound(value, width, lower, upper):
+def safebound(value: float, width: float, lower: float, upper: float):
+    """ 
+    Returns the bounded min and max about value with width.
+    """
     vmin = int(max(lower, value - width))
     vmax = int(min(upper, value + width))
     return vmin, vmax
 
+def bound(value:float, lower: float, upper:float):
+    """
+    Returns a bounded value.
+    """
+    if value > lower:
+        if value < upper:
+            return value
+        else:
+            return upper
+    else:
+        return lower
 
 class Electrode:
-    def __init__(self, x, y, randomPos=0):
-        # self.phosphene = phosphene
-        self.x = x
-        self.y = y
+    def __init__(self, x: float, y: float, randomPos: float = 0):
+        """
+        Produces a phosphene for a single electrode.
+        
+        Args:
+            x: float         - position in range [0, 1]. 
+            y: float         - position in range [0, 1]
+            randomPos: float - a scaling factor for random positioning. 
+        """
         self.randomPos = randomPos
-        self.size = PBASE * (0.5 + (4 * np.sqrt((x - 0.5) ** 2 + (y - 0.5) ** 2)) ** 2)
+        self.x = bound(x + (random.random() - 0.5) * self.randomPos, 0, 1)
+        self.y = bound(y + (random.random() - 0.5) * self.randomPos, 0, 1)
+
+        self.size = PBASE * (0.5 + (4 * np.sqrt((self.x - 0.5) ** 2 + (self.y - 0.5) ** 2)) ** 2)
 
         self.rendered = self.render()
 
     def render(self, xsize=YSIZE, ysize=XSIZE):
-        xmin, xmax = safebound(XSIZE * self.x + (random.random() - 0.5) * self.randomPos, self.size, 0, XSIZE)
-        ymin, ymax = safebound(YSIZE * self.y + (random.random() - 0.5) * self.randomPos, self.size, 0, YSIZE)
+        xmin, xmax = safebound(XSIZE * self.x, self.size, 0, XSIZE)
+        ymin, ymax = safebound(YSIZE * self.y, self.size, 0, YSIZE)
 
         base = np.zeros((ysize, xsize))
         base[ymin:ymax, xmin:xmax] = 1
@@ -43,7 +65,13 @@ class Electrode:
 
 
 class RegularGrid:
-    def __init__(self, exsize=EXSIZE, eysize=EYSIZE):
+    def __init__(self, exsize: int = EXSIZE, eysize: int = EYSIZE):
+        """
+        
+        Args:
+            exsize: int - x size of electrode grid 
+            eysize: int - y size of electrode grid
+        """
         self.exsize = EXSIZE
         self.eysize = EYSIZE
         self.grid = [
