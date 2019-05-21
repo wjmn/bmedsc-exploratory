@@ -53,6 +53,13 @@ argspec = {
         'nargs': '?',
         'default': 'regular',
         'help': 'The grid type for rendering. One of regular, irregular or regularPolar.'
+    },
+    'no-numpad': {
+        'action': 'store_const',
+        'const': True,
+        'default': False,
+        'dest': 'noNumpad',
+        'help': 'Flags that normal number keys instead of numpad should be used.'
     }
 }
 
@@ -65,6 +72,7 @@ config.TESTING   = args.testing
 config.NTRIALS   = args.ntrials
 config.NCUES     = args.ncues
 config.GRID_TYPE = args.grid
+config.NO_NUMPAD = args.noNumpad
 
 
 # First, we define the constants for the window size of the experiment.
@@ -162,7 +170,10 @@ config.PROMPT_TEXT = "{}% complete.\n\nPress any key when ready."
 config.END_TEXT    = "Thank you. \n\nPress any key to exit."
 
 # Keypress during a trial.
-config.KEY_LIST = ["num_" + str(x) for x in range(10)]
+if config.NO_NUMPAD:
+    config.KEY_LIST=[str(x) for x in range(10)]
+else:
+    config.KEY_LIST = ["num_" + str(x) for x in range(10)]
 
 # When saving the config, excluding some variables due to size.
 config.EXCLUDED = ['STIMULI', 'GRID', 'IMAGES']
