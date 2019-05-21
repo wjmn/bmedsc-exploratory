@@ -109,7 +109,7 @@ config.STIMULI = [
 # We initiate a grid of electrodes.
 grids = {
     'regular':   phosphenes.RegularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE),
-    'irregular': phosphenes.IrregularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE, randomPos=0.5),
+    'irregular': phosphenes.IrregularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE, randomPos=0.1),
     'polarRegular': phosphenes.PolarRegularGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE),
 }
 
