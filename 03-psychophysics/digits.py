@@ -95,14 +95,15 @@ config.IMAGE_SIZE = np.shape(imread(config.IMAGE_TEMPLATE.format(0)))
 # This may need changing later. 
 config.IMAGE_SCALE = config.EXSIZE / config.IMAGE_SIZE[0]  
 
+# `IMAGES` holds the original digit images.
+config.IMAGES = [np.flipud(color.rgb2gray(imread(config.IMAGE_TEMPLATE.format(digit)))) for digit in range(10)]
+
 # `STIMULI` contains a list of numpy arrays.
 # Each element in the list holds the image data (in greyscale at the moment) 
 # for the digit equal to its index.
 config.STIMULI = [
-    np.fliplr(np.array(Image.fromarray(
-        color.rgb2gray(imread(config.IMAGE_TEMPLATE.format(digit))).transpose())\
-        .resize((config.EXSIZE, config.EYSIZE))))
-    for digit in range(10)
+    np.array(Image.fromarray(image).resize((config.EXSIZE, config.EYSIZE)))
+    for image in config.IMAGES
 ]
 
 # Here, we define the processing method used to convert the stimulus to 
@@ -115,7 +116,7 @@ class Stimulus:
     def process(self):
         """ Converts the stimulus into a brightness vector for the
         """
-        flattened = self.image.flatten(order="F")
+        flattened = self.image.flatten(order="C")
         return flattened
 
 
@@ -160,7 +161,7 @@ config.END_TEXT    = "Thank you. \n\nPress any key to exit."
 config.KEY_LIST = ["num_" + str(x) for x in range(10)]
 
 # When saving the config, excluding some variables due to size.
-config.EXCLUDED = ['STIMULI', 'GRID']
+config.EXCLUDED = ['STIMULI', 'GRID', 'IMAGES']
 
 # Here, we make our main experiment, only if called from the command line.
 if __name__ == "__main__":
@@ -194,13 +195,15 @@ if __name__ == "__main__":
     # Now we save the config for this session.
     with open(config.configFile, 'w+') as configFile:
         json.dump({k:v for k, v in config.items() if k not in config.EXCLUDED}, configFile)
-        
-    # We make a window for the experiment.
-    win = visual.Window([config.XSIZE, config.YSIZE])
-    
-    # We also initiate a testing window. 
-    # testwin = visual.Window([XSIZE, YSIZE])
 
+    # We initiate a testing window if this is a testing run.
+    if config.TESTING:
+        testWin = visual.Window([config.XSIZE, config.YSIZE], pos=(200,200), allowGUI=False, winType='pyglet')
+        win = visual.Window([config.XSIZE, config.YSIZE], pos=(200+config.XSIZE, 200), allowGUI=False, winType='pyglet', color=-1)
+    else:
+        # We make a window for the experiment.
+        win = visual.Window(fullscr=True, allowGUI=False, winType='pyglet', color=-1)
+        
     # We now start the experiment loop.
     with open(config.sessionFile, 'w+') as outfile:
 
@@ -213,10 +216,14 @@ if __name__ == "__main__":
             # Set the trial clock to 0.
             # This clock will start counting from the wait screen, so includes that time..
             clockTrial.reset()
+            
+            if config.TESTING:
+                testWin.flip()
 
-            # Show a prompt at the beginning of the trial and wait for a keypress.
+            # Show a prompt on grey background at the beginning of the trial and wait for a keypress.
+            bg     = visual.GratingStim(win, tex=None, mask=None, size=2, units='norm', color=0)
             prompt = visual.TextStim(win, text=config.PROMPT_TEXT.format(trial * 100 // config.NTRIALS))
-            prompt.draw(); win.flip(); event.waitKeys(clearEvents=True)
+            bg.draw(); prompt.draw(); win.flip(); event.waitKeys(clearEvents=True)
 
             # Create a stream of digits of length NCUES for the trial.
             # At the moment, the stream is made of randomly-ordered 10-digit blocks
@@ -235,14 +242,18 @@ if __name__ == "__main__":
                 digit    = stream.pop()
                 stimulus = Stimulus(config.STIMULI[digit])
                 rendered = config.GRID.render(stimulus.vector)
-
+                
+                # If this is a testing run, also draw the original image.
+                if config.TESTING:
+                    originalImage = visual.ImageStim(testWin, image=color.rgb2gray(config.IMAGES[digit]), size=(2,2))
+                    originalImage.draw(); testWin.flip()
+                    
                 # Create an image stimulus out of the rendered image.
-                # Size (2,2) ensures the the image takes up the whole window.
-                # (Where the window is like a Cartesian plane with x and y domain [-1,1])
                 # Then show the stimulus.
-                imstim = visual.ImageStim(win, image=rendered, size=(2, 2))
+                # Ensure stimulus is square on full screen window, assuming window has greater x dim than y dim.
+                imstim = visual.ImageStim(win, image=rendered, size = (2 * win.size[1] / win.size[0], 2))
                 imstim.draw(); win.flip()
-
+                
                 # Wait for a keypress. 
                 # We only need the first keypress, and want the key input from the numpage.
                 keypressRaw, *_ = event.waitKeys(clearEvents=True, keyList=config.KEY_LIST)
@@ -274,5 +285,6 @@ if __name__ == "__main__":
                     
         # At the end of all the trials, show an end screen and wait for key press
         # to exit.
+        bg  = visual.GratingStim(win, tex=None, mask=None, size=2, units='norm', color=0)
         end = visual.TextStim(win, text=config.END_TEXT)
-        end.draw(); win.flip(); event.waitKeys(clearEvents=True)
+        bg.draw(); end.draw(); win.flip(); event.waitKeys(clearEvents=True)
