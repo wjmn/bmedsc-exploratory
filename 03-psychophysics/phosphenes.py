@@ -88,7 +88,7 @@ class UniqueElectrode:
         base = np.zeros((ysize, xsize, 3))
         base[ymin:ymax, xmin:xmax, :] = self.colour
 
-        return gaussian_filter(base, self.size)
+        return gaussian_filter(base, self.size * (random.random() ** 0.3))
 
 # Grids, which are composed of electrodes.
 
