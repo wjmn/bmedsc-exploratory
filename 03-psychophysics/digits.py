@@ -52,7 +52,14 @@ argspec = {
         'type': str,
         'nargs': '?',
         'default': 'regular',
-        'help': 'The grid type for rendering. One of regular, irregular or regularPolar.'
+        'help': 'The grid type for rendering. One of regular, irregular, polarRegular or polarRegularUnique.'
+    },
+    'no-numpad': {
+        'action': 'store_const',
+        'const': True,
+        'default': False,
+        'dest': 'noNumpad',
+        'help': 'Flags that normal number keys instead of numpad should be used.'
     }
 }
 
@@ -65,6 +72,7 @@ config.TESTING   = args.testing
 config.NTRIALS   = args.ntrials
 config.NCUES     = args.ncues
 config.GRID_TYPE = args.grid
+config.NO_NUMPAD = args.noNumpad
 
 
 # First, we define the constants for the window size of the experiment.
@@ -111,6 +119,7 @@ grids = {
     'regular':   phosphenes.RegularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE),
     'irregular': phosphenes.IrregularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE, randomPos=0.1),
     'polarRegular': phosphenes.PolarRegularGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE),
+    'polarRegularUnique': phosphenes.PolarRegularUniqueGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE),
 }
 
 config.GRID = grids[config.GRID_TYPE]
@@ -161,11 +170,19 @@ config.SESSION_ROW_TEMPLATE = ','.join(['{' + word + '}' for word in config.SESS
 config.PROMPT_TEXT = "{}% complete.\n\nPress any key when ready."
 config.END_TEXT    = "Thank you. \n\nPress any key to exit."
 
+# If testing, the blank image.
+if config.TESTING:
+    config.BLANK_FILE = config.IMAGE_TEMPLATE.format('blank')
+    config.BLANK_IMAGE = np.flipud(color.rgb2gray(imread(config.BLANK_FILE)))
+
 # Keypress during a trial.
-config.KEY_LIST = ["num_" + str(x) for x in range(10)]
+if config.NO_NUMPAD:
+    config.KEY_LIST=[str(x) for x in range(10)]
+else:
+    config.KEY_LIST = ["num_" + str(x) for x in range(10)]
 
 # When saving the config, excluding some variables due to size.
-config.EXCLUDED = ['STIMULI', 'GRID', 'IMAGES']
+config.EXCLUDED = ['STIMULI', 'GRID', 'IMAGES', 'BLANK_IMAGE']
 
 # Here, we make our main experiment, only if called from the command line.
 if __name__ == "__main__":
@@ -220,9 +237,13 @@ if __name__ == "__main__":
             # Set the trial clock to 0.
             # This clock will start counting from the wait screen, so includes that time..
             clockTrial.reset()
-            
+
+            # If testing, show the blank.
             if config.TESTING:
-                testWin.flip()
+                blankStimulus = Stimulus(config.BLANK_IMAGE, config.GRID)
+                rendered = config.GRID.render(blankStimulus.vector)
+                imageStimulus = visual.ImageStim(testWin, image=rendered, size=(2,2))
+                imageStimulus.draw(); testWin.flip()
 
             # Show a prompt on grey background at the beginning of the trial and wait for a keypress.
             bg     = visual.GratingStim(win, tex=None, mask=None, size=2, units='norm', color=0)
