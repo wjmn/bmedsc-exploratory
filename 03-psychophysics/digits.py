@@ -8,6 +8,7 @@ This script runs a digit recognition psychophysics session.
 import numpy as np
 import json
 import phosphenes
+from phosphenes import Stimulus
 from datetime import datetime
 from argparse import ArgumentParser
 from psychopy import visual, core, gui, event
@@ -123,24 +124,6 @@ grids = {
 }
 
 config.GRID = grids[config.GRID_TYPE]
-
-# Here, we define the processing method used to convert the stimulus to 
-# a brightness vector for the electrodes. 
-class Stimulus:
-    def __init__(self, image, grid):
-        self.image = image
-        self.shape = self.image.shape
-        self.grid = grid
-        self.vector = self.process()
-
-    def process(self):
-        """ Converts the stimulus into a brightness vector for the
-        """
-        params = [self.image[min(self.shape[0] - 1, int(self.shape[0] * e.y)),
-                             min(self.shape[1] - 1, int(self.shape[1] * e.x))] 
-                             for e in self.grid.grid]
-        #flattened = self.image.flatten(order="C")
-        return params
 
 # Templates for data paths.
 config.DATETIME_FORMAT       = '%Y-%m-%d_%H-%M-%S'
