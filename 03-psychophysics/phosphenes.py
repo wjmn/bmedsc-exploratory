@@ -97,7 +97,7 @@ class UniqueElectrode:
 # Grids, which are composed of electrodes.
 
 class RegularGrid:
-    def __init__(self, exsize: int = EXSIZE, eysize: int = EYSIZE):
+    def __init__(self, exsize: int = EXSIZE, eysize: int = EYSIZE, xsize=XSIZE, ysize=YSIZE):
         """
         
         Args:
@@ -107,7 +107,7 @@ class RegularGrid:
         self.exsize = EXSIZE
         self.eysize = EYSIZE
         self.grid = [
-            Electrode(x / exsize, y / eysize)
+            Electrode(x / exsize, y / eysize, xsize=xsize, ysize=ysize)
             for x in range(exsize)
             for y in range(eysize)
         ]
@@ -120,11 +120,11 @@ class RegularGrid:
         # return (summed / summax) * 2 - 1
 
 class IrregularGrid:
-    def __init__(self, randomPos=2, exsize=EXSIZE, eysize=EYSIZE, ):
+    def __init__(self, randomPos=2, exsize=EXSIZE, eysize=EYSIZE, xsize=XSIZE, ysize=YSIZE):
         self.exsize = EXSIZE
         self.eysize = EYSIZE
         self.grid = [
-            Electrode(x / exsize, y / eysize, randomPos=randomPos )
+            Electrode(x / exsize, y / eysize, xsize=xsize, ysize=ysize, randomPos=randomPos )
             for x in range(exsize)
             for y in range(eysize)
         ]
@@ -137,7 +137,7 @@ class IrregularGrid:
         # return (summed / summax) * 2 - 1
 
 class PolarRegularGrid:
-    def __init__(self, nrho, ntheta, xsize, ysize):
+    def __init__(self, nrho, ntheta, xsize=XSIZE, ysize=YSIZE):
         self.nrho   = nrho
         self.ntheta = ntheta
         self.grid = [
@@ -160,7 +160,7 @@ class PolarRegularGrid:
         # return (summed / summax) * 2 - 1
 
 class PolarRegularUniqueGrid:
-    def __init__(self, nrho, ntheta, xsize, ysize):
+    def __init__(self, nrho, ntheta, xsize=XSIZE, ysize=YSIZE):
         self.nrho   = nrho
         self.ntheta = ntheta
         self.grid = [

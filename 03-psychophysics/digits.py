@@ -9,6 +9,7 @@ import numpy as np
 import json
 import phosphenes
 from phosphenes import Stimulus
+from utilities import digitToImage
 from datetime import datetime
 from argparse import ArgumentParser
 from psychopy import visual, core, gui, event
@@ -30,7 +31,7 @@ parser = ArgumentParser(description='Digit recognition task.')
 
 # Define command line arguments.
 argspec = {
-    'test': {
+    'testing': {
         'action': 'store_const',
         'const': True,
         'default': False,
@@ -40,20 +41,26 @@ argspec = {
     'ntrials': {
         'type': int,
         'nargs': '?',
-        'default': 30,
+        'default': 2,
         'help': 'Number of trials for the experiment.'
     },
     'ncues': {
         'type': int,
         'nargs': '?',
-        'default': 20,
+        'default': 10,
         'help': 'Number of cues per trial. Should be a multiple of 10 (for now) for digit stream.'
     },
     'grid': {
         'type': str,
         'nargs': '?',
-        'default': 'regular',
+        'default': 'polarRegular',
         'help': 'The grid type for rendering. One of regular, irregular, polarRegular or polarRegularUnique.'
+    },
+    'processor': {
+        'type': str,
+        'nargs': '?',
+        'default': 'brightness',
+        'help': 'The processor for the session. One of brightness of learner.'
     },
     'no-numpad': {
         'action': 'store_const',
@@ -73,6 +80,7 @@ config.TESTING   = args.testing
 config.NTRIALS   = args.ntrials
 config.NCUES     = args.ncues
 config.GRID_TYPE = args.grid
+config.PROCESSOR = args.processor
 config.NO_NUMPAD = args.noNumpad
 
 
@@ -82,9 +90,9 @@ config.NO_NUMPAD = args.noNumpad
 # electrodes there are). 
 # `SCALE` links the two. 
 
-config.XSIZE  = 480
-config.YSIZE  = 480
-config.SCALE  = 48
+config.XSIZE  = 64
+config.YSIZE  = 64
+config.SCALE  = 6
 config.EXSIZE = config.XSIZE // config.SCALE
 config.EYSIZE = config.YSIZE // config.SCALE
 
@@ -93,7 +101,7 @@ config.EYSIZE = config.YSIZE // config.SCALE
 # variable. 
 
 # `IMAGE_TEMPLATE` is a string of the filepath of the stimulus digit images.
-config.IMAGE_TEMPLATE = './data/digit-images/{}.png'
+config.IMAGE_TEMPLATE = './data/digit-images-aliased/{}.png'
 
 # `IMAGE_SIZE` is an (int, int) tuple of the image size of the first image.
 # We assume that each image is of the same size as the image labelled "0"
@@ -117,13 +125,13 @@ config.STIMULI = [
 
 # We initiate a grid of electrodes.
 grids = {
-    'regular':   phosphenes.RegularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE),
-    'irregular': phosphenes.IrregularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE, randomPos=0.1),
-    'polarRegular': phosphenes.PolarRegularGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE),
-    'polarRegularUnique': phosphenes.PolarRegularUniqueGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE),
+    'regular':   lambda: phosphenes.RegularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE, xsize=config.XSIZE, ysize=config.YSIZE),
+    'irregular': lambda: phosphenes.IrregularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE, randomPos=0.1, xsize=config.XSIZE, ysize=config.YSIZE),
+    'polarRegular': lambda: phosphenes.PolarRegularGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE, xsize=config.XSIZE, ysize=config.YSIZE),
+    'polarRegularUnique': lambda: phosphenes.PolarRegularUniqueGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE, xsize=config.XSIZE, ysize=config.YSIZE),
 }
 
-config.GRID = grids[config.GRID_TYPE]
+config.GRID = grids[config.GRID_TYPE]()
 
 # Templates for data paths.
 config.DATETIME_FORMAT       = '%Y-%m-%d_%H-%M-%S'
@@ -157,6 +165,8 @@ config.END_TEXT    = "Thank you. \n\nPress any key to exit."
 if config.TESTING:
     config.BLANK_FILE = config.IMAGE_TEMPLATE.format('blank')
     config.BLANK_IMAGE = np.flipud(color.rgb2gray(imread(config.BLANK_FILE)))
+    config.TEST_WINDOW_XSIZE = 480
+    config.TEST_WINDOW_YSIZE = 480
 
 # Keypress during a trial.
 if config.NO_NUMPAD:
@@ -202,8 +212,10 @@ if __name__ == "__main__":
 
     # We initiate a testing window if this is a testing run.
     if config.TESTING:
-        testWin = visual.Window([config.XSIZE, config.YSIZE], pos=(200,200), allowGUI=False, winType='pyglet')
-        win = visual.Window([config.XSIZE, config.YSIZE], pos=(200+config.XSIZE, 200), allowGUI=False, winType='pyglet', color=-1)
+        testWin = visual.Window([config.TEST_WINDOW_XSIZE, config.TEST_WINDOW_YSIZE],
+                                pos=(200,200), allowGUI=False, winType='pyglet')
+        win = visual.Window([config.TEST_WINDOW_XSIZE, config.TEST_WINDOW_YSIZE],
+                            pos=(200+config.TEST_WINDOW_XSIZE, 200), allowGUI=False, winType='pyglet', color=-1)
     else:
         # We make a window for the experiment.
         win = visual.Window(fullscr=True, allowGUI=False, winType='pyglet', color=-1)
@@ -248,12 +260,13 @@ if __name__ == "__main__":
 
                 # Get a digit from the stream, make it into a stimulus and render it on the grid. 
                 digit    = stream.pop()
-                stimulus = Stimulus(config.STIMULI[digit], config.GRID)
+                image    = config.IMAGES[digit]
+                stimulus = Stimulus(image, config.GRID)
                 rendered = config.GRID.render(stimulus.vector)
                 
                 # If this is a testing run, also draw the original image.
                 if config.TESTING:
-                    originalImage = visual.ImageStim(testWin, image=color.rgb2gray(config.IMAGES[digit]), size=(2,2))
+                    originalImage = visual.ImageStim(testWin, image=color.rgb2gray(image), size=(2,2))
                     originalImage.draw(); testWin.flip()
                     
                 # Create an image stimulus out of the rendered image.
