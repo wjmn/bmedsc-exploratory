@@ -58,7 +58,7 @@ argspec = {
     'processor': {
         'type': str,
         'nargs': '?',
-        'default': 'weighted',
+        'default': 'direct',
         'help': 'The processor for the session. One of brightness of learner.'
     },
     'no-numpad': {
@@ -132,9 +132,6 @@ grids = {
 
 config.GRID = grids[config.GRID_TYPE]()
 
-if config.PROCESSOR == 'weighted':
-    config.WEIGHTS = [[0, 0] for i in range(config.EXSIZE * config.EYSIZE)]
-
 # Templates for data paths.
 config.DATETIME_FORMAT       = '%Y-%m-%d_%H-%M-%S'
 config.DIGIT_SOUND_TEMPLATE  = './data/digit-voice/{}-alt.wav'
@@ -180,8 +177,6 @@ else:
 config.EXCLUDED = ['STIMULI', 'GRID', 'IMAGES', 'BLANK_IMAGE']
 
 
-# Reweighting.
-
 # Here, we make our main experiment, only if called from the command line.
 if __name__ == "__main__":
     
@@ -224,11 +219,9 @@ if __name__ == "__main__":
     else:
         # We make a window for the experiment.
         win = visual.Window(fullscr=True, allowGUI=False, winType='pyglet', color=-1)
-      
-    # REMOVE
-    lastAccuracy = 0
-    if config.PROCESSOR == 'weighted':
-        bestWeights = config.WEIGHTS
+
+    # Start the mouse event
+    mouse = event.Mouse(visible=False, win=win)
         
     # We now start the experiment loop.
     with open(config.sessionFile, 'w+') as outfile:
@@ -243,9 +236,6 @@ if __name__ == "__main__":
             # This clock will start counting from the wait screen, so includes that time..
             clockTrial.reset()
             
-            # REMOVE Reset the number of correct cues.
-            numCorrect = 0
-
             # If testing, show the blank.
             if config.TESTING:
                 blankStimulus = Stimulus(config.BLANK_IMAGE, config.GRID)
@@ -265,32 +255,53 @@ if __name__ == "__main__":
             streamlists = [sample(range(10), 10) for i in range(config.NCUES // 10)]
             stream      = [i for s in streamlists for i in s]
 
-            # Star the cue loop.
+            # Start the cue loop.
             for cue in range(config.NCUES):
                 
-                # Set the cue clock to 0.
-                clockCue.reset()
-
-                # Get a digit from the stream, make it into a stimulus and render it on the grid. 
+                # Get a digit from the stream and initialise the stimulus.
                 digit    = stream.pop()
                 image    = config.IMAGES[digit]
-                stimulus = Stimulus(image, config.GRID, method='weighted', weights=config.WEIGHTS)
-                rendered = config.GRID.render(stimulus.vector)
+                stimulus = Stimulus(image, config.GRID)
                 
                 # If this is a testing run, also draw the original image.
                 if config.TESTING:
                     originalImage = visual.ImageStim(testWin, image=color.rgb2gray(image), size=(2,2))
                     originalImage.draw(); testWin.flip()
                     
-                # Create an image stimulus out of the rendered image.
-                # Then show the stimulus.
-                # Ensure stimulus is square on full screen window, assuming window has greater x dim than y dim.
-                imstim = visual.ImageStim(win, image=rendered, size = (2 * win.size[1] / win.size[0], 2))
-                imstim.draw(); win.flip()
+                # Clear the event buffer
+                event.clearEvents()      
                 
-                # Wait for a keypress. 
-                # We only need the first keypress, and want the key input from the numpage.
-                keypressRaw, *_ = event.waitKeys(clearEvents=True, keyList=config.KEY_LIST)
+                # Set the mouse to the center
+                mouse.setPos((0,0))    
+ 
+                # Initialise a False keypress
+                keypressRaw = False
+        
+                # Set the cue clock to 0.
+                clockCue.reset()
+                
+                # Loop until the keypress
+                while not keypressRaw:
+                    
+                    # Get the mouse position and set the stimulus to the position.
+                    newPos = mouse.getPos()
+                    stimulus.setPos(*newPos)
+                
+                    # Render the stimulus
+                    rendered = config.GRID.render(stimulus.vector)
+
+                    # Create an image stimulus out of the rendered image.
+                    # Then show the stimulus.
+                    # Ensure stimulus is square on full screen window, assuming window has greater x dim than y dim.
+                    imstim = visual.ImageStim(win, image=rendered, size = (2 * win.size[1] / win.size[0], 2))
+                    imstim.draw(); win.flip()
+                    
+                    # Wait for a keypress. 
+                    # We only need the first keypress, and want the key input from the numpage.
+                    keypresses = event.getKeys(keyList = config.KEY_LIST)
+                    if keypresses:
+                        keypressRaw = keypresses[0]
+                    #keypressRaw, *_ = event.waitKeys(clearEvents=True, keyList=config.KEY_LIST)
                 
                 # Check if their input was correct. 
                 # Numpad keys are prepended with 'num_', so we strip it out.
@@ -314,31 +325,9 @@ if __name__ == "__main__":
                 # Play the feedback sound.
                 correctSound.play() if correct else incorrectSound.play()
                 
-                # REMOVE Add to the numCorrect if correct
-                if correct:
-                    numCorrect += 1
-
                 # Play the digit sound.
                 digitSounds[digit].play()
                 
-            # REMOVE At the end of the trial, change the weights.
-            accuracy = numCorrect / config.NCUES
-            accuracyDifference = accuracy - lastAccuracy
-            if accuracy > lastAccuracy:
-                lastAccuracy = accuracy
-                bestWeights = config.WEIGHTS
-            
-            if trial == 0:
-                modifier = 0.1
-            else:
-                modifier =  abs(accuracyDifference)
-            newWeightAdders = [[(random() -0.5)* 0.1 * modifier,
-                                (random() -0.5)* 0.1 * modifier]
-                              for i in range(config.EXSIZE * config.EYSIZE)]
-            
-            config.WEIGHTS = [[b[0] + a[0], b[1]+ a[1]] for b, a in zip(bestWeights, newWeightAdders)]
-            print(config.WEIGHTS)
-                    
         # At the end of all the trials, show an end screen and wait for key press
         # to exit.
         bg  = visual.GratingStim(win, tex=None, mask=None, size=2, units='norm', color=0)

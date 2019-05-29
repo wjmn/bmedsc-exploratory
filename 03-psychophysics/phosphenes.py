@@ -182,21 +182,30 @@ class PolarRegularUniqueGrid:
         return np.clip(summed, 0, 1)
         # return (summed / summax) * 2 - 1
 
+        
+        
+# STIMULUS
+
 class Stimulus:
-    def __init__(self, image, grid, method='direct', weights=None):
-        self.image = image
-        self.shape = self.image.shape
+    def __init__(self, image, grid, xpos=0, ypos=0):
+        self.original = image
+        self.shape = self.original.shape
+        
+        self.padder = np.zeros((3 * self.shape[0], 3 * self.shape[1]))
+        self.padder[self.shape[0]:2*self.shape[0], self.shape[1]:2*self.shape[1]] = self.original
+        
+        self.xpos = xpos
+        self.ypos = ypos
+        
+        self.image = self.getImage()
+        
         self.grid = grid
         self.sampleWidth = 6
         
-        if method == 'direct':
-            self.vector = self.process()
-        elif method == 'weighted' and weights is not None:
-            self.vector = self.processWithWeights(weights)
+        self.vector = self.process()
             
     def get_params(self, x : float, y : float):
-        # Compensate for half grid
-        x = (x - 0.5) * 2
+        
         ymin = bound(int(self.shape[0] * y - self.sampleWidth // 2), 0, self.shape[0] - 1)
         ymax = bound(int(self.shape[0] * y + self.sampleWidth // 2), 0, self.shape[0] - 1)
         xmin = bound(int(self.shape[1] * x - self.sampleWidth // 2), 0, self.shape[1] - 1)            
@@ -204,6 +213,15 @@ class Stimulus:
 
         vals  = self.image[ymin:ymax, xmin:xmax]
         return np.mean(vals)
+    
+    def getImage(self):
+        """ Based on xpos and ypos, get the image view from the padder.
+        """
+        
+        xstart = self.shape[0] - int(self.xpos * self.shape[0])
+        ystart = self.shape[1] - int(self.ypos * self.shape[1])
+        
+        return self.padder[ystart:ystart+self.shape[1], xstart:xstart+self.shape[0]]
 
     def process(self):
         """ Converts the stimulus into a brightness vector for the
@@ -213,8 +231,10 @@ class Stimulus:
         return params
         #flattened = self.image.flatten(order="C")
     
-    def processWithWeights(self, weights):
-        """ Weights should be list of 2-element lists
+    def setPos(self, xpos: float, ypos: float):
+        """Translate the image. xpos and ypos lie in the range (-1, 1)
         """
-        params = [self.get_params(e.x+w[0], e.y+w[1]) for e, w in zip(self.grid.grid, weights)]
-        return params
+        self.xpos = xpos
+        self.ypos = ypos
+        self.image = self.getImage()
+        self.vector = self.process()
