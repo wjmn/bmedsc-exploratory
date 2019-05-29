@@ -17,7 +17,7 @@ from psychopy.sound.backend_pygame import SoundPygame
 from psychopy.tools.filetools import fromFile, toFile
 from skimage import color
 from imageio import imread
-from random import sample, random
+from random import random, choices
 from PIL import Image
 
 # I'm setting up a config dictionary with dot-syntax so it can be serialised 
@@ -53,7 +53,7 @@ argspec = {
         'type': str,
         'nargs': '?',
         'default': 'polarRegular',
-        'help': 'The grid type for rendering. One of regular, irregular, polarRegular or polarRegularUnique.'
+        'help': 'The grid type for rendering. One of regular, irregular, polarRegular, polarRegularUnique, or nonLinear.'
     },
     'processor': {
         'type': str,
@@ -89,9 +89,9 @@ config.NO_NUMPAD = args.noNumpad
 # electrodes there are). 
 # `SCALE` links the two. 
 
-config.XSIZE  = 64
-config.YSIZE  = 64
-config.SCALE  = 6
+config.XSIZE  = 128
+config.YSIZE  = 128
+config.SCALE  = 13
 config.EXSIZE = config.XSIZE // config.SCALE
 config.EYSIZE = config.YSIZE // config.SCALE
 
@@ -128,6 +128,7 @@ grids = {
     'irregular': lambda: phosphenes.IrregularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE, randomPos=0.1, xsize=config.XSIZE, ysize=config.YSIZE),
     'polarRegular': lambda: phosphenes.PolarRegularGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE, xsize=config.XSIZE, ysize=config.YSIZE),
     'polarRegularUnique': lambda: phosphenes.PolarRegularUniqueGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE, xsize=config.XSIZE, ysize=config.YSIZE),
+    'nonLinear': lambda: phosphenes.NonLinearInteractionGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE, xsize=config.XSIZE, ysize=config.YSIZE),
 }
 
 config.GRID = grids[config.GRID_TYPE]()
@@ -139,9 +140,11 @@ config.DIGIT_SOUND_TEMPLATE  = './data/digit-voice/{}-alt.wav'
 if config.TESTING:
     config.CONFIG_FILE_TEMPLATE  = './data/sessions/tests/{}_{}_config.json'
     config.SESSION_FILE_TEMPLATE = './data/sessions/tests/{}_{}_session.csv'
+    config.MOUSE_FILE_TEMPLATE   = './data/sessions/tests/{}_{}_mouse.csv'
 else:
     config.CONFIG_FILE_TEMPLATE  = './data/sessions/participants/{}_{}_config.json'
     config.SESSION_FILE_TEMPLATE = './data/sessions/participants/{}_{}_session.csv'
+    config.MOUSE_FILE_TEMPLATE   = './data/sessions/participants/{}_{}_mouse.csv'
 
 # Parameters for sound.
 config.CORRECT_NOTE   = 'G'
@@ -151,10 +154,16 @@ config.NOTE_VOLUME    = 0.5
 
 # Session data.
 config.SESSION_VARS = ['trial', 'cue', 'digit', 'keypress', 'cuetime', 'trialtime', 'sessiontime']
+config.MOUSE_VARS   = ['trial', 'cue', 'digit', 'xmouse', 'ymouse', 'cuetime', 'trialtime', 'sessiontime']
 
 # Output templates based on session data.
 config.SESSION_HEADER       = ','.join(config.SESSION_VARS) + '\n'
 config.SESSION_ROW_TEMPLATE = ','.join(['{' + word + '}' for word in config.SESSION_VARS]) + '\n'
+config.MOUSE_HEADER         = ','.join(config.MOUSE_VARS) + '\n'
+config.MOUSE_ROW_TEMPLATE   = ','.join(['{' + word + '}' for word in config.MOUSE_VARS]) + '\n'
+
+# Mouse recording interval in seconds.
+config.MOUSE_RECORD_INTERVAL = 0.2
 
 # Text.
 config.PROMPT_TEXT = "{}% complete.\n\nPress any key when ready."
@@ -188,6 +197,7 @@ if __name__ == "__main__":
     if dialog.OK:
         config.configFile  = config.CONFIG_FILE_TEMPLATE.format(config.details["participant"], config.details["datetime"])
         config.sessionFile = config.SESSION_FILE_TEMPLATE.format(config.details["participant"], config.details["datetime"])
+        config.mouseFile = config.MOUSE_FILE_TEMPLATE.format(config.details["participant"], config.details["datetime"])
     else:
         core.quit()
 
@@ -195,6 +205,7 @@ if __name__ == "__main__":
     clockSession = core.Clock()
     clockTrial   = core.Clock()
     clockCue     = core.Clock()
+    mouseRecord  = core.Clock()
 
     # We initiate some generic sounds for correct and incorrect.
     correctSound   = SoundPygame(value=config.CORRECT_NOTE, secs=config.NOTE_DURATION)
@@ -224,10 +235,11 @@ if __name__ == "__main__":
     mouse = event.Mouse(visible=False, win=win)
         
     # We now start the experiment loop.
-    with open(config.sessionFile, 'w+') as outfile:
+    with open(config.sessionFile, 'w+') as outfile, open(config.mouseFile, 'w+') as mousefile:
 
         # We first write the header of the csv file.
         outfile.write(config.SESSION_HEADER)
+        mousefile.write(config.MOUSE_HEADER)
 
         # Start the trial loop.
         for trial in range(config.NTRIALS):
@@ -249,11 +261,7 @@ if __name__ == "__main__":
             bg.draw(); prompt.draw(); win.flip(); event.waitKeys(clearEvents=True)
 
             # Create a stream of digits of length NCUES for the trial.
-            # At the moment, the stream is made of randomly-ordered 10-digit blocks
-            # I need to think of a better way to do this to prevent duplicate digits
-            # while making it more random thatn it is now.
-            streamlists = [sample(range(10), 10) for i in range(config.NCUES // 10)]
-            stream      = [i for s in streamlists for i in s]
+            stream = choices(range(10), k=config.NCUES)
 
             # Start the cue loop.
             for cue in range(config.NCUES):
@@ -271,7 +279,7 @@ if __name__ == "__main__":
                 # Clear the event buffer
                 event.clearEvents()      
                 
-                # Set the mouse to the center
+                # Set the mouse to the center. Might turn off, not sure which is better.
                 mouse.setPos((0,0))    
  
                 # Initialise a False keypress
@@ -279,6 +287,9 @@ if __name__ == "__main__":
         
                 # Set the cue clock to 0.
                 clockCue.reset()
+
+                # Set the mouse recording clock to 0
+                mouseRecord.reset()
                 
                 # Loop until the keypress
                 while not keypressRaw:
@@ -286,6 +297,22 @@ if __name__ == "__main__":
                     # Get the mouse position and set the stimulus to the position.
                     newPos = mouse.getPos()
                     stimulus.setPos(*newPos)
+                    
+                    if mouseRecord.getTime() > config.MOUSE_RECORD_INTERVAL:
+                    
+                        mouseRow = config.MOUSE_ROW_TEMPLATE.format(
+                            trial=trial,
+                            cue=cue,
+                            digit=digit,
+                            xmouse=newPos[0],
+                            ymouse=newPos[1],
+                            cuetime=clockCue.getTime(),
+                            trialtime=clockTrial.getTime(),
+                            sessiontime=clockSession.getTime(),
+                        )
+                        mousefile.write(mouseRow)
+                        
+                        mouseRecord.reset()
                 
                     # Render the stimulus
                     rendered = config.GRID.render(stimulus.vector)

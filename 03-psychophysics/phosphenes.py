@@ -11,7 +11,7 @@ import math
 
 XSIZE = 64
 YSIZE = 64
-PBASE = 1
+PBASE = 2
 SCALE = 6
 EXSIZE = XSIZE // SCALE
 EYSIZE = YSIZE // SCALE
@@ -181,6 +181,29 @@ class PolarRegularUniqueGrid:
         summax = np.max(summed)
         return np.clip(summed, 0, 1)
         # return (summed / summax) * 2 - 1
+
+class NonLinearInteractionGrid:
+    def __init__(self, nrho, ntheta, xsize=XSIZE, ysize=YSIZE):
+        self.nrho   = nrho
+        self.ntheta = ntheta
+        self.grid = [
+            # Need to think of better way to scale.
+            UniqueElectrode(((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.cos((math.pi * theta / ntheta) - math.pi/2)) + 1) / 2,
+                            ((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.sin((math.pi * theta / ntheta) - math.pi/2)) + 1) / 2,
+                            xsize = xsize,
+                            ysize = ysize,
+                           )
+            # Ensure the central electrodes are actually visible by adding 1 to zero.
+            for rho in range(1, nrho+1)
+            for theta in range(ntheta)
+        ]
+
+    def render(self, values):
+        product = [v * e.rendered for (v, e) in zip(values, self.grid)]
+        summed = sum(product)
+        summax = np.max(summed)
+        #return np.clip(summed, 0, 1)
+        return (summed / summax) * 2 - 1
 
         
         
