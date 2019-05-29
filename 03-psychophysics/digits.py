@@ -9,7 +9,6 @@ import numpy as np
 import json
 import phosphenes
 from phosphenes import Stimulus
-from utilities import digitToImage
 from datetime import datetime
 from argparse import ArgumentParser
 from psychopy import visual, core, gui, event
@@ -18,7 +17,7 @@ from psychopy.sound.backend_pygame import SoundPygame
 from psychopy.tools.filetools import fromFile, toFile
 from skimage import color
 from imageio import imread
-from random import sample
+from random import sample, random
 from PIL import Image
 
 # I'm setting up a config dictionary with dot-syntax so it can be serialised 
@@ -41,7 +40,7 @@ argspec = {
     'ntrials': {
         'type': int,
         'nargs': '?',
-        'default': 2,
+        'default': 5,
         'help': 'Number of trials for the experiment.'
     },
     'ncues': {
@@ -59,7 +58,7 @@ argspec = {
     'processor': {
         'type': str,
         'nargs': '?',
-        'default': 'brightness',
+        'default': 'weighted',
         'help': 'The processor for the session. One of brightness of learner.'
     },
     'no-numpad': {
@@ -133,6 +132,9 @@ grids = {
 
 config.GRID = grids[config.GRID_TYPE]()
 
+if config.PROCESSOR == 'weighted':
+    config.WEIGHTS = [[0, 0] for i in range(config.EXSIZE * config.EYSIZE)]
+
 # Templates for data paths.
 config.DATETIME_FORMAT       = '%Y-%m-%d_%H-%M-%S'
 config.DIGIT_SOUND_TEMPLATE  = './data/digit-voice/{}-alt.wav'
@@ -177,6 +179,9 @@ else:
 # When saving the config, excluding some variables due to size.
 config.EXCLUDED = ['STIMULI', 'GRID', 'IMAGES', 'BLANK_IMAGE']
 
+
+# Reweighting.
+
 # Here, we make our main experiment, only if called from the command line.
 if __name__ == "__main__":
     
@@ -219,6 +224,11 @@ if __name__ == "__main__":
     else:
         # We make a window for the experiment.
         win = visual.Window(fullscr=True, allowGUI=False, winType='pyglet', color=-1)
+      
+    # REMOVE
+    lastAccuracy = 0
+    if config.PROCESSOR == 'weighted':
+        bestWeights = config.WEIGHTS
         
     # We now start the experiment loop.
     with open(config.sessionFile, 'w+') as outfile:
@@ -232,6 +242,9 @@ if __name__ == "__main__":
             # Set the trial clock to 0.
             # This clock will start counting from the wait screen, so includes that time..
             clockTrial.reset()
+            
+            # REMOVE Reset the number of correct cues.
+            numCorrect = 0
 
             # If testing, show the blank.
             if config.TESTING:
@@ -261,7 +274,7 @@ if __name__ == "__main__":
                 # Get a digit from the stream, make it into a stimulus and render it on the grid. 
                 digit    = stream.pop()
                 image    = config.IMAGES[digit]
-                stimulus = Stimulus(image, config.GRID)
+                stimulus = Stimulus(image, config.GRID, method='weighted', weights=config.WEIGHTS)
                 rendered = config.GRID.render(stimulus.vector)
                 
                 # If this is a testing run, also draw the original image.
@@ -300,9 +313,31 @@ if __name__ == "__main__":
 
                 # Play the feedback sound.
                 correctSound.play() if correct else incorrectSound.play()
+                
+                # REMOVE Add to the numCorrect if correct
+                if correct:
+                    numCorrect += 1
 
                 # Play the digit sound.
                 digitSounds[digit].play()
+                
+            # REMOVE At the end of the trial, change the weights.
+            accuracy = numCorrect / config.NCUES
+            accuracyDifference = accuracy - lastAccuracy
+            if accuracy > lastAccuracy:
+                lastAccuracy = accuracy
+                bestWeights = config.WEIGHTS
+            
+            if trial == 0:
+                modifier = 0.1
+            else:
+                modifier =  abs(accuracyDifference)
+            newWeightAdders = [[(random() -0.5)* 0.1 * modifier,
+                                (random() -0.5)* 0.1 * modifier]
+                              for i in range(config.EXSIZE * config.EYSIZE)]
+            
+            config.WEIGHTS = [[b[0] + a[0], b[1]+ a[1]] for b, a in zip(bestWeights, newWeightAdders)]
+            print(config.WEIGHTS)
                     
         # At the end of all the trials, show an end screen and wait for key press
         # to exit.

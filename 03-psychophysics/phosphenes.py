@@ -78,8 +78,8 @@ class UniqueElectrode:
         self.size = PBASE * (0.5 + (4 * np.sqrt((self.x - 0.5) ** 2 + (self.y - 0.5) ** 2)) ** 2)
         self.colour = np.random.random(3)
         # xmod and ymod modify the shape of the phosphene
-        self.xmod = 1 + (random.random()-0.5) * 2.5
-        self.ymod = 1 + (random.random()-0.5) * 2.5
+        self.xmod = 1 + (random.random()-0.5) * 3
+        self.ymod = 1 + (random.random()-0.5) * 3
         self.xsize = xsize
         self.ysize = ysize
 
@@ -124,7 +124,7 @@ class IrregularGrid:
         self.exsize = EXSIZE
         self.eysize = EYSIZE
         self.grid = [
-            Electrode(x / exsize, y / eysize, xsize=xsize, ysize=ysize, randomPos=randomPos )
+            Electrode(0.5 + (x / exsize) / 2, y / eysize, xsize=xsize, ysize=ysize, randomPos=randomPos )
             for x in range(exsize)
             for y in range(eysize)
         ]
@@ -142,8 +142,8 @@ class PolarRegularGrid:
         self.ntheta = ntheta
         self.grid = [
             # Need to think of better way to scale.
-            Electrode(((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.cos(2 * math.pi * theta / ntheta)) + 1) / 2,
-                      ((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.sin(2 * math.pi * theta / ntheta)) + 1) / 2,
+            Electrode(((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.cos((math.pi * theta / ntheta) - math.pi/2)) + 1) / 2,
+                      ((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.sin((math.pi * theta / ntheta) - math.pi/2)) + 1) / 2,
                       xsize = xsize,
                       ysize = ysize,
                      )
@@ -165,8 +165,8 @@ class PolarRegularUniqueGrid:
         self.ntheta = ntheta
         self.grid = [
             # Need to think of better way to scale.
-            UniqueElectrode(((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.cos(2 * math.pi * theta / ntheta)) + 1) / 2,
-                            ((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.sin(2 * math.pi * theta / ntheta)) + 1) / 2,
+            UniqueElectrode(((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.cos((math.pi * theta / ntheta) - math.pi/2)) + 1) / 2,
+                            ((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.sin((math.pi * theta / ntheta) - math.pi/2)) + 1) / 2,
                             xsize = xsize,
                             ysize = ysize,
                            )
@@ -183,17 +183,38 @@ class PolarRegularUniqueGrid:
         # return (summed / summax) * 2 - 1
 
 class Stimulus:
-    def __init__(self, image, grid):
+    def __init__(self, image, grid, method='direct', weights=None):
         self.image = image
         self.shape = self.image.shape
         self.grid = grid
-        self.vector = self.process()
+        self.sampleWidth = 6
+        
+        if method == 'direct':
+            self.vector = self.process()
+        elif method == 'weighted' and weights is not None:
+            self.vector = self.processWithWeights(weights)
+            
+    def get_params(self, x : float, y : float):
+        # Compensate for half grid
+        x = (x - 0.5) * 2
+        ymin = bound(int(self.shape[0] * y - self.sampleWidth // 2), 0, self.shape[0] - 1)
+        ymax = bound(int(self.shape[0] * y + self.sampleWidth // 2), 0, self.shape[0] - 1)
+        xmin = bound(int(self.shape[1] * x - self.sampleWidth // 2), 0, self.shape[1] - 1)            
+        xmax = bound(int(self.shape[1] * x + self.sampleWidth // 2), 0, self.shape[1] - 1)
+
+        vals  = self.image[ymin:ymax, xmin:xmax]
+        return np.mean(vals)
 
     def process(self):
         """ Converts the stimulus into a brightness vector for the
         """
-        params = [self.image[min(self.shape[0] - 1, int(self.shape[0] * e.y)),
-                             min(self.shape[1] - 1, int(self.shape[1] * e.x))] 
-                             for e in self.grid.grid]
+
+        params = [self.get_params(e.x, e.y) for e in self.grid.grid]
         return params
         #flattened = self.image.flatten(order="C")
+    
+    def processWithWeights(self, weights):
+        """ Weights should be list of 2-element lists
+        """
+        params = [self.get_params(e.x+w[0], e.y+w[1]) for e, w in zip(self.grid.grid, weights)]
+        return params
