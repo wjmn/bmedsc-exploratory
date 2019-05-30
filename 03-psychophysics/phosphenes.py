@@ -4,6 +4,7 @@ import numpy as np
 from scipy.ndimage import gaussian_filter
 import random
 import math
+from skimage import color
 
 # from scipy.ndimages.filters import convolve
 
@@ -261,3 +262,28 @@ class Stimulus:
         self.ypos = ypos
         self.image = self.getImage()
         self.vector = self.process()
+        
+        
+# TESTING ONLY 
+
+import tensorflow as tf
+tf.executing_eagerly()
+import keras
+
+input_shape = (72, 72)
+
+def make_encoder_model():
+    model = tf.keras.Sequential()
+    model.add(tf.keras.layers.Flatten(input_shape=input_shape))
+    model.add(tf.keras.layers.Dense(10*10*6))
+    model.add(tf.keras.layers.Dense(10*10))
+    #print(model.output_shape)
+    return model
+
+encoder = make_encoder_model()
+
+class StimulusNet(Stimulus):
+    
+    def process(self):
+        image_tensor = tf.convert_to_tensor(np.array([color.rgb2gray(self.image)]), dtype=tf.float32)
+        return encoder(image_tensor).numpy()[0]

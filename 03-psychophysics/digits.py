@@ -75,12 +75,12 @@ argspec = {
 
 # Parse the arguments and save into config.
 args = parser.parse_args()
-config.TESTING   = args.testing
-config.NTRIALS   = args.ntrials
-config.NCUES     = args.ncues
-config.GRID_TYPE = args.grid
-config.PROCESSOR = args.processor
-config.NO_NUMPAD = args.noNumpad
+config.TESTING        = args.testing
+config.NTRIALS        = args.ntrials
+config.NCUES          = args.ncues
+config.GRID_TYPE      = args.grid
+config.PROCESSOR_TYPE = args.processor
+config.NO_NUMPAD      = args.noNumpad
 
 
 # First, we define the constants for the window size of the experiment.
@@ -91,7 +91,7 @@ config.NO_NUMPAD = args.noNumpad
 
 config.XSIZE  = 128
 config.YSIZE  = 128
-config.SCALE  = 13
+config.SCALE  = 12
 config.EXSIZE = config.XSIZE // config.SCALE
 config.EYSIZE = config.YSIZE // config.SCALE
 
@@ -132,6 +132,15 @@ grids = {
 }
 
 config.GRID = grids[config.GRID_TYPE]()
+
+# We initiate the stimulus processor type.
+
+processors = {
+    'direct': phosphenes.Stimulus,
+    'net': phosphenes.StimulusNet,
+}
+
+config.PROCESSOR = processors[config.PROCESSOR_TYPE]
 
 # Templates for data paths.
 config.DATETIME_FORMAT       = '%Y-%m-%d_%H-%M-%S'
@@ -183,7 +192,7 @@ else:
     config.KEY_LIST = ["num_" + str(x) for x in range(10)]
 
 # When saving the config, excluding some variables due to size.
-config.EXCLUDED = ['STIMULI', 'GRID', 'IMAGES', 'BLANK_IMAGE']
+config.EXCLUDED = ['STIMULI', 'GRID', 'IMAGES', 'BLANK_IMAGE', 'PROCESSOR']
 
 
 # Here, we make our main experiment, only if called from the command line.
@@ -250,7 +259,7 @@ if __name__ == "__main__":
             
             # If testing, show the blank.
             if config.TESTING:
-                blankStimulus = Stimulus(config.BLANK_IMAGE, config.GRID)
+                blankStimulus = config.PROCESSOR(config.BLANK_IMAGE, config.GRID)
                 rendered = config.GRID.render(blankStimulus.vector)
                 imageStimulus = visual.ImageStim(testWin, image=rendered, size=(2,2))
                 imageStimulus.draw(); testWin.flip()
@@ -269,7 +278,7 @@ if __name__ == "__main__":
                 # Get a digit from the stream and initialise the stimulus.
                 digit    = stream.pop()
                 image    = config.IMAGES[digit]
-                stimulus = Stimulus(image, config.GRID)
+                stimulus = config.PROCESSOR(image, config.GRID)
                 
                 # If this is a testing run, also draw the original image.
                 if config.TESTING:
