@@ -24,3 +24,5 @@ modelsLandoltc
 __pycache__/
 
 nosave*
+
+03-psychophysics/data/external/
