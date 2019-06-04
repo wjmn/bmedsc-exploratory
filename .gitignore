@@ -27,3 +27,5 @@ nosave*
 
 03-psychophysics/data/external/
 03-psychophysics/data/test/
+
+virtualenv/
