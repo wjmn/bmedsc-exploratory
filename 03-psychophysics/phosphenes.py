@@ -6,8 +6,6 @@ import random
 import math
 from skimage import color
 
-# from scipy.ndimages.filters import convolve
-
 # CONSTANTS
 
 XSIZE = 64
@@ -152,6 +150,8 @@ class PolarRegularGrid:
             for rho in range(1, nrho+1)
             for theta in range(ntheta)
         ]
+        
+        self.renders = tf.convert_to_tensor(np.array([e.rendered for e in self.grid]), dtype=tf.float32)
 
     def render(self, values):
         product = [v * e.rendered for (v, e) in zip(values, self.grid)]
@@ -159,6 +159,12 @@ class PolarRegularGrid:
         summax = np.max(summed)
         return np.clip(summed, 0, 1) * 2 - 1
         # return (summed / summax) * 2 - 1
+        
+    def render_tensor(self, tensor):
+        reshaped = tf.transpose(tf.reshape(tf.tile(tensor, tf.constant([64])), (64, 144, 1)), perm=[1, 0, 2])
+        product = reshaped * self.renders
+        summed = tf.reduce_sum(product, axis=0)
+        return tf.clip_by_value(summed, 0, 1) * 2 - 1
 
 class PolarRegularUniqueGrid:
     def __init__(self, nrho, ntheta, xsize=XSIZE, ysize=YSIZE):
@@ -175,6 +181,8 @@ class PolarRegularUniqueGrid:
             for rho in range(1, nrho+1)
             for theta in range(ntheta)
         ]
+        
+        self.renders = tf.convert_to_tensor(np.array([e.rendered for e in self.grid]), dtype=tf.float32)
 
     def render(self, values):
         product = [v * e.rendered for (v, e) in zip(values, self.grid)]
@@ -182,6 +190,12 @@ class PolarRegularUniqueGrid:
         summax = np.max(summed)
         return np.clip(summed, 0, 1)
         # return (summed / summax) * 2 - 1
+        
+    def render_tensor(self, tensor):
+        reshaped = tf.transpose(tf.reshape(tf.tile(tensor, tf.constant([64])), (64, 144, 1)), perm=[1, 0, 2])
+        product = reshaped * self.renders
+        summed = tf.reduce_sum(product, axis=0)
+        return tf.clip_by_value(summed, 0, 1) * 2 - 1
 
 class NonLinearInteractionGrid:
     def __init__(self, nrho, ntheta, xsize=XSIZE, ysize=YSIZE):
