@@ -2,18 +2,14 @@
 
 * Context
 
-This repository contains exploratory code written during my Honours year, mostly
-in Matlab.
+This is a version-controlled repository of work during my honours year.
 
-All prose (weeklies, literature reviews, thesis) is kept in a separate
-repository. My "proper" lab notebook is kept in Dropbox, though the Log section
-below provides some short context on each directory in this repository and will
-be updated as it changes (timestamps show last updated). Prior states of this
-repository can be explored via the Git history.
+Originally, I kept the writing and code in separate repositories, but I have now
+merged them into this single repository.
 
-* Log
+* Directory
 
-** [2019-03-13 Wed] =01-realtime-processing-prototype=
+** =01-realtime-processing-prototype=
 
 This directory contains some code for a small webcam-based real-time phosphene
 renderer. There are currently three modes - intensity-based processing,
@@ -31,7 +27,7 @@ Renders on an irregular phosphene grid, though this is modifiable in the
 Has a number of dependencies on Matlab's Computer Vision and Deep Learning
 toolboxes (TODO - explicitly define dependencies).
 
-** [2019-03-17 Sun] =02-mix-and-match=
+** =02-mix-and-match=
 
 This directory contains code for "mixing and matching" image processors and
 renderers, with the eventual goal to compare the classification accuracy of
@@ -75,3 +71,21 @@ Renderers include:
 
 
 Not optimised for real-time - intended to produce some static graphics only.
+
+** =03-psychophysics=
+
+This is the main part of my project and consists of work leading up to a basic
+psychophysics experiment for (currently) digit recognition with different
+processors and renderers.
+
+The file [[./03-psychophysics/index.ipynb]] contains the code for this directory,
+and tangles the code into other files including [[./03-psychophysics/digits.py]]
+(which is the script for the actual experiment). It also includes the primary
+source of analysis code.
+
+* Lab Notebook
+
+My lab notebook [[./notebook.org]] is a messy but candid and chronological log of my
+progress and is mostly intended for my own reference.
+
+

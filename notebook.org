@@ -1,0 +1,3334 @@
+#+TITLE: Lab Notebook
+#+AUTHOR: Jamin Wu
+
+Note: initially, several of the entries in this notebook were kept in
+separate files. They have now been merged into this file and as a
+result, there may be some slight inconsistencies in formatting or how
+the entries are laid out (particularly during March, which are much
+less technical than the remaining entries). 
+
+I combined my writing on <2019-06-11 Tue> and as a result, entries
+before this time may be incomplete. 
+
+* March 2019
+** <2019-03-04 Mon>
+:LOGBOOK:
+CLOCK: [2019-03-05 Tue 10:11]--[2019-03-05 Tue 10:12] =>  0:01
+CLOCK: [2019-03-04 Mon 11:34]--[2019-03-04 Mon 19:29] =>  7:55
+:END:
+
+Today's the first official day of honours. 
+
+I got a key with a $20 deposit (MAKE SURE TO BRING IT BACK) for the
+neurobionics lab.
+
+Potential projects:
+
+1. Psychophysics
+2. Image processing
+3. Eye movements? - eye tracking for calibrating cortical input on movement
+4. Visual cortex organisation - V2 is more abstract than V1 or how else done?
+5. Ancillary inputs - auditory/visual perception as adjuncts, so e.g. could "ask
+   for a cup" and have the visual system highlight it or the like.
+6. Attention - how does attention change what gets perceived for the visual
+   prosthesis?
+7. Cortical space representation and phosphene accuracy
+
+I've also tried setting up =org-ref= and =interleave= on my laptop so I can
+start to make notes for my literature review and the like.
+
+** <2019-03-05 Tue>
+:LOGBOOK:
+CLOCK: [2019-03-05 Tue 15:00]--[2019-03-05 Tue 16:38] =>  1:38
+CLOCK: [2019-03-05 Tue 10:12]--[2019-03-05 Tue 14:27] =>  4:15
+:END:
+
+Been going through the Chen 2008 two part papers (/Simulating Prosthetic
+Vision/). They're really quite helpful and lay out some good information on the
+topic.
+
+Found a paper on transformative reality - seems like a very
+interesting angle.
+
+In terms of directions, here are some things I can think of:
+
+- Expanding on transformative reality - using machine learning algorithms to
+  highlight objects when requested, possibly providing adjunct devices (e.g.
+  microphone input, audio feedback, haptic feedback) to augment the visual
+  experience (something similar to an "accio")
+- Could be implemented alongisde "mode switching" e.g. as per Lui et al's
+  paper - could be implemented as things like structural edge mode, depth floor
+  mode, face mode, text mode, etc.
+
+** <2019-03-06 Wed>
+:LOGBOOK:
+CLOCK: [2019-03-06 Wed 12:05]--[2019-03-06 Wed 14:05] =>  2:00
+CLOCK: [2019-03-06 Wed 12:01]--[2019-03-06 Wed 12:05] =>  0:04
+:END:
+
+Ideas:
+
+- Edge detection + smart filling of selected objects
+- Audio adjunct to the device.
+
+Todos:
+- Collect physiology room key and claim a desk
+- Figure out a rough timeline and proposal for the project
+- Start working on literature review
+
+I think I'd like to read some more papers on the image processing methods used
+for the bionic eye.
+
+But I think as along as I can get a timeline for things, I should have a bit
+more structure about what to do.
+
+So here's a draft timeline:
+
+*** Goal Timeline
+**** March
+
+  - Decide on testable experiment and focus of honours project
+  - Begin prototyping processing algorithms
+  - Complete half of literature review
+
+**** April
+
+
+  - Conduct survey(?) to identify areas of most benefit for visually impaired patients
+  - Design experiment to test processing algorithms
+  - [2019-04-17 Wed] - Progress report due - discussed and signed by supervisor
+  - By end April - Complete draft literature review
+
+**** May
+
+  - Recruit participants for experiment
+  - [2019-05-01 Wed] - Department Oral No. 1
+  - [2019-05-15 Wed] - Literature Review due
+
+**** June
+
+  - Finalise processing algorithms to test
+
+**** July
+
+  - Conduct experiment and reiterate if necessary
+  - Preliminary analysis of results
+
+**** August
+
+  - Analyse results
+  - Work on thesis
+
+**** September
+
+  - Work on thesis
+  - [2019-09-25 Wed] - Department oral No. 2
+  - By end of September - draft thesis
+
+**** October
+
+  - [2019-10-29 Tue] - Thesis Due
+  - [2019-10-29 Tue] - Faculty Oral and Presentation upload to Moodle Due
+  - [2019-10-30 Wed] - Faculty Oral and Presentation Days
+
+** <2019-03-07 Thu>
+:LOGBOOK:
+CLOCK: [2019-03-07 Thu 22:25]--[2019-03-07 Thu 22:28] =>  0:03
+CLOCK: [2019-03-07 Thu 11:48]--[2019-03-07 Thu 12:48] =>  1:00
+CLOCK: [2019-03-07 Thu 09:29]--[2019-03-07 Thu 11:48] =>  2:19
+:END:
+
+I ran a quick search on Scopus using:
+
+- visual AND prosthe?i?, AND
+- intracortical OR cortical, AND
+- image AND processing
+
+Found quite a few interesting articles that would be worth reading.
+
+Picked up the key from physiology today. Didn't have to deposit anything, just
+wrote down my name on a piece of paper and they gave it to me. I suppose Ill
+have to just remember to return it at the end of the year since they have the record.
+
+Going to try doing some quick prototyping in MatLab. Looks like I'll need a few
+toolboxes - installed the webcam one, going to install the image processing one
+too. 
+
+** <2019-03-08 Fri>
+:LOGBOOK:
+CLOCK: [2019-03-08 Fri 13:31]--[2019-03-08 Fri 13:38] =>  0:07
+CLOCK: [2019-03-08 Fri 09:59]--[2019-03-08 Fri 13:31] =>  3:32
+:END:
+
+So I've started looking at Matlab. I downloaded the Computer Vision toolbox and
+finally worked out how to get some the input and output for "real-time"
+processing using the webcam (had to use =vision.videoPlayer=).
+
+Spent a bit of time getting a basic simulation loop going in Matlab. I
+guess Matlab isn't /that/ terrible...it was quite fast and easy to
+prototype.  I'm thinking I could implement the foveal/more dense at
+the center by using a different kernel based on the position in the
+matrix (I guess I'd be making a 2 + 2 = 4 dimensional kernel matrix,
+ah, then you could just multiply it out - though I suppose the
+dimensions would have to agree) - but in such a case, the kernels at
+the edges would have central values that are quite "broad" and hence
+give the phosphene a larger "size" e.g.
+
+Near the center:
+
+| 0 |  1 | 0 |
+| 1 | 10 | 1 |
+| 0 |  1 | 0 |
+
+
+And near the peripheries:
+
+| 0 | 1 | 1 | 1 | 0 |
+| 1 | 2 | 2 | 2 | 1 |
+| 2 | 2 | 2 | 2 | 2 |
+| 1 | 2 | 2 | 2 | 1 |
+| 0 | 1 | 1 | 1 | 0 |
+
+But I think I could probably do so at a later time.
+
+I actually have a question now - do phosphenes flicker if you simulate them
+continuously? Do they adapt? It would seem that these would be quite important
+to know, but I don't think I've come up against it yet in my (extremely early)
+literature reading...I suppose I should keep an eye out.
+
+** <2019-03-11 Mon>
+:LOGBOOK:
+CLOCK: [2019-03-11 Mon 14:15]--[2019-03-11 Mon 16:43] =>  2:28
+CLOCK: [2019-03-11 Mon 09:26]--[2019-03-11 Mon 12:39] =>  3:13
+:END:
+
+Briefly saw Yan - he says to be more realistic about the number of phosphenes
+available in the map, and maybe add more noise to see how that changes
+perception. It was 64 * 48 so I've reduced it down to about 13 * 10 (he said
+around 100 phosphenes would be state of the art).
+
+I've created a small dataset of 200 images to see if I can try to classify my
+keys...I've put a  label around the keys for each for the 200 images.
+
+I'm using this resource to look at object detection with rectangles:
+
+https://www.mathworks.com/help/vision/examples/object-detection-using-faster-r-cnn-deep-learning.html
+
+
+There's a function that converts groundTruth data to trainingData. It's so easy
+to just string up a neural network in Matlab, I kinda of feel like it's
+shamefully easy...
+
+Training takes a while. 1300 iterations (epoch 7) using the network described by
+Mathworks takes 10 minutes.
+
+It's surprising though - the mini-batch accuracy gets up to aroud 90%. Hopefully
+it can generalise well enough...
+
+(In fact, it seems on Step 2, it reaches 100% on some times. I wonder if that's
+just overfitting).
+
+The detector trained and I saved it - and it works! Actually not shabby at all,
+considering the model was completely naive (as well as the parameters I used)
+and I only used 200 images (which I took in a stream) from my webcam.
+
+The latency is very noticeable unfortunately, but then again, I wonder whether
+that would be a problem for this use case - for example, if you're looking for
+something and you're not seeing the environment, would it be so bad? You don't
+see yourself and you don't see the whole environment spinning around you - just
+one thing on the screen (or nothing). Could be a quick screen.
+
+Anyway current issues:
+
+- Won't detect things unless same size as training data (is there a solution for
+  this?) - wait actually it can cope with some different sizes (but not all)j
+- Colour matters
+
+-----
+
+I spent about 2 hours today labelling ground truth pixels for my backpack...
+
+-----
+
+And I ended up abandoning the image segmentor. I realised I had to segment
+/everything/ in the image, and I just am not prepared to do that at the moment. I
+stashed it away. I think object detection makes more sense at this stage - after
+all, I'm just asking to detect objects.
+
+** <2019-03-13 Wed>
+:LOGBOOK:
+CLOCK: [2019-03-13 Wed 10:22]--[2019-03-13 Wed 14:11] =>  3:49
+:END:
+
+I might try to look into doing the whole "evaluating classification accuracy"
+for different image processing algorithms - I think it could actually be a nice
+quantitative way of measuring it (and also I can make this a "standard" way of
+measuring the classification accuracy for a new image processing algorithmI
+define. )
+
+
+Some datasets to look at :
+
+1. CIFAR-10
+
+   http://www.cs.utoronto.ca/%7Ekriz/cifar.html
+
+2. Caltech 101
+
+   http://www.vision.caltech.edu/Image_Datasets/Caltech101/
+
+3. MNIST Database
+
+   http://yann.lecun.com/exdb/mnist/
+
+*** Meeting Notes :meeting:
+**** Status
+   1. Have a plan now for discussion (hopefully)
+   2. Started toying with different image processing implementations
+   3. Continuing to read through literature in prep for lit review
+   4. Made a project timeline
+
+   For discussion in particular today:
+
+   *Project plan + project timeline*
+
+**** Project Plan
+
+***** Context
+
+   1. Visual pathways can be damaged and vision can be lost.
+   2. Stimulating visual cortex -> phosphenes => regain vision?
+   3. BUT
+      1. Irregular phosphene maps
+      2. Non-dependenable intensity levels/colour
+      1. Very low resolution (stats?)
+
+***** Big Question
+
+   /How can we make an irregular, binary, low-resolution representation of vision
+   most useful?/
+
+   (and by extension, how can we make an intracortical visual prosthesis most
+   useful?)
+
+   #+begin_src ditaa :file ./presentations/ditaa/w2_intro.png :exports results
+                       +-----+
+                       |     |
+       Camera Image -> |  ?  | -> Phosphene Map -> Electrodes -> ...
+                       +-----+
+   #+end_src
+
+   #+RESULTS:
+   [[file:./presentations/ditaa/w2_intro.png]]
+
+***** Possibilities
+
+****** Direct
+
+   Intensity -> binarise -> downsample
+
+****** Filters
+
+   - Gaussian / other blur
+   - Difference of Gaussians / Laplacian / other edge-detection
+
+****** "Special" phosphenes
+
+   - Depth-encoding phosphene (Mohammadi 2012)
+
+****** Selective
+
+   - "Empty ground" (Lui 2012)
+
+****** Transformative
+
+   - Face -> avatar (Lui 2012)
+
+****** Augmentation with other modalities
+
+   - Auditory?
+   - Haptic?
+
+***** Issues
+
+   - Direct ::
+	Dramatic information loss inevitable -> indistinguishable.
+
+   - Filters ::
+	Dramatic information loss inevitable -> indistuinguishable.
+	Edges lost (too low-resolution).
+
+   - "Special" phosphenes ::
+	Phosphene fidelity questionable.
+
+   - Selective ::
+	Loss of general information. Also, how?
+
+   - Transformative ::
+	Transformations need to be low-resolution. Distinguishable?
+	Features may not be distinguishable.
+
+   - Augmentation with other modalities ::
+	Requires additional hardware. Useful? Confusing?
+
+***** Proposed Focus: User-Directed Selective Sight
+
+   Create a set of trained models.
+   User asks for object in trained models -> phosphenes highlight bbox.
+
+   1. Image expectation guided by user -> reduce information possibility space
+      Spatial information providable (where is it roughly?)
+      Information becomes binary (is it present or not?) if very low-fidelity.
+
+   2. Computer vision and software capabilities progressing rapidly.
+      Pure-image object recognition becoming a possibility.
+
+   3. Does not have to be the only "mode".
+      (Can simply supplement other techniques).
+
+   (Possibility: interacting with simple audio adjunct?)
+   (Interfacing with user for selection?)
+
+***** Demo: Recognising My Keys
+
+   Quick-and-dirty demo (clearly not polished...):
+     - Training data from 200 frames of me dangling my keys in front of my webcam
+       in a single video take (about 3-5 seconds of video)
+     - Quickly labelled with bounding boxes
+     - "Out-of-the-box" R-CNN (2x covol, 3x RELU, 1x pooling, 2x fully connected)
+
+   (Show Keys Demo)
+
+   Hopefully shows vague (but potentially useful) positional sense even on lossy,
+   irregular map.
+
+   Note - some classification error (although the network is very rudimentary and
+   training data very small/unsanitised...)
+
+***** Unknowns
+
+   1. Is this useful?
+      (Specific scenarios? e.g. looking at a table?)
+   2. Is latency reducible?
+   3. Is classification accuracy acceptable?
+   4. Is this safe?
+   5. Is training time acceptable/training process establishable?
+   6. How necessary is it? (Would learning/neuroplasticity eventually be able to derive
+      useful information from simple methods?)
+
+***** Possible Testing Framework and Plan
+
+   0. (?Survey on areas of difficulty for visually impaired)
+   1. Develop model training process to quickly make training data
+   2. Train models and investigate model parameters for useable networks
+   3. Work with Psychophysics toolbox to develop testing experiments against
+      controls (intensity, edge-detection) e.g.:
+      1. Object arrangement task?
+      2. Situational task?
+   4. Run experiments + gather qualitative data
+   5. Analyse data (statistical difference between object arrangement
+      accuracy/time)
+   6. Writeup?
+
+***** Proposed Hypothesis
+
+   User-directed and deep-learning-based selective phosphene rendering improves
+   user performance on object manipulation and situational tasks in simulated
+   prosthetic vision.
+
+***** Meta Issues
+
+   1. What's actually novel about the project?
+      (Maybe only the application to SPV part? Is that even novel?)
+
+   2. How translatable is it to an intracortical visual prosthesis?
+      (Hardware limitations? Memory limitations? Training limitations?)
+
+   3. How convincing would the Psychophysics results be?
+      (How many participants required? Any other methods of measuring?)
+
+   4. How feasible is the project?
+      (Timeline to help guide and reassess progress where necessary?)
+
+**** Timeline
+
+***** March
+
+   #+begin_quote
+   [2019-03-29 Fri] - Finalise project title.
+   #+end_quote
+
+   - Decide on testable hypothesis for honours project
+   - Begin prototyping image processing methods + training methods
+   - Begin interfacing with Psychophysics toolbox for experiment design
+   - Get to "halfway" mark on literature review (not necessarily writing, but
+     collected references and writing strucure)
+
+***** April
+
+   #+begin_quote
+   [2019-04-17 Wed] - Progress report due - discussed and signed by supervisor.
+   #+end_quote
+
+   - Finish literature review draft, for review.
+   - Conduct survey(?) to identify areas of most benefit for visually impaired
+     patients
+   - Decide specifics of experimental design (what objects, what models) + collect
+     and label data for training
+
+***** May
+
+   #+begin_quote
+   [2019-05-01 Wed] - Department Oral No. 1.
+
+   [2019-05-15 Wed] - Literature Review due.
+   #+end_quote
+
+   - Finish and submit literature review.
+   - Investigate and iterate network parameters and Psychophysics task, + reassess
+   - Recruit participants for experiment.
+
+***** June
+
+   - Investigate methods of improving object recognition + reassess
+   - Finalise experimental design and trial run experiment
+   - If time: work on adjuncts (e.g. auditory feedback)
+
+***** July
+
+   - Conduct experiment and reiterate if necessary
+   - Conduct preliminary analysis of results
+   - If time: work on adjuncts (e.g. auditory feedback)
+
+***** August
+
+   - Conduct experiment and reiterate if necessary
+   - Analyse results
+   - Work on thesis
+
+***** September
+
+   #+begin_quote
+   [2019-09-25 Wed] - Department Oral No. 2
+   #+end_quote
+
+   - Work on thesis
+   - Complete draft thesis by end of September, for review
+
+***** October
+
+   #+begin_quote
+   [2019-10-29 Tue] - Thesis Due
+
+   [2019-10-29 Tue] - Faculty Oral and Poster upload to Moodle Due
+
+   [2019-10-30 Wed] and [2019-10-31 Thu] - Faculty Oral and Poster Days
+   #+end_quote
+
+   - Refine thesis
+   - Complete and submit project
+**** Post-Meeting Notes
+
+   1. Temporal resolution to be considered in simulated prosthetic vision
+      - May be difficult for actual VR considering it makes people sick, but at
+	least something to keep in the back of the mind
+      - Do phosphenes decay? At what rate? Important consideration for refresh
+	rate.
+   2. Are there ways of quantifying the information loss from different image
+      processing methods?
+      - e.g. Landolt C - after simulated image processing, is it still classifiable
+	by a computer, then by a human? Compare different image processing methods.
+   3. Are there ways of quantifying the best image processing method for a given
+      phosphene map?
+      - e.g. Given a specific phosphene map (possibly largely variable positioning,
+	intensity and size), can we determine "best" image processing algorithm
+	(from a given subset?)
+   4. Need to consider what is an /actual/ area of need for visually impaired
+      community
+      - Already have a lot of capacity (perhaps moreso than is usually thought) -
+	what can a bionic eye actually /add/? And is the additional capability
+	worth it?
+      - Identify an area of actual need - do a review of literature surrounding
+	this.
+   5. [ ] Confirm - who organises Department Oral? Also timing - is it a hard deadline?
+   p
+
+** <2019-03-15 Fri>
+:LOGBOOK:
+CLOCK: [2019-03-15 Fri 15:09]--[2019-03-15 Fri 15:13] =>  0:04
+:END:
+
+Spent a bit of time today trying to get a processor and renderer so I can
+eventually make a pipeline of image -> processor -> renderer -> classifier.
+
+I think it might be good to think of the processor as producing a set of
+phosphene modulation indices (but binary only!) and the renderer as simply
+taking those indices and mapping it to a simulated image.
+
+** <2019-03-17 Sun>
+:LOGBOOK:
+CLOCK: [2019-03-17 Sun 11:45]--[2019-03-17 Sun 20:00] =>  8:15
+:END:
+
+I'm going to try doing a little work today on getting the "evaluation" step of
+processing done. First I need to find some images of Landolt Cs or similar...
+
+I might just use the MNIST dataset for now, it's easier.
+
+I downloaded the MNIST data from
+
+http://yann.lecun.com/exdb/mnist/
+
+
+Ahh, but it seems like there might be an easier data format to use from
+Kaggle...
+
+This blog mentions is:
+
+https://blogs.mathworks.com/loren/2015/08/04/artificial-neural-networks-for-beginners/#1168dbb4-1365-4b63-8326-140263e2072f
+
+And the data is available from:
+
+https://www.kaggle.com/c/digit-recognizer/data
+
+I used this data (csv, easy to read) and preprocessed it to training and test
+images. It's a pity they don't provide labels for the test set, so I just
+divided the training set using a 70/30 split.
+
+
+-----
+
+I made a little function to show the original, processed and rendered MNIST
+image. I think it's good to visualise these things.
+
+
+-----
+
+I just found out Matlab comes with some pretrained classifiers...That might be
+useful to use in the future for some quick demo type stuff...
+
+https://www.mathworks.com/help/vision/examples/image-category-classification-using-deep-learning.html
+
+-----
+
+I tried using fitcecoc on the the full (70%) training data set (internal), but I
+was running it for about half an hour and it didn't stop. I tried on 100 rows
+and it ran almost instantly. I guess I'll just train it on a subset then...
+
+I've tried again on 2940 images (10% of the dataset) and it's still taking a
+while. About 5 minutes so far...
+
+But it did eventually finish! Maybe about 5-10 minutes?
+
+
+-----
+
+Okay, now I've got four processors - intensity, edges, and two "transformative"
+ones specially for MNIST. I think I need to think about how exactly to make
+transformative renderers for the more general case, but this should be okay for
+now I think...
+
+So since I've got four processors and two renderers, I should be able to start
+making some training and test images for classification.
+
+
+-----
+
+So I've trained on 1000 images and made models for each process/render/size, and
+now am going to try classifying 500 images. The number of each is fairly
+arbitrary - the model training was actually very fast this time, despite the
+images being larger (maybe because they're binary?) and completed in less than
+10 minutes for all of them (though after that is when my computer froze). 
+
+-----
+
+But actually, it just hit me that there's an upper limit on the accuracy of
+mnistBraille and mnistMimic - the accuracy of the original SVM...which they
+might be hitting, since I only trained the original SVM on 10% of the full
+dataset...
+
+The flow is basically:
+
+1. renderAndSave (training)
+2. trainOnSavedRenders
+3. renderAndSave (test)
+4. evaluateAccuracy
+
+Okay, after re-running, I think the results are a lot more consistent. I've also
+added the control, and low and behold, it's a 91% accuracy (the same as all the
+mnist transformation ones).
+
+Now that I've run it though, it seems like the result is self-evident...of
+course, a transformative approach is going to achieve almost 100% accuracy.
+Maybe the irregular map isn't irregular enough. The model was definitely able to
+learn from the positions of the phosphenes on the irregular map it seems...
+
+So it seems that the transformative method doesn't lose any information even at
+3x3 irregular maps (all the information loss is in the initial SVM
+classification step).
+
+Todos for tomorrow:
+
+1. Graph accuracy results
+2. Make montages
+3. Write into something cohesive for weekly
+
+Also maybe put graphics in the writing directory version control after all...
+** <2019-03-18 Mon>
+:LOGBOOK:
+CLOCK: [2019-03-18 Mon 11:28]--[2019-03-18 Mon 15:28] =>  4:00
+CLOCK: [2019-03-18 Mon 11:27]--[2019-03-18 Mon 11:28] =>  0:01
+:END:
+
+I think today I'll work on presenting the results and I might try running an
+"irregularChanging" renderer as well just for comparison's sake....
+
+I think I'll present the final accuracy results in Julia (though the montages
+are probably easier to do in Matlab)...
+
+-----
+
+Okay, I've rerun it for the irregular changing map...now to see if it makes a
+difference. I expect that the classification accuracy for all of them for the
+irregular changing map should be significantly lower....
+
+-----
+
+Plotting in Julia and working with the notebook is...not as good as I thought it
+would be. Running a cell is /slow/ for the first time, which is very
+frustrating.
+
+Also, plotting is a little harder than it needs to be.  I can't specify the
+order of inidividual bars using groupedbars from StatsPlots...let's see if I can
+with gadfly...
+
+Okay, Gadfly makes it a  little easier. I really like Gadfly now...
+
+-----
+
+Well, anyway, I managed to get the plots done and the montages done, and even
+ran another renderer (irregularChanging). 
+
+** <2019-03-19 Tue>
+:LOGBOOK:
+CLOCK: [2019-03-19 Tue 12:16]--[2019-03-19 Tue 14:16] =>  2:00
+CLOCK: [2019-03-19 Tue 09:49]--[2019-03-19 Tue 12:13] =>  2:24
+:END:
+
+I thought yesterday about whether I should try and do some real-time processing
+with the pretrained neural network, but since it's not an R-CNN, I don't think
+it'd quite do what I want...and there's still a lot of things I need to do for
+my literature review and general understanding of neurophysiology, so I think
+today I'll just work on literature review and cementing my own understanding.
+
+
+-----
+
+Wrote up my weekly for tomorrow. I think I'll just take it a bit slower today,
+just work on understanding things and connecting ideas...and my literature
+review and direction.
+
+** <2019-03-20 Wed>
+*** Meeting Notes :meeting:
+
+**** Status
+
+   - Quick-and-dirty mix-and-match (of processors + renderers) results
+   - Continuing literature review
+   - Who organises department oral?
+
+     #+begin_quote
+
+     This presentation can be held any time prior to the deadline stipulated in the
+     Unit Guide, Course Guide and Moodle [March 1st]. Each School will advise
+     Supervisors and Students whether the School, Department, or Supervisor are
+     responsible for arranging the date and venue for the Oral Presentation and, if
+     the supervisor or Department arranges the seminar, to whom the grading sheets
+     should be returned to.
+
+     #+end_quote
+
+**** "Mix and Match"
+
+***** Quantifying "Information Loss" From Processing Methods
+
+   #+begin_src ditaa :file ./presentations/ditaa/w3_intro.png :exports results
+
+    +-------+ Process +---------+ Render +----------+
+    | Image |-------->|Processed|------->|Phosphenes|
+    +-------+         +---------+        +----------+
+                    (For rendering)
+   #+end_src
+
+   #+RESULTS:
+   [[file:./presentations/ditaa/w3_intro.png]]
+
+   Some questions from last week:
+
+   1. Is there /actually/ any information lost for particular processing methods?
+   2. Can we compare how much is lost?
+   3. Does the information lost depend on rendering method?
+
+   Last week, we discussed using *classification accuracy* on the rendered
+   phosphenes to determine if the original image remains classifiable.
+
+***** Methods
+
+   #+begin_src ditaa :file ./presentations/ditaa/w3_methods.png :exports results
+
+                            +-------------+
+                            |MNIST DATASET|
+                            +-------------+
+                                   |
+                                   V
+   +----------------------------------------------------------------+
+   |                                                                |
+
+    +---------+   +--------------+   +-------------+  +------------+
+    |Intensity|   |Edge-Detection|   |MNIST-Braille|  | MNIST-Mimic|    (Processors)
+    +---------+   +--------------+   +-------------+  +------------+
+
+                                    X
+
+       +--------+   +-------------------+  +-------------------+
+       | Regular|   |Irregular(Constant)|  |Irregular(Changing)|        (Renderers)
+       +--------+   +-------------------+  +-------------------+
+
+                                   X
+
+	+-----+           +-----+               +-------+
+	| 3x3 |           | 5x5 |               | 10x10 |               (Sizes)
+	+-----+           +-----+               +-------+
+
+   |                                                               |
+   +---------------------------------------------------------------+
+                                    V (FOR EACH COMBO)
+                    +------------------------------+
+                    |      SIMULATED RENDERS       |
+              +-----|-----(2000 for training)      |
+              |     |     (+ 500 for testing)------|--------+
+              |     +------------------------------+        |
+              |                     |                       |
+              |                     V                       |
+              |   +------------------------------------+    |
+              +-->|TRAINED MULTI-CLASS DECODERS (2000) |    |
+		  |(ECOC, 45 binary SVMs on flattened) |    |
+		  +------------------------------------+    |
+                                    |                       |
+                                    V                       |
+		       +------------------------+           |
+		       | TESTED DECODERS (500)  |<----------+
+		       |   ACCURACY ASSESSED    |
+		       +------------------------+
+
+
+
+   #+end_src
+
+   #+RESULTS:
+   [[file:./presentations/ditaa/w3_methods.png]]
+
+****** Notes
+
+   - MNIST Dataset :: Sourced from [[https://www.kaggle.com/c/digit-recognizer/data][public Kaggle dataset]] (as it was a CSV and quick
+	to process)...
+     - Why MNIST? Couldn't find Landolt C dataset (though it could be generated)
+       and wanted to test on something "real". MNIST is also clean and well-tested.
+   - MNIST-Braille and MNIST-Mimic :: Recognises MNIST digit using SVM (trained on
+	1000 images to save on time on my laptop...) then:
+     - MNIST-Braille :: Converts recognised digit to clearn 2x2 Braille representation then upscales
+	  to grid size.
+     - MNIST-Mimic :: Converts recognised digit to clean 3x3 or 5x5 digit-like
+	  representation, then upscales to grid size.
+   - Renders :: All renders map to a grid of circular phosphenes (convoluted with 2D
+	Gaussian kernel to simulate feathering), with the final rendered image
+	being 56x56 pixels (source was 28x28).
+     - Irregular Renders :: Render grid was transformed to 2D polar coordinates and
+	  noised such that theta and r were altered by factor in range (0.95, 1.05)
+	  and intensity altered by factor in range (0, 1). I transformed to polar
+	  coordinates to (in the future, maybe) deform phosphenes based on radius
+	  (foveal area corresponds to smaller phosphenes?)
+
+***** Visualising Mix and Match: An Example
+
+****** Original MNIST Image
+
+   [[./02-mix-and-match/graphics/mixAndMatch_original.png]]
+
+****** Render Montages
+
+   FORMAT:
+
+   |---------------+-----------+----------------+------------------+--------------------|
+   | METHOD        | PROCESSED | REGULAR RENDER | IRREGULAR RENDER | IRREGULAR RENDER 2 |
+   |---------------+-----------+----------------+------------------+--------------------|
+   | INTENSITY     |           |                |                  |                    |
+   |---------------+-----------+----------------+------------------+--------------------|
+   | EDGES         |           |                |                  |                    |
+   |---------------+-----------+----------------+------------------+--------------------|
+   | MNIST-BRAILLE |           |                |                  |                    |
+   |---------------+-----------+----------------+------------------+--------------------|
+   | MNIST-MIMIC   |           |                |                  |                    |
+   |---------------+-----------+----------------+------------------+--------------------|
+
+   NOTE: =IRREGULAR RENDER 2= corresponds to the "Irregular Changing" method, but
+   as this is only a snapshot of a single MNIST digit, this doesn't really mean
+   anything...so it's effectively just another irregular render.
+
+******* 10x10 Phosphene Grid
+
+   [[./02-mix-and-match/graphics/mixAndMatch_s10.png]]
+
+******* 5x5 Phosphene Grid
+
+   [[./02-mix-and-match/graphics/mixAndMatch_s5.png]]
+
+******* 3x3 Phosphene Grid
+
+   [[./02-mix-and-match/graphics/mixAndMatch_s3.png]]
+******* Observations
+
+   1. Intensity and edge-based methods are liable to complete failure at very low
+      resolution (particularly for a thin figure like the 4)
+   2. Source images (MNIST dataset) are NOT bounding-boxed (potentially significant
+      as the transformative methods /do/ effectively upscale the
+      representation...but even if they were bounding boxes, could be argued that
+      the digit handwritten forms would still NOT necessarily translate cleanly
+      into a 3x3 form.)
+***** Results
+
+****** Bar Graphs of Classification Accuracy
+
+******* 10x10 Phosphene Grid
+
+   [[./02-mix-and-match/graphics/mixAndMatch_results10.png]]
+
+******* 5x5 Phosphene Grid
+
+   [[./02-mix-and-match/graphics/mixAndMatch_results5.png]]
+
+******* 3x3 Phosphene Grid
+
+   [[./02-mix-and-match/graphics/mixAndMatch_results3.png]]
+
+***** Discussion
+
+   1. A /constant/ irregular phosphene map is not really an issue for a machine
+      decoder (though a /changing/ irregular map does lower performance)
+   2. The Mnist-Braille and Mnist-Mimic processors achieve parity with the SVM they
+      use, which implies that /most of the information is lost in the processing
+      step/ (for a machine decoder)
+   3. Trasformative methods are robust against increasingly low-resolution sizes
+      (not unexpected given they transform the data into explicitly unique
+      encodings), /but this is only as good as the original recognition accuracy/
+      - Implication - can machines achieve better recognition accuracy than humans?
+	I would argue, since the machine has access to the full-resolution image
+	(whereas the human only has access to the downsampled, binary image),
+	/yes/ - maybe machines are worse than humans if they had the same source
+	image, but they /don't/ have the same source image to work with.
+      - Therefore, "pre-recognising" the image according to user's will, to
+	constrain the meaning of phosphene encodings, may be useful. (I mean, if
+	you only had a 3x3 grid, you can only differentiate 2^9 = 512 unique states
+	of the world with your "general" vision ).
+    4. How would this translate to human recognition?
+       - Would an irregular (constant) map be more of a deterrent? Maybe not.
+       - How long would it take to learn how to decode representations?
+       - Would the additional information provided by a moving stream of images be
+	 enough to supplement intensity/edges to accurately decode?
+
+***** Summary
+
+   1. "Smart" specific transformative processing methods provide greater machine classification
+      accuracies than "general" processing methods and are robust even at very low resolutions.
+   2. These methods require specific training and use-case targeting, but can
+      provide clean (+ redundant to defend against low fidelity) encodings with
+      constrained meaning (which general methods lack).
+   3. Unknown how this would translate to real-time image stream in humans.
+      Potentially a point to test).
+
+**** Post-Meeting Notes
+
+   - Landolt C / Tumbling Es may be able to be generated from within Matlab - to
+     investigate and use (check Psychtoolbox)
+   - Brindley & Dobelle & Schmidt - may be able to map electrode locations to
+     actual phosphene locations with data from these papers (maybe...) - to
+     investigate (and think about making actual phsphene locations more based on
+     real data)
+   - Image statistics - may be clasifying images into categories based on
+     statistics (e.g. spatial frequencies? to characterise "thinness") and grouping
+     images based on these statistics for determining "good" and "bad" images for
+     different classification methods
+   - Classify "like a human" - handicapping the machine classifier (e.g. by adding
+     random noise) until classification reaches human-level classification; then
+     the handicapped machine classifier could be a reusable approximation of a
+     human learner
+   - Think about classifying different types of images (e.g. Landolt C/Tumbling Es,
+     natural images) and different methods/use-cases (e.g. object detection,
+     navigation, whole-image classification, localisation) - maybe choose just one
+     or two to focus on on one-or-two types of images
+   - Augmented reality research - might be a good source of literature to think
+     about how supplemental information could be provided (e.g. haptic, auditory)
+     other than just purely visual information
+**** Plan for This Week
+
+   1. Continue working on literature review
+   2. Continue tinkering
+
+** <2019-03-22 Fri>
+:LOGBOOK:
+CLOCK: [2019-03-22 Fri 12:22]--[2019-03-22 Fri 13:22] =>  1:00
+:END:
+
+I think I have to spend some time just going through the literature and
+methodically identifying the gaps I see at the moment...then trying to
+brainstorm how to approach these gaps.
+
+** <2019-03-26 Tue>
+:LOGBOOK:
+CLOCK: [2019-03-27 Wed 00:16]--[2019-03-27 Wed 01:16] =>  1:00
+CLOCK: [2019-03-27 Wed 00:14]--[2019-03-27 Wed 00:16] =>  0:02
+CLOCK: [2019-03-27 Wed 00:09]--[2019-03-27 Wed 00:14] =>  0:05
+CLOCK: [2019-03-26 Tue 09:39]--[2019-03-27 Wed 12:39] =>  3:00
+:END:
+
+It's been really hectic recently trying to balance my three part-time
+jobs, CIGMAH and honours...
+
+I think today, I just need to get an iron clad argument for my lit review set up
+and make sure I have something to talk about for the weekly tomorrow...
+
+** <2019-03-27 Wed>
+*** Meeting Notes :meeting:
+**** Status
+
+   - Continuing to work on literature review...starting to get a move on.
+   - Repeated last week's "experiment" with Landolt Cs
+
+**** Gaps
+
+   #+begin_src ditaa :file ./presentations/ditaa/w4_questionflow.png :exports results
+
+	  +-----+
+     +--> |Scene|
+     |    +-----+
+     |       |
+     |       | <------------------ What scenes?                             (Brady 2013)
+     |       | <------------------ How often?                               (?)
+     |       |
+     |       |
+     |       v
+     |    +------------+
+     |    |Camera Image|
+     |    +------------+
+     |       |
+     |       | <------------------ What is most useful?                     (?)
+     |       | <------------------ What is achievable in real-time?         (?)
+     |       | <------------------ What has been used before?               (Reviewed Chen 2009)
+     |       |
+     |       v
+     |    +---------------+
+     |    |Processed Image|
+     |    +---------------+
+     |       |
+     |       | <------------------ Can phosphenes be mapped?                (Dobelle 1974, Schmidt 1996, Kaskhedikar 2017)
+     |       | <------------------ Is phosphene mapping necessary?          (?)
+     |       | <------------------ How much information per phosphene?      (Dobelle 1974)
+     |       |
+     |       |
+     |       |
+     |       |
+     |       v
+     |    +-----------------+
+     |    |Per-electrode PMI|
+     |    +-----------------+
+     |       |
+     |       | <------------------ How reliable are phosphene locations?    (Dobelle 1974, ...)
+     |       | <------------------ How large are phosphenes per electrode?  (Dobelle 1974, ...)
+     |       |
+     |       |
+     |       v
+     |    +--------------+
+     |    |Rendered Image|
+     |    +--------------+
+     |       |
+     |       | <------------------ How long does rendered image last?       (Dobelle 1974, ...)
+     |       | <------------------ Is this image useful?                    (Brady 2013)
+     |       |
+     |       |
+     +-------+
+
+
+
+   #+end_src
+
+   #+RESULTS:
+   [[file:./presentations/ditaa/w4_questionflow.png]]
+
+**** Tasks + Focus
+
+   1. Identification (Brady 2013)
+   2. Reading (Brady 2013)
+   3. Description (Brady 2013)
+   4. Navigation (Giudice 2008)
+   5. Localisation (e.g. Weeraratne 2012)
+
+   Potential focus: Natural scene object localisation (discussed previously).
+
+**** Question (maybe off the rails...)
+
+   Is the approach of simulating prosthetic vision as /vision/ necessary?
+
+   Corollary: is phosphene mapping necessary?
+
+   (i.e. maybe reframing as an /information mapping/ problem (from states of world
+   -> stream of discrete bits) would be a very interesting perspective...possible
+   augmentation outside of constrains of "having to transform to a recognisable
+   image")
+
+**** "Mix-And-Match" Run 2 - Landolt Cs
+
+   Same as last week, but repeated for LandoltC.
+
+   Reasoning:
+
+   - Input data is bounding boxed, not center of gravity.
+   - Simpler input image data -> more "clean" evaluation of information loss.
+   - Less classes, less decoders, shorter to run.
+
+***** Methods (Similar to Last Week)
+
+   #+begin_src ditaa :file ./presentations/ditaa/w4_mixmethods.png :exports results
+
+                            +-------------+
+                            | Landolt Cs  | (Made in Blender)
+                            +-------------+
+                                   |
+                                   V
+   +----------------------------------------------------------------+
+   |                                                                |
+
+       +---------+   +--------------+   +---------------+
+       |Intensity|   |Edge-Detection|   |Landolt C Mimic|               (Processors)
+       +---------+   +--------------+   +---------------+
+
+                                    X
+
+       +--------+   +-------------------+  +-------------------+
+       | Regular|   |Irregular(Constant)|  |Irregular(Changing)|        (Renderers)
+       +--------+   +-------------------+  +-------------------+
+
+                                   X
+
+	+-----+           +-----+               +-------+
+	| 3x3 |           | 5x5 |               | 10x10 |               (Sizes)
+	+-----+           +-----+               +-------+
+
+   |                                                               |
+   +---------------------------------------------------------------+
+                                    V (FOR EACH COMBO)
+                    +------------------------------+
+                    |      SIMULATED RENDERS       |
+              +-----|------(200 for training)      |
+              |     |     (+ 500 for testing)------|--------+
+              |     +------------------------------+        |
+              |                     |                       |
+              |                     V                       |
+              |   +------------------------------------+    |
+              +-->|TRAINED MULTI-CLASS DECODERS (200)  |    |
+		  |(ECOC, binary SVMs on flattened)    |    |
+		  +------------------------------------+    |
+                                    |                       |
+                                    V                       |
+                       +------------------------+           |
+                       | TESTED DECODERS (500)  |<----------+
+                       |   ACCURACY ASSESSED    |
+                       +------------------------+
+
+
+
+   #+end_src
+
+   #+RESULTS:
+   [[file:./presentations/ditaa/w4_mixmethods.png]]
+
+***** Visuals
+
+****** Original
+
+   [[./02-mix-and-match/graphics/mixAndMatch_landoltc_original.png]]
+
+****** 10x10 grid
+
+   [[./02-mix-and-match/graphics/mixAndMatch_landoltc_s10.png]]
+
+****** 5x5 grid
+
+   [[./02-mix-and-match/graphics/mixAndMatch_landoltc_s5.png]]
+
+****** 3x3 grid
+
+   [[./02-mix-and-match/graphics/mixAndMatch_landoltc_s3.png]]
+
+***** Results
+****** 10x10 grid
+
+   [[./02-mix-and-match/graphics/mixAndMatch_landoltc_results10.png]]
+
+****** 5x5 grid
+
+   [[./02-mix-and-match/graphics/mixAndMatch_landoltc_results5.png]]
+
+****** 3x3 grid
+
+   [[./02-mix-and-match/graphics/mixAndMatch_landoltc_results3.png]]
+***** Discussion
+
+   - Similar results to last week, but cleaner comparison (original actually
+     reaches 100% classification accuracy, as it should...)
+   - Transformative method robust against different grid sizes, direct methods not
+     so.
+   - Transformative method also fairly robust against an irregular, changing
+     phosphene map due to redundancy.
+**** Post-Meeting Notes
+
+   - Hard deadlines:
+     - LIT REVIEW DRAFT in 2 WEEKS
+     - DEFINITIVE PLAN/FOCUS by 1 MONTH
+   - READ up on a Primer on the Visual System
+     - SfN
+     - Kandel
+   - Constrain the demographic to people who have lost vision /recently/, may be
+     more manageable problem
+   - Localisation and information (what) should be considered together
+   - Start thinking about putting some slides together and practising presentation
+     skills.
+   - Working with MNIST is still an option for "semi-real" situations.
+   - Think about using available Landolt C psychophysics data (Chen, Hallum)
+
+* April 2019
+
+#+BEGIN_QUOTE
+[2019-06-11 Tue 13:29] Note: this month is particularly incomplete,
+mostly as I was working on my oral presentation and literature review
+and doing all the writing there.
+#+END_QUOTE
+
+** <2019-04-02 Tue>
+
+*** Meeting Notes :meeting:
+**** Status
+
+   Deadlines and timelines:
+
+   #+begin_quote
+   [2019-04-17 Wed] - Progress report due - discussed and signed by supervisor.
+   #+end_quote
+
+   - [ ] Final confirmation of project title.
+   - [ ] Progress report - will bring for discussion next week.
+   - [ ] Will confirm Department Oral arrangements if no further information by Friday.
+   - [ ] /I will have a literature review draft by next Wednesday, *hard deadline*./
+     It may be rubbish, but I will have one.
+
+**** Literature Review
+
+   - Focus ::  I'd like to focus on computer vision-aided (simulated) prosthetic vision as an "overarching"
+	topic for the literature review.
+
+     - Key questions:
+
+       1. What is the current state of computer vision assistive technologies
+	  for the visually impaired? (not necessarily prosthetic)
+       2. What is the current state of image processing for visual prosthetics?
+       3. What (or are there even any) deficits are there in current image
+	  processing methods for visual prosthetics and can past research on
+	  computer vision assistive technology be applied to visual prosthetics?
+       4. What are the unknowns in translating computer-vision-processed
+	  information into visual-prosthetic-information? (essentially the
+	  interpreting non-visual information part - how far can this be taken?
+	  What's known about it? )
+
+   - Rationale :: I hope this reconciles a few different parts which I'd like to
+	focus more closely on.
+
+	#+begin_src ditaa :file ./presentations/ditaa/w5_overview.png :exports results
+
+
+
+                           "State of the World" Information
+
+                                             |
+                                             v
+
+                             Functional Context Information  ------------------------------+
+				  /            |       \                                   |
+                              /---             |        -----\                             |
+	 Direct Approach  /---                 |              ------\                      |
+	 +----------------+-------------+      |                     ----                  |
+	 |      Visual Stream           |   Audio Stream           Other (Tactile etc.)    |
+	 |                              |                                                  | User-Guided
+	 |         /                    |                                                  |
+	 |        /   Capture           |                                                  |
+	 |                              |   Computer-Vision Augmented Approach             |
+	 |   Camera Image --------      |  +-----------------------------------------+     |
+	 |                        \------> |Preliminary Information Inference  <-----+-----+
+	 |       |                      |  |                                         |     |
+	 |       |    Process           |  |       |     Process                     |     |
+	 |       v                      |  |       v                                 |     |
+	 |                              |  |                                         |     |
+	 | Phosphene Modulation Indices |  |Phosphene Modulation Indices             |     |
+	 |                              |  |                                         |     |
+	 |       |                      |  |       |                                 |     |
+	 |       |    Stimulate         |  |       |     Stimulate                   |     |
+	 |       |                      |  |       |                                 |     |
+	 |       v                      |  |       v                                 |     |
+	 |                              |  |                                         |     |
+	 |   Rendered Image             |  |Rendered Image                           |     |
+	 |                              |  |                                         |     |
+	 |       |                      |  |     |                                   |     |
+	 |       |    Stream            |  |     |    Stream                         |     |
+	 |       v                      |  |     v                                   |     |
+	 |                              |  |                                         |     |
+	 |   Information Inference      |  |Information Inference   <----------------+-----+
+	 +------------------------------+  +-----------------------------------------+
+
+
+
+	#+end_src
+
+	#+RESULTS:
+	[[file:./presentations/ditaa/w5_overview.png]]
+
+     1. Cortical visual prosthetics (currently) produce very low-resolution information
+	(with low fidelity, irregular spatial layout, though these are assumed
+	to be be constant once implanted.)
+     2. The /additional/ utility of such information /beyond/ that currently
+	available to the visually impaired population needs to be justified for
+	an invasive procedure.
+     3. There are /inherent/ representation limits posed by very low-resolution
+	information, which means any information presented /must/ be
+	context-dependent to extends inherent limits.
+     4. Context-dependency based on retained /natural/ senses (e.g. auditory,
+	tactile) are useful in some scenarios (e.g. talking face-to-face,
+	movement guided by proprioception), but infeasible in other scenarios
+	(e.g. object recognition, crowd-searching, reading navigation text)
+	which arguably are the /greatest/ current gap in capacity for the
+	visually impaired (i.e. where current workarounds or technology are
+	lacking).
+     5. However, context-dependency based on computer-interpreted images or
+	other inputs provides /additional/ information not currently afforded by
+	retained natural senses, and the possible "interpretable input"
+	resolution is far greater (that of the direct camera image, vs that of
+	the phosphene map).
+     6. Computer vision has been applied to many domains, including that of
+	assistive technology for the visually impaired. However, there are
+	limited cases where this has been applied to cortical visual
+	prosthetics.
+     7. There remain questions on:
+
+	1. How current computer vision technology has been applied, and with
+           what success, to assitive technology for the visually impaired.
+	2. How current image processing techniques for prosthetic vision fare in
+           terms of daily utility.
+	3. How people would cope with non-direct mappings of scene information
+           (and possibly non-scene information) to the visual system (perhaps this
+           could exist on a graded scale, from directly mapping image to
+           phosphenes, to "similar" with only minor alterations, to completely
+           dissimilar).
+           - Example (crazy) experiment: substituting humans for the last layer of a CNN
+             and optimising weights for /human/ classifier (so the network learns
+             remapped information representation which optimises for human
+             classification at the end). Would need a streamlined process and a
+             /lot/ of data, but would be interesting experiment between
+             psychophysics and computer science...
+           - I'm wondering whether there are problems with putting abstracted
+             information at the level of V1, when it usually deals with lower-level
+             features. Don't know how to test that in simulated prosthetic vision though...
+	4. What context-dependent mappings would be feasible (the idea of modes -
+           e.g. reading mode, "finding" mode, navigation mode) and useful.
+
+   - Project title :: Used to be (way back last year)
+	"Exploring methods of conveying visual information through phosphenes
+	produced from a cortical visual prosthesis", but maybe change to
+	"The utility of computer vision augmentation of simulated
+	prosthetic vision." (or along those lines) for more specificity.
+
+     - Outline ::
+
+       1. Current image processing methods for simulated prosthetic vision
+
+	  - Chen 2009 (review)
+	  - Lui 2011 (transformative)
+	  - Mohammadi 2012 (special-encoding phosphenes)
+	  - Abolfotuh H 2016
+	  - Vergnieux 2017 (computer vision-detected distance and wireframe mapping
+            for navigation)
+	  - Guo 2018 (computer vision-aided for object saliency in object detection)
+
+            Lot of interesting stuff on retinal side:
+
+	  - Li H 2017 (real-time saliency detection and enhancement)
+	  - Cao X 2017 (correlating task accuracy with phosphene irregularity
+            distortion and droupout)
+	  - Li H 2018 (computer-vision guided object detection and improving object
+            saliency - a bit like the keys demo)
+
+       2. Matching suitability of current image processing methods with areas of
+	  need and identifying deficits
+
+	  - Brady 2013 (visual challenges in everyday life)
+	  - Giudice 2008 (blind navigation)
+	  - Weeraratne 2016 (challenges for medication usage)
+
+       3. Current uses of computer vision techniques for assistive technology for
+	  visually impaired and potential applications to prosthetic vision.
+
+	  Evaluation
+
+	  - Beyeler 2017: "Learning to see again: biological constraints on
+            cortical plasticity and the implications for sight restoration
+            technologies" - retinal but suggests there's a "tolerance envelope" for
+            which cortical plasticity can compensate for ( + discussion on
+            gamification of training )
+**** Post Meeting Notes
+
+   - BibTeX - make sure to check reference consistency!
+   - Start from very basics with lit review to ensure the fundamentals are covered
+     before talking about more detailed aspects
+   - Build argument up from literature review - at the end, should have very clear
+     idea of "what needs to be done" in this area
+   - BY END OF THIS MONTH - determine /minimum/ work for a good project, and
+     /add-ons/ for extra stuff - then do the minimum work first!
+   - [ ] TUESDAY DRAFT FOR LITERATURE REVIEW (for discussion next week)
+** <2019-04-09 Tue>
+*** Meeting Notes :meeting:
+**** Status
+
+   Deadlines and timelines:
+
+   #+begin_quote
+   [2019-04-17 Wed] - Progress report due - discussed and signed by supervisor.
+   [2019-05-01 Wed] - Deadline for oral presentation.
+   [2019-05-15 Wed] - Deadline for literature review.
+   #+end_quote
+
+   - [ ] Complete progress report
+   - Literature review in progress (for discussion)
+   - [ ] Ethics documentation
+   - Plan for next week:
+     - Full draft by Monday next week [2019-04-15 Mon]
+     - Practise presentation on Wednesday next week [2019-04-17 Wed]
+** <2019-04-17 Wed>
+
+Early overview of slides intention:
+
+[[./presentations/early-overview.png]]
+
+** <2019-04-28 Sun>
+
+Slides for oral presentation done. 
+
+[[./presentations/presentation1.pdf]]
+
+* May 2019
+** <2019-05-01 Wed>
+
+*** Meeting Notes :meeting:
+
+**** Status
+
+Deadlines:
+
+#+begin_quote
+[2019-05-15 Wed] - Deadline for literature review.
+#+end_quote
+
+**** Plan
+
+1. Literature review draft section/s tonight
+2. Set deadline Saturday for literature review to be finished so can start
+   working on project
+3. Prototype for next week to nut out specific details of methodology of
+   psychophysics experiment, including:
+   1. Fixation? How long? Randomness?
+   2. How long render?
+   3. Button press? When?
+   4. Feedback? How given?
+   5. How long? Locations * trials * time = ???
+   6. Do you need to repeat locations?
+   7. For the model - do you need feedback? Prevent co-adaptation?
+   8. Head fixation and eye tracking
+   9. Statistics - maybe non-parametric tests? Offset errors not normally
+      distributed exactly (truncated, at the very least)
+**** TODOS:
+
+- [ ] Literature review section tonight
+- [ ] Literature review full draft end of this week
+- [ ] Prototype next week (doesn't need to be complete, just an indication)
+** <2019-05-08 Wed>
+
+*** Meeting Notes :meeting:
+
+
+10 Status
+
+#+begin_quote
+[2019-05-15 Wed] - Deadline for literature review.
+#+end_quote
+
+- Literature review "draft" (though can't say I'm happy with it yet).
+- Formatting + more detail + polishing for next week.
+- Prototyping the psychophysics.
+
+
+**** Timeline Review
+
+***** May
+
+   #+begin_quote
+   [2019-05-15 Wed] - Literature Review due.
+   #+end_quote
+
+   - Finish and submit literature review.
+   - Investigate and iterate network parameters and Psychophysics task, + reassess
+   - Recruit participants for experiment.
+
+***** June
+
+   - Finalise experimental design and trial run experiment
+
+***** July
+
+   - Conduct experiment and reiterate if necessary
+   - Conduct preliminary analysis of results
+
+***** August
+
+   - Conduct experiment and reiterate if necessary
+   - Analyse results
+   - Work on thesis
+
+***** September
+
+   #+begin_quote
+   [2019-09-25 Wed] - Department Oral No. 2
+   #+end_quote
+
+   - Work on thesis
+   - Complete draft thesis by end of September, for review
+
+***** October
+
+   #+begin_quote
+   [2019-10-29 Tue] - Thesis Due
+
+   [2019-10-29 Tue] - Faculty Oral and Poster upload to Moodle Due
+
+   [2019-10-30 Wed] and [2019-10-31 Thu] - Faculty Oral and Poster Days
+   #+end_quote
+
+   - Refine thesis
+   - Complete and submit project
+
+**** Post Meeting Notes
+
+   - Lit review - more examples for the last section, rather than just discussion
+   - Summary sentences/lead-ins to bind the big lists - more on WHY you are
+     discussing things to justify
+   - For experiment:
+     - [ ] Next week - diagram for the psychophysics part!
+     - [ ] How much scramble can the model overcome? Is there a specific type of
+       scramble this will work best on?
+     - [ ] What is the actual model? What are the actual comparisons? Pick a
+       scramble effect.
+
+** <2019-05-15 Wed>
+
+*** Meeting Notes :meeting:
+
+1. Literature review was submitted. I was not happy with it at all. 
+2. Post-mortem:
+    1. Not enough ties back to hypotheses and aims.
+    2. Should have gotten a move on much earlier.
+    3. Referencing organisation needs to be better.
+3. Focusing on psychophysics aspect this week and getting some sort of experiment running.
+
+** [2019-05-20 Mon]
+
+- Audio files for psychophysics numbers obtained from [Evolution](https://evolution.voxeo.com/library/audio/prompts/numbers/index.jsp) as `.wav` files, licensed under LGPL. Shouldn't be hard to need to change this if required.
+- Audio files didn't immediately work with Pygame's sound backend. I converted them to 16-bit signed WAV using Audacity, which fixed the issue.
+- With the 10x10 grid of regular phosphenes (not log polar yet) and just brightness based processing, it took me 13 minutes and 9 seconds to finish 30 trials 0f 20 digits each, with feedback.
+    - Should I tell people what trial they're up to? Has that been shown in the literature to be bad? It gets a bit frustrating with so many trials.
+    - Hard to tell the difference between the 3 and the 9 ( I don't think there even is a difference...)
+    - I sometimes mistook the keypress (using the numpad) e.g. mixed up between the 8 and 2 (i.e.  I meant to press 2 but accidentally pressed 8). Is keypad the best input method? I think voice would have less friction, but that would introduce more source of error.
+- I finished prototyping the psychophysics part (mostly) and have now got command line arguments up. I just realised I named one of them 'test' (for my test), which will be confusing considering I called the actual experimental phases 'testing' and 'training'...Otherwise, it's working fine.
+- TODOS:
+    - [ ] Change the randomisation for the digit stream. Block-wise randomisation might mean people can guess at the end of a 10-digit train. 
+    - [ ] Different grids. LogPolar, colour grid and interaction grid. 
+    - [ ] Processing function - mix and match. 
+    - [ ] Process preliminary trial data. 
+
+** [2019-05-21 Tue]
+
+- I spent a bit of time this morning on niceties for the graphical display - fullscreen stimuli with black background and ensuring the aspect ratio was maintained. Also added a window during testing that shows the original image.
+- I changed the way that the brightness processing is done, so now it really is like a mask. 
+- I'm having a bit of trouble with the polar representation. It really gets completely unrecognisable with 10x10 electrodes, and even at 30x30 electrodes (where it lags a lot), it's not really recognisable at all. I think the "mask" approach isn't very good for a polar grid...
+- Okay, I retranslated it so that the center is actually in the center, and it's not so bad now. The scaling for a log polar grid is a bit of an issue though. 
+
+** [2019-05-22 Wed]
+
+*** Initial Analysis
+
+**** Imports
+     :PROPERTIES:
+     :CUSTOM_ID: imports
+     :END:
+
+   #+BEGIN_SRC python
+       import numpy as np
+       import pandas as pd
+       import json
+       import os
+       from matplotlib import pyplot as plt
+       from glob import glob
+
+       %matplotlib inline
+   #+END_SRC
+
+**** Data Reading
+     :PROPERTIES:
+     :CUSTOM_ID: data-reading
+     :END:
+
+   Specifying the directory containing the participant data.
+
+   #+BEGIN_SRC python
+       DATA_DIR = '../data/sessions/participants/'
+   #+END_SRC
+
+   Specifying the fileformat glob of the config files.
+
+   #+BEGIN_SRC python
+       datafiles = glob(DATA_DIR+'*.json')
+   #+END_SRC
+
+   Looping through each config file and reading the data into a variable.
+
+   #+BEGIN_SRC python
+       configs = []
+       for file in datafiles:
+           with open(file) as infile:
+               configs.append(json.load(infile))
+   #+END_SRC
+
+   #+BEGIN_SRC python
+       list(configs[0].keys())
+   #+END_SRC
+
+   #+BEGIN_EXAMPLE
+       ['TESTING',
+	'NTRIALS',
+	'NCUES',
+	'GRID_TYPE',
+	'NO_NUMPAD',
+	'XSIZE',
+	'YSIZE',
+	'SCALE',
+	'EXSIZE',
+	'EYSIZE',
+	'IMAGE_TEMPLATE',
+	'IMAGE_SIZE',
+	'IMAGE_SCALE',
+	'DATETIME_FORMAT',
+	'DIGIT_SOUND_TEMPLATE',
+	'CONFIG_FILE_TEMPLATE',
+	'SESSION_FILE_TEMPLATE',
+	'CORRECT_NOTE',
+	'INCORRECT_NOTE',
+	'NOTE_DURATION',
+	'NOTE_VOLUME',
+	'SESSION_VARS',
+	'SESSION_HEADER',
+	'SESSION_ROW_TEMPLATE',
+	'PROMPT_TEXT',
+	'END_TEXT',
+	'KEY_LIST',
+	'EXCLUDED',
+	'details',
+	'configFile',
+	'sessionFile']
+   #+END_EXAMPLE
+
+   Each config in =configs= contains the name of the session file, relative
+   to root directory of =03-psychophysics=. First, we change the current
+   directory.
+
+   #+BEGIN_SRC python
+       os.chdir('../')
+   #+END_SRC
+
+   Then read all the file data.
+
+   #+BEGIN_SRC python
+       data = [pd.read_csv(config['sessionFile']) for config in configs]
+   #+END_SRC
+
+   And examining the first ten rows of the first data file:
+
+   #+BEGIN_SRC python
+       data[0][:10]
+   #+END_SRC
+
+   #+BEGIN_HTML
+     <div>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <style scoped>
+	 .dataframe tbody tr th:only-of-type {
+             vertical-align: middle;
+	 }
+
+	 .dataframe tbody tr th {
+             vertical-align: top;
+	 }
+
+	 .dataframe thead th {
+             text-align: right;
+	 }
+     </style>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <table border="1" class="dataframe">
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <thead>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <tr style="text-align: right;">
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   trial
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   cue
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   digit
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   keypress
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   cuetime
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   trialtime
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   sessiontime
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     </tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     </thead>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <tbody>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   0
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   0
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   0
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   1
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   1
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   1.827028
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   2.579587
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   3.309634
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     </tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   1
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   0
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   1
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   7
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   7
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   1.226297
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   3.805941
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   4.535988
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     </tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   2
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   0
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   2
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   9
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   9
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   2.117782
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   5.923782
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   6.653828
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     </tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   3
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   0
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   3
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   3
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   0
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   1.098034
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   7.021869
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   7.751917
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     </tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   4
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   0
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   4
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   8
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   8
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   1.255164
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   8.277109
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   9.007155
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     </tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   5
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   0
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   5
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   2
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   2
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   0.846393
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   9.123560
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   9.853607
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     </tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   6
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   0
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   6
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   4
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   4
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   1.088721
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   10.212334
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   10.942381
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     </tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   7
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   0
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   7
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   5
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   5
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   1.343659
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   11.556046
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   12.286093
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     </tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   8
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   0
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   8
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   0
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   0
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   1.031067
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   12.587172
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   13.317219
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     </tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <th>
+   #+END_HTML
+
+   9
+
+   #+BEGIN_HTML
+     </th>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   0
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   9
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   6
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   6
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   1.568590
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   14.155817
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     <td>
+   #+END_HTML
+
+   14.885864
+
+   #+BEGIN_HTML
+     </td>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     </tr>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     </tbody>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     </table>
+   #+END_HTML
+
+   #+BEGIN_HTML
+     </div>
+   #+END_HTML
+
+   For convenience, I will zip the configs and data.
+
+   #+BEGIN_SRC python
+       alldata = list(zip(configs, data))
+   #+END_SRC
+
+   At the moment, I only have data to compare GRID (i.e. renderers), as
+   I've only implemented one processor.
+
+   #+BEGIN_SRC python
+       ngrids = len(data)
+   #+END_SRC
+
+**** What was the mean accuracy of digit recognition?
+     :PROPERTIES:
+     :CUSTOM_ID: what-was-the-mean-accuracy-of-digit-recognition
+     :END:
+
+   First, we find the mean accuracy of each method, overall.
+
+   #+BEGIN_SRC python
+       meanAccuracies = [sum(d.digit == d.keypress) / len(d) for d in data]
+   #+END_SRC
+
+   #+BEGIN_SRC python
+       gridTypes = [c['GRID_TYPE'] for c in configs]
+   #+END_SRC
+
+   #+BEGIN_SRC python
+       plt.bar(range(ngrids), meanAccuracies, tick_label=gridTypes)
+       plt.axhline(1 / 10, linestyle=':', color='r')
+       plt.title("Mean Accuracy vs Grid Render Method")
+   #+END_SRC
+
+   Text(0.5, 1.0, 'Mean Accuracy vs Grid Render Method')
+
+
+   [[./03-psychophysics/data/archive/mean-accuracy-vs-grid-render.png]]
+
+**** What was the mean response time to a cue?
+     :PROPERTIES:
+     :CUSTOM_ID: what-was-the-mean-response-time-to-a-cue
+     :END:
+
+   #+BEGIN_SRC python
+       meanResponseTime = [d.cuetime.mean() for d in data]
+       stdResponseTime = [d.cuetime.std() for d in data]
+   #+END_SRC
+
+   #+BEGIN_SRC python
+       plt.bar(range(ngrids), meanResponseTime, tick_label=gridTypes, yerr=stdResponseTime)
+       plt.title("Mean Response Time (ssec) vs Grid Render Method.")
+   #+END_SRC
+
+   Text(0.5, 1.0, 'Mean Response Time (ssec) vs Grid Render Method.')
+
+
+   [[./03-psychophysics/data/archive/mean-response-time.png]]
+
+**** How did performance change over a session?
+     :PROPERTIES:
+     :CUSTOM_ID: how-did-performance-change-over-a-session
+     :END:
+
+   #+BEGIN_SRC python
+       fig, ax = plt.subplots(4, sharex=True, sharey=True, figsize=(5,10))
+
+       for i, d in enumerate(data):
+           ax[i].step(range(len(d)), np.cumsum((d['digit'] == d['keypress']).astype(int)))
+           ax[i].set_title(gridTypes[i])
+        
+       fig.suptitle("Cumulative performance during a Session")
+   #+END_SRC
+
+   Text(0.5, 0.98, 'Cumulative performance during a Session')
+
+
+   [[./03-psychophysics/data/archive/cumulative-performance.png]]
+
+**** What numbers were chosen the most?
+     :PROPERTIES:
+     :CUSTOM_ID: what-numbers-were-chosen-the-most
+     :END:
+
+   #+BEGIN_SRC python
+       fig, ax = plt.subplots(4, sharex=True, sharey=True, figsize=(5,8))
+
+       for i, d in enumerate(data):
+           ax[i].bar(range(10), [sum((d.keypress == digit).astype(int)) for digit in range(10)], tick_label=range(10))
+           ax[i].axhline(10, color='r', linestyle=':')
+           ax[i].set_title(gridTypes[i])
+   #+END_SRC
+
+   [[./03-psychophysics/data/archive/number-frequency-chosen.png]]
+
+**** What numbers were most well recognised?
+     :PROPERTIES:
+     :CUSTOM_ID: what-numbers-were-most-well-recognised
+     :END:
+
+   #+BEGIN_SRC python
+       for d in data:
+           d['correct'] = (d.digit == d.keypress).astype(int)
+   #+END_SRC
+
+   #+BEGIN_SRC python
+       ncues = 10
+   #+END_SRC
+
+   #+BEGIN_SRC python
+       proportions = [[sum(((d.digit == i) & (d.correct == 1)).astype(int)) / ncues for i in range(10)] for d in data]
+   #+END_SRC
+
+   #+BEGIN_SRC python
+       fig, ax = plt.subplots(ngrids, sharex=True, sharey=True, figsize=(5, 8))
+
+       for i, props in enumerate(proportions):
+           ax[i].bar(range(10), props, tick_label=range(10))
+           ax[i].set_title(gridTypes[i])
+
+       fig.suptitle('Accuracy per digit for each Grid')
+   #+END_SRC
+
+   Text(0.5, 0.98, 'Accuracy per digit for each Grid')
+
+
+   [[./03-psychophysics/data/archive/number-well-recognised.png]]
+
+**** What numbers were often confused?
+     :PROPERTIES:
+     :CUSTOM_ID: what-numbers-were-often-confused
+     :END:
+
+   #+BEGIN_SRC python
+       from collections import Counter
+   #+END_SRC
+
+   #+BEGIN_SRC python
+       fig, ax = plt.subplots(4, figsize=(8,8))
+
+       for i, d in enumerate(data):
+           keypairs = []
+           for row in d.iterrows():
+	       keypair = tuple(frozenset((int(row[1].digit), int(row[1].keypress))))
+	       keypairs.append(keypair)
+           c = Counter(keypairs).most_common()
+           ax[i].bar(range(len(c)), [el[1] for el in c], tick_label=[str(el[0]) for el in c])
+           ax[i].set_title(gridTypes[i])
+           for tick in ax[i].get_xticklabels():
+	       tick.set_rotation(90)
+       fig.tight_layout()
+   #+END_SRC
+
+
+   [[./03-psychophysics/data/archive/number-confused.png]]
+
+
+*** Meeting Notes :meeting:
+
+1. Concrete examples of what the CNN can do.
+2. Changing digit position/size?
+3. One hemisphere of phosphenes only.
+4. Keep feedback - good for psychophysics.
+5. Can be faster!
+6. Can throw away first however many trials based on sliding window of accuracies - or weighting the inputs to the network based on performance.
+7. Confusion matrix to present the pairs of digits which were often confused.
+8. Could GANs be applied?
+9. To make a distinguishing network - maybe not only optimise for the difference and distinguishability, but cull candidate processors based on similarity to the original images. 
+10. Maybe use larger digits then downsample - aliasing information may be helpful information.
+
+** [2019-05-27 Mon]
+
+- Worked on getting larger digits. Briefly looked at changing the position of digits, but I think classification gets very difficult with that approach. But it's easy enough and I've written it so I might come back to it.
+- Machine decoder (completely naive) can get up to 40% accuracy with moving digits on a polar regular grid. I guess that's not so bad.
+
+** [2019-05-28 Tue]
+
+- When the digit isn't moving, a CNN can achieve 100% accuracy, though I guess tthat's not completely unexpected.
+- I just tried again (with some more constraint to position i.e. within 0.25 and 0.75 of the x and y axis) and the model can get around 50% accuracy (still naive).
+- Tensorflow versioning is a little bit frustrating. I am upgrading to tensorflow 2.0 alpha. 
+
+** [2019-05-29 Wed]
+
+- I decided to implement mouse tracking to better simulate "real life"
+  situations where you have the option to move your head. It's actually not
+  that hard to get decent performance even with the irregular grid though...And
+  I can bet that the CNNs aren't going to preserve spatial information very
+  well.
+- I'm not positive the gradient descent will actually work at all with a human.
+  That, I still need to think about... But it seems like it should be possible?
+  After all, GAN's are possible and I'm not sure I believe the gradient is
+  tracked all the way through the decoder network. Maybe it is?
+- I guess, after trying the experiment with mouse tracking and a non-linear
+  grid, the question really is about interpretability. I think my very first
+  idea a few months ago, that user-specific context is important, is probably
+  the better idea actually... There are going to be intrinsic information 
+  limitations and something as simple as positional sense may be easier.
+
+*** Progress
+- Working on CNN
+  - Decoder trained on regular grid 100% (as expected), regularunique grid ~ 90%
+  - Encoder network with random inital weights can be fed inputs and get
+    correctly shaped outputs
+  - Currently working on the training step, going through Tensorflow
+    documentation (gradient tracking is a bit opaque)
+- Numerous improvements to experiment
+  - Using aliased digits.
+  - Can vary digit position per trial, though I have chosen not to for now.
+  - Half-visual field renders.
+  - Less latency on render (lower resolution to assist the computer decoder),
+    will facilitate more data
+  - Area based 
+- Plan for this Week
+  - Finish encoder training model
+  - Investigate loss functions (binary vs rated digits?)
+   
+*** Meeting Notes
+  
+  - Short meeting
+  - Size and rotation of digits 
+  - Confidence - opt out - opt out - 0, -1, or 1
+
+** [2019-05-30 Thu]
+*** May 30th: Naive GAN
+     :PROPERTIES:
+     :CUSTOM_ID: may-30th-naive-gan
+     :END:
+
+  | Property          | Value                  |
+  |-------------------+------------------------|
+  | Git Commit Hash   | None (run on colab)    |
+  | Grid              | Polar Regular Unique   |
+  | Vector size       | 12 $\times$ 12 = 144   |
+
+  #+BEGIN_SRC ditaa
+                    +--------------------------------------------+--------------------------+
+                    |                                            |                          |
+                    v                                            v                          |
+                  Encoder               Renderer              Decoder                       |
+      100-vector ---------> 144-vector ----------> 2D Image  --------> Class (binary) -+    |
+											- Loss
+                                                   MNIST Im. --------> Class (binary) -+
+                      
+  #+END_SRC
+
+  First attempt was just a completely naive GAN that attempted to
+  transform a random seed (100-vector of random floats) into a 144-vector
+  of floats that, when fed to the renderer, would best look like a digit.
+  As this was dissociated from the actual digit identity, this was purely
+  a feasibility test.
+
+  It looked like the below after 5 epochs (total 202 seconds, after which
+  I stopped it).
+
+  [[./03-psychophysics/data/archive/naive-gan.png]]
+
+  Lessons learnt:
+
+  - Yes, training on the renders /can/ be done (though it required a
+    number of modifications which became clear during this feasibility
+    test, including the need to pre-render all the electrodes and wrap the
+    final render under Tensorflow).
+  - In this particular case, you can see /mode collapse/ (i.e. they all
+    look the same! even though the random seeds are different). Probably
+    won't be such a big issue when takes the actual digit, rather than a
+    random seed, as the input.
+  - Training takes quite a long time.
+  - Does not seem likely that training based on participant performance
+    will be feasible, given the huge data and time requirements...but it
+    definitely seems plausible to train based on individual electrode
+    features and certain electrode combining functions, which could be
+    modelled after individuals' perceptions.
+
+*** Timeline
+
+- JUN 7: Finish the encoder. 
+- JUN 14: Test experiment on self
+- JUN 21: Analyse self results.
+- JUN 28: Finish experiment setup for psychophysics testing.
+- JUL 5: Recruit 5 participants and conduct experiments.
+- JUL 19: Finish conducting experiments.
+- AUG 2: Analyse results for 1) Significant difference between processors, 2) Significant difference between renderers.
+
+* June 2019
+** [2019-06-03 Mon]
+
+- I worked on a GAN (full GAN i.e. both the encoder and decoder are being trained), which very closely follows a basic GAN architecture. It can produce actually not-too-shabby looking pictograms from random noise, but I haven't yet linked these to the actual digits (i.e. it produces random digits out of random noises, but at least they sort of look like digits). I think the next step is going to be actually making it linkable with the digit themselves...
+- Ah! I've actually managed to get the "half-encoder" model to run. I don't know the results yet, but at the very least ,it's running without error. It basically trains an encoder which takes 64x64 phosphenised images then runs it through a pretrained MNIST decoder, comparing it to the original 64x64 image run through the pretrained MNIST decoder. Loss is CategoricalCrossEntropy at the moment (I can't seem to get tf.argmax to work even though I think it would be better because it would discard all the incorrect digit confidences; using argmax causes the trainer to lose track of the gradients so I get the dreaded "no gradients for any variable" error) but at the very least it is running. It is taking a long time though....
+- I'm doing 12 batches of 128 digits per epoch at the moment for 1536 per epoch, and it takes about one minute per epoch (so 20 minutes for 20 epochs). I can't say that the result look terribly good though... (but at least there are results)
+- After 19 such epochs, the results are...interesting. But they don't look very digit like...I wonder whether I should just separate out the digit interpretation and the encoding step. But I have to think about that.
+- It turns out that argmax isn't differentiable, which explains why the gradients were lost. But using one hot might work....maybe?
+- Backup plan might be good. Probably the 'selective sight' plan.
+*** June 3rd: Generative Network against MNIST
+     :PROPERTIES:
+     :CUSTOM_ID: june-3rd-generative-network-against-mnist
+     :END:
+
+  | Property          | Value                  |
+  |-------------------+------------------------|
+  | Git Commit Hash   | None (run on colab)    |
+  | Grid              | Polar Regular          |
+  | Vector size       | 12 $\times$ 12 = 144   |
+
+  #+BEGIN_SRC ditaa
+
+                   +-------------------------------------------------------------+
+                   |                                                             |
+                   v                                                             |
+		Encoder               Renderer           MNIST Decoder           |
+      2D Image ---------> 144-vector ----------> 2D Image ---------> Class --+   |
+                                                                              - Loss
+      Image Label -----------------------------------------------------------+
+
+  #+END_SRC
+
+  Second attempt was a generative network which directly took the digit
+  image and spit out the 144-vector, which was then fed to the renderer. I
+  trained a separate decoder neural network on the MNIST digit dataset,
+  and fed the rendered image to this stable pretrained network, and
+  optimised against the predictions of the pretrained network on the
+  renderer.
+
+  Network architectures at this point were very ad-hoc; this was still in
+  the realm of "feasibility testing."
+
+  It looks like the below after 11 epochs (approx 80 seconds):
+
+  [[./03-psychophysics/data/archive/generative-network-mnist.png]]
+
+  Lessons learnt:
+
+  - Yes, training on digit identities is feasible.
+  - Doesn't really look like anything except garbage.
+  - Training is slow.
+
+** [2019-06-05 Wed]
+
+- Preliminary testing with the new attempt (attempt 3) seems to train
+  very slowly. Trying again with a one-hot comparison for the loss
+  function, which I think captures the meaning a bit more nicely...but
+  the change between epochs isn't really very much for some reason.
+- Changing the learning rate speeds up the learning speed, although it
+  seems a bit slow still. Using the AdamOptimiser, maybe changing
+  epsilon would work?
+- One of the other mysteries is what architecture is best. I've only
+  got two layers after the softmax layer at the moment (and one of
+  those layers is the output layer!).
+- Also, maybe I should be training on more data. At the moment, I'm
+  only using 3072 per epoch, but I know the MNIST set uses 60000 per
+  epoch. Time is just the issue.
+- I've moved out the digit generation of the training loop because I
+  think it adds a lot of time (generating one digit image takes 12ms,
+  so 10000 takes 120 seconds or 2 minutes. That's 2 minutes
+  (hopefully) saved?). So I've pre-generated these images and saved
+  them and am just feeding them into the training loop. One epoch with
+  10000 images takes 118 seconds (as opposed to 6000 images which took
+  roughly the same time). I think I might have to make it a Tensorflow
+  Dataset at some point though, I'm literally just feeding it Numpy
+  array slices...
+- I need to actually check that the "render tensor" method of the grid
+  is equivalent to the "render" method, otherwise my visualisations
+  may not actually reflect the performance of the generation...(Okay,
+  just checked and can confirm that render and render tensor both give
+  the same output. Phew!)
+- So I realised that increasing epsilon actually decreases the
+  change...and when I had a learning rate of 1 and the default
+  epsilon, woah! The network really blasted the brightness levels so I
+  got almost a completely black and white image. Didn't see that
+  before.
+- I realise the generator might also be learning things to do with the
+  inadequacies of the MNIST decoder, which is pretty naive...hm. I
+  think whatever I compare against as the decoder needs to actually be
+  good and "human-like" (or "visual-like").
+- This seems more likely given that the accuracy (which is not what is
+  optimised against, since it's optimising against cross entropy which
+  hopefully should capture near-equivocal classifications a bit
+  better) improves dramatically after the first epoch. So it "works"
+  for the MNIST decoder - it's just the MNIST decoder isn't very good
+  at distinguishing garbage. So the "representation" seems to learn
+  features...Maybe this needs to be hooked in with another
+  discriminator network.  (I mean, it gets an "accuracy" of 0.985
+  after the first epoch from 0.091 before training, when tested
+  against the first 1000 digit images. Hm.)
+- Moral of the story - it's training really well!...just the thing
+  it's training against isn't a very knowledgeable decoder itself.
+- I've set it up to now output the losses instead of accuracy. Loss
+  decreases quite nicely. I think the real challenge now is figuring
+  out how to make the decoder..."human-like".
+- I've added an extra class, a garbage 11th class, to the MNIST
+  decoder. So now hopefully garbage renders get classiifed as garbage
+  instead of digits and adds some extra adversity to the generative
+  network...
+*** June 5th: Decoder -> Generative Network against MNIST
+     :PROPERTIES:
+     :CUSTOM_ID: june-5th-decoder---generative-network-against-mnist
+     :END:
+
+  | Property          | Value                                      |
+  |-------------------+--------------------------------------------|
+  | Git Commit Hash   | 71bd2ef6e66122935e320f0880658e7442bc832c   |
+  | Grid              | Polar Regular                              |
+  | Vector size       | 12 $\times$ 12 = 144                       |
+
+  Third attempt was a generative neural network which first decodes the
+  digit using a pretrained decoder, then upsamples that decoded digit into
+  a 144 vector, which is fed into a renderer and then decoded by an MNIST
+  decoder.
+
+  #+BEGIN_SRC ditaa
+
+                                     +-------------------------------------------------------------+
+                                     |                                                             |
+                                     v                                                             |
+		Digit Decoder ---> Encoder              Renderer           MNIST Decoder           |
+      2D Image ---------------------------> 144-vector ----------> 2D Image ---------> Class --+   |
+												- Loss
+      Image Label -----------------------------------------------------------------------------+
+
+  #+END_SRC
+
+  Before training:
+
+  [[./03-psychophysics/data/archive/decoder-generative-mnist-pre.png]]
+
+  After training for 10 epochs, approx 5 minutes:
+
+  [[./03-psychophysics/data/archive/decoder-generative-mnist-post.png]]
+
+  Lessons learnt:
+
+  - Not shown here, but loss actually minimised really well i.e. the MNIST
+    decoder was able to decode the digit from these representations with
+    high accuracy (> 90%!). So, while the encoder is learning well, it is
+    learning in a way optimised for the MNIST decoder features. Some of
+    the features may be useful, but mostly not really.
+  - As the images are decoded first, essentially each digit just maps to a
+    single phosphene representation. Arguable whether a CNN is needed to
+    achieve this (but still interesting...)
+  - Had a go messing with learning rates and oher hyperparameters here.
+    May make a difference.
+
+*** June 5th: Decoder -> Generative Network against MNIST + Garbage
+     :PROPERTIES:
+     :CUSTOM_ID: june-5th-decoder---generative-network-against-mnist-garbage
+     :END:
+
+  | Property          | Value                                      |
+  |-------------------+--------------------------------------------|
+  | Git Commit Hash   | e7f41258e408a15d1138b1a80bb97bace204363e   |
+  | Grid              | Polar Regular                              |
+  | Vector size       | 12 $\times$ 12 = 144                       |
+
+  Because the output of the third attempt was learning features but
+  ultimately still outputting garbageful renderers, I decided to add an
+  additional class to the MNIST decoder - a "garbage" class full of random
+  renders of 144-vectors. The architecture is otherwise very similar, just
+  the decoding step at the end uses a decoder which can output 11
+  classes - and none of the "real" labels are of the 11th class, so
+  hopefully the encoder should optimise /away/ from garbage renders.
+
+  #+BEGIN_SRC ditaa
+
+                                     +-------------------------------------------------------------+
+                                     |                                                             |
+                                     v                                                             |
+		Digit Decoder ---> Encoder              Renderer     MNIST + Garbage Decoder       |
+      2D Image ---------------------------> 144-vector ----------> 2D Image ---------> Class --+   |
+												- Loss
+      Image Label -----------------------------------------------------------------------------+
+
+  #+END_SRC
+
+  Before training:
+
+  [[./03-psychophysics/data/archive/decoder-generative-mnist-garbage-pre.png]]
+
+  After training on 50 epochs (approx 40 minutes, though the training
+  slows dramatically after the first 10 or so epochs):
+
+  [[./03-psychophysics/data/archive/decoder-generative-mnist-garbage-post.png]]
+
+  And losses:
+  [[./03-psychophysics/data/archive/decoder-generative-mnist-garbage-loss.png]]
+
+  Lessons learnt:
+
+  - First time actually the output renders actually are somewhat
+    encouraging (although they are far from human-interpretable, except
+    for the 1!). Slightly more useful features are being learned, although
+    clearly the network still optimises against the decoder nuances a
+    little too much. But definitely better putting the "A" back in GAN!
+  - How to choose hyperparameters? Big question.
+  - For this particular run, I chose a learning rate of 1e-2. Larger
+    learning rates cause more drastic changes on the first epoch.
+
+*** Progress
+
+
+- Started attempts at training on simulated renders. Successfully trainable, results vary (though it took me a bit of tinkering...)
+    - Attempt 1: purely generative from random seed ("what can the network actually produce?"). Produced sort of digit-like forms but experienced some mode collapse (i.e. they all looked the same) - not entirely unexpected, very naive architecture.
+    - Attempt 2: trained a neural network processor from scratch and fed to a stable MNIST decoder, loss defined as categorical cross-entropy against MNIST predictions. Produces sort of digit-like forms (again), but does not appear to scale very well with digit position. Probably because the network is trying to do too much at once. Also training stagnates very quickly.
+    - Attempt 3: pretrained digit classifier, then fed to a generative neural network (which is the only trainable network), then fed to a stable MNIST decoder. Results pending.
+- Timeline:
+    - Jun 21st - Experimental setup progress - should be almost done.
+    - Jun 28th - MUST FINISH EXPERIMENTAL SETUP.
+- Looking forward:
+    - I'm a bit doubtful that training on participant data will be feasible (unlikely to be able to get enough data to be useful, and issue of choice of backpropogation/loss) - probably best to keep the training "offline" (i.e. feed the neural network a map and renderer) and test the offline version. So the experimental setup will be comparing two different, stable processors on digit recognition accuracy and speed + control. 
+        - At the moment, experimental setup looks to be:
+            1. Recruit participant
+            2. Generate a unique map (spatial) & ?renderer (nonLinear?) for participant
+            3. Train generative network on simulated renderer with map
+            4. Test map with a brightness processor vs control processor  vs generative network processor
+            5. Compare accuracies, speed, and scanning motions between processors
+    - In coming- week, I will work on investigating further architectures for the generative model. (this week was getting things actually working, coming week will be about seeing what works best.)
+    - Backup plan in back of my mind...(based on object localisation only like the key detection demo). This would involve hooking up pretrained imagenext networks into an experiment, which involves much less unknowns (literally just putting the captured bounding boxes under the renderer), but less interesting (but potentially more "realistically useful?"). 
+
+- For discussion:
+    - Thinking about actual utility - is identity information even useful if location is not preserved? (contrasting with, say, location, which is difficult to communicate concisely through other modalities). 
+    - Comparison groups - good enough? (e.g. should I be testing a processor which is a CNN with hand-encoded representations?) 
+    - Is hooking up with the VR headset easier/better than using mouse movements to simulate scanning? (could also open up possibility for more sophisticated tasks which leverage pretrained networks and would also be better for the object detection backup plan...)
+    - Quick question - how important is it that I catalogue/retain the code for my failed attempts? It's all version controlled with Git, but should I be doing this more explicitly?
+
+** [2019-06-11 Tue]
+
+- Been really busy this week with a number of other responsibilities,
+  so not much has changed yet...
+- I'm just going to quickly try adding another conv1d layer to the
+  MNIST digit network. Adding layers doesn't increase performance of
+  MNIST categorisation all that much (it's getting around 97%/98%),
+  but I'm not sure if the filters might be more useful.
+- I feel like I should look into a method to visualise the filters -
+  that might be useful.
+- The learning rate does seem to make a large difference - if it's too
+  large, it really bleaches the image on the first epoch, and there
+  aren't that many changes after the first epoch is done (although the
+  loss doesn't decrease to as low a level, so maybe there's still
+  hope?)
+- I think I should so some extra reading on techniques used for
+  GANs. That might give me some better ideas on how exactly these
+  hyperparamters should be tuned.
+- I'm also wondering on how the architecture of the encoder should
+  look like. I guess I originally thought that since it could just be
+  a one-to-one mapping, that a simple architecture (even without
+  hidden layers) might work. But I wonder whether that limits the
+  jumps that training can make?
+- I'm trying to reorganise my directory a little bit. I think it's
+  better to actually save everything between runs and keep them
+  persisted, rather than saving them through git commits and
+  overwriting them. That way, I can easily access past results without
+  having to rollback to a commit.
+- I made the index notebook more general so I can specify different
+  grid parameters without changing the code too much. I also made a
+  gif of the training at each epoch. That should make it easier to
+  visualise what's going on.
+- I'm wondering whether it might actually be beneficial for me to just
+  stitch together all my logbook entries into one lab notebook
+  document. Actually, I think that would be good. Probably an org mode
+  file.
+
+*** Generative Attempts
+    :PROPERTIES:
+    :CUSTOM_ID: generative-attempts
+    :END:
+
+  This notebook briefly describes a history of attempts at getting a
+  generative neural network to learn how to best represent digits for a
+  given phosphene map.
+
+  The original digit images look like this:
+
+  [[./03-psychophysics/data/archive/original-digit.png]]
+
+  The aim is to develop a network which can process this image and output
+  a *vector* (/not/ an image), which when subsequently fed to a specified
+  distorted renderer, will produce an image that a human can infer the
+  original digit from. The renderer does not change, so we can (hopefully)
+  train a network to best work with the renderer it gets.
+
+
+*** June 11th: Upping the Decoder Layers and Learning Rate
+     :PROPERTIES:
+     :CUSTOM_ID: june-11th-upping-the-decoder-layers-and-learning-rate
+     :END:
+
+  | Property          | Value                                      |
+  |-------------------+--------------------------------------------|
+  | Git Commit Hash   | 7d24bc3f3f2e2ef883d8f688799536b4ae3ea9fc   |
+  | Grid              | Polar Regular                              |
+  | Vector size       | 12 $\times$ 12 = 144                       |
+
+  I used the same architecture as above, but I wanted to see what would
+  happen if I:
+
+  1. Upped the number of layers in the MNIST network (I added one more
+     Conv1d layer)
+  2. Upping the learning rate (to 1e-1).
+
+  Training gif:
+
+  #+CAPTION: GIF
+  [[./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-11_10-47_evolution_PolarRegularGrid_12-12_64-64.gif]]
+
+  Plotted loss:
+
+  [[./03-psychophysics/data/archive/decoder-generative-mnist-garbage-uplearn-loss.png]]
+
+  Lessons learnt:
+
+  1. The learning rate seems very aggressive (the loss shoots up
+     initially, and indeed after the first few epochs, some of the digits
+     are entirely blank).
+  2. Seems to really "bleach" the digits.
+  3. Loss decreases but not to the level of a slower learning rate.
+  4. I get the impression that if I were to continue this beyond 50
+     epochs, I might get better results.
+
+* July 
+ 
+* Utilities
+
+This is not chronological.
+
+** Loss Plot
+
+   #+BEGIN_SRC python
+       from matplotlib import pyplot as plt
+       import numpy as np
+
+       def plot_loss(logpath):
+           with open(logpath) as infile:
+               loss_raw = infile.readlines()
+
+           loss_data = np.array(list(map(float, loss_raw)))
+
+           plt.plot(range(loss_data.shape[0]), loss_data)
+           plt.ylabel("Categorical Cross Entropy between\nPrediction and One-Hot Class")
+           plt.xlabel("Training Batch (each containing 500 images)")
+           plt.title("Decoder Loss per Epoch")
+   #+END_SRC
