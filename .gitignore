@@ -30,3 +30,5 @@ nosave*
 03-psychophysics/data/training-data/
 
 virtualenv/
+
+03-psychophysics/data/training-intermediate-data/training-images/
