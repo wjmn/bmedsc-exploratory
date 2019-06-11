@@ -2986,6 +2986,19 @@ Deadlines:
 - It turns out that argmax isn't differentiable, which explains why the gradients were lost. But using one hot might work....maybe?
 - Backup plan might be good. Probably the 'selective sight' plan.
 *** June 3rd: Generative Network against MNIST
+
+So this is part of a series of attempts at digit generation.
+
+  The original digit images look like this:
+
+  [[./03-psychophysics/data/archive/original-digit.png]]
+
+  The aim is to develop a network which can process this image and output
+  a *vector* (/not/ an image), which when subsequently fed to a specified
+  distorted renderer, will produce an image that a human can infer the
+  original digit from. The renderer does not change, so we can (hopefully)
+  train a network to best work with the renderer it gets.
+
      :PROPERTIES:
      :CUSTOM_ID: june-3rd-generative-network-against-mnist
      :END:
@@ -3251,26 +3264,6 @@ Deadlines:
   stitch together all my logbook entries into one lab notebook
   document. Actually, I think that would be good. Probably an org mode
   file.
-
-*** Generative Attempts
-    :PROPERTIES:
-    :CUSTOM_ID: generative-attempts
-    :END:
-
-  This notebook briefly describes a history of attempts at getting a
-  generative neural network to learn how to best represent digits for a
-  given phosphene map.
-
-  The original digit images look like this:
-
-  [[./03-psychophysics/data/archive/original-digit.png]]
-
-  The aim is to develop a network which can process this image and output
-  a *vector* (/not/ an image), which when subsequently fed to a specified
-  distorted renderer, will produce an image that a human can infer the
-  original digit from. The renderer does not change, so we can (hopefully)
-  train a network to best work with the renderer it gets.
-
 
 *** June 11th: Upping the Decoder Layers and Learning Rate
      :PROPERTIES:
