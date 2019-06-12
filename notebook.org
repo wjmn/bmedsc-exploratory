@@ -5,7 +5,8 @@ Note: initially, several of the entries in this notebook were kept in
 separate files. They have now been merged into this file and as a
 result, there may be some slight inconsistencies in formatting or how
 the entries are laid out (particularly during March, which are much
-less technical than the remaining entries). 
+less technical than the remaining entries). This serves as a scrapbook
+more than anything else. 
 
 I combined my writing on <2019-06-11 Tue> and as a result, entries
 before this time may be incomplete. 
@@ -450,7 +451,7 @@ Some datasets to look at :
    4. How feasible is the project?
       (Timeline to help guide and reassess progress where necessary?)
 
-**** Timeline
+**** Timeline :timeline:
 
 ***** March
 
@@ -1207,6 +1208,10 @@ and make sure I have something to talk about for the weekly tomorrow...
 
 * April 2019
 
+   #+begin_quote
+   [2019-04-17 Wed] - Progress report due - discussed and signed by supervisor.
+   #+end_quote
+
 #+BEGIN_QUOTE
 [2019-06-11 Tue 13:29] Note: this month is particularly incomplete,
 mostly as I was working on my oral presentation and literature review
@@ -1431,6 +1436,13 @@ Slides for oral presentation done.
 [[./presentations/presentation1.pdf]]
 
 * May 2019
+
+   #+begin_quote
+   [2019-05-01 Wed] - Department Oral No. 1.
+
+   [2019-05-15 Wed] - Literature Review due.
+   #+end_quote
+
 ** <2019-05-01 Wed>
 
 *** Meeting Notes :meeting:
@@ -2849,7 +2861,6 @@ Deadlines:
 
    [[./03-psychophysics/data/archive/number-confused.png]]
 
-
 *** Meeting Notes :meeting:
 
 1. Concrete examples of what the CNN can do.
@@ -2916,7 +2927,7 @@ Deadlines:
   - Confidence - opt out - opt out - 0, -1, or 1
 
 ** [2019-05-30 Thu]
-*** May 30th: Naive GAN
+*** May 30th: Naive GAN                                        :generative:
      :PROPERTIES:
      :CUSTOM_ID: may-30th-naive-gan
      :END:
@@ -2985,7 +2996,7 @@ Deadlines:
 - After 19 such epochs, the results are...interesting. But they don't look very digit like...I wonder whether I should just separate out the digit interpretation and the encoding step. But I have to think about that.
 - It turns out that argmax isn't differentiable, which explains why the gradients were lost. But using one hot might work....maybe?
 - Backup plan might be good. Probably the 'selective sight' plan.
-*** June 3rd: Generative Network against MNIST
+*** June 3rd: Generative Network against MNIST                 :generative:
 
 So this is part of a series of attempts at digit generation.
 
@@ -3098,7 +3109,7 @@ So this is part of a series of attempts at digit generation.
   decoder. So now hopefully garbage renders get classiifed as garbage
   instead of digits and adds some extra adversity to the generative
   network...
-*** June 5th: Decoder -> Generative Network against MNIST
+*** June 5th: Decoder -> Generative Network against MNIST      :generative:
      :PROPERTIES:
      :CUSTOM_ID: june-5th-decoder---generative-network-against-mnist
      :END:
@@ -3147,7 +3158,7 @@ So this is part of a series of attempts at digit generation.
   - Had a go messing with learning rates and oher hyperparameters here.
     May make a difference.
 
-*** June 5th: Decoder -> Generative Network against MNIST + Garbage
+*** June 5th: Decoder -> Generative Network against MNIST + Garbage :generative:
      :PROPERTIES:
      :CUSTOM_ID: june-5th-decoder---generative-network-against-mnist-garbage
      :END:
@@ -3265,7 +3276,7 @@ So this is part of a series of attempts at digit generation.
   document. Actually, I think that would be good. Probably an org mode
   file.
 
-*** June 11th: Upping the Decoder Layers and Learning Rate
+*** June 11th: Upping the Decoder Layers and Learning Rate :generative:
      :PROPERTIES:
      :CUSTOM_ID: june-11th-upping-the-decoder-layers-and-learning-rate
      :END:
@@ -3286,7 +3297,7 @@ So this is part of a series of attempts at digit generation.
   Training gif:
 
   #+CAPTION: GIF
-  [[./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-11_10-47_evolution_PolarRegularGrid_12-12_64-64.gif]]
+ [[./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-11_10-47_evolution_PolarRegularGrid_12-12_64-64.gif]]
 
   Plotted loss:
 
@@ -3302,26 +3313,346 @@ So this is part of a series of attempts at digit generation.
   4. I get the impression that if I were to continue this beyond 50
      epochs, I might get better results.
 
-* July 
+*** Directory Reorganisation 
+
+- [2019-06-11 Tue 13:53] :: I've done a complete reorganisation of the
+     directories so now my lab notebook is all in one place. I think
+     I'm going to try logging things much better from now on, it's
+     felt a bit disorganised. I've also noticed that it's much easier
+     to see the gaps when it's all laid out chronologically...
+
+*** Plan Review
+
+I think I'd like to try by tomorrow:
+
+- [ ] Visualising the filters of the MNIST decoder +/- trained encoder
+- [ ] Integrating the trained encoder with the digit experiment
+- [ ] Running the encoder training for the non-linear grid (this is
+  going to be the most important part, and possibly the most difficult
+  part too.)
+- [ ] Testing my own accuracy for different processors
+- [ ] Analysing the data for mouse position, accuracy etc.
+
+*** Adding a Layer to the Generative Encoder Network
+:LOGBOOK:
+CLOCK: [2019-06-11 Tue 14:09]--[2019-06-11 Tue 14:47] =>  0:38
+:END:
+
+| Git Commit Hash | 3da6687fb8cdf4f0e7d4fedfebcb1689fea6dc57 |
+| Grid            | Polar Regular                            |
+| Vector size     | 12 x 12 = 144                            |
+
+
+I figure I might as well see what happens if I add a another layer to
+the /encoder/ network, so now its architecture is the following:
+
+#+BEGIN_SRC 
+Model: "sequential_3"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+sequential_16 (Sequential)   (None, 10)                164634    
+_________________________________________________________________
+dense_7 (Dense)              (None, 12)                132       
+_________________________________________________________________
+dense_8 (Dense)              (None, 12)                156       
+_________________________________________________________________
+dense_9 (Dense)              (None, 144)               1872      
+=================================================================
+Total params: 166,794
+Trainable params: 2,160
+Non-trainable params: 164,634
+_________________________________________________________________
+#+END_SRC
+
+I've also reset the learning rate to 1e-2 rather than 1e-1, as it
+seems like 1e-1 moves a little too fast.
+
+After just 3 epochs, the loss is already down to 0.05ish
+numbers. Hm. I think the main issue is the question of how exactly do
+you get the model which this is training adversarially against to best
+replicate a human? The issue right now is that, while the digits may
+be separable, they don't "look" digit like, so I suppose there needs
+to be some sort of quantification of what "looks" digit like that is
+then incorporated into the loss function. That's what the MNIST
+decoder is supposed to do, but I suppose it's really more a feature
+extractor than a "this is what the whole image needs to look like"
+type of thing. 
+
+Maybe if I increase the garbage dataset, it might start looking a bit
+better. The results are actually not terrible, but they could
+definitely look better (but I suppose I'll need to run this for the
+non-linear, irregular grid before it starts being meaningful).
+
+Each epoch is taking approximately 40 seconds, which is fine for the
+moment (so 50 epochs = 2000 seconds, ~30 minutes). 
+
+Actually, in hindsight, perhaps reducing the parameters is the better
+idea - even just making it a two layer network. I think more
+parameters has the danger of getting stuck...
+
+After 25 epochs, the loss is 0.04ish. I just decided to stop it there
+because I didn't think it was necessarily going to give any better
+results.
+
+Here's the gif:
+
+[[./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-11_14-13_evolution_PolarRegularGrid_12-12_64-64.gif]]
+
+And the loss graph:
+
+[[file:./03-psychophysics/./data/training-intermediate-data/training-graphs/2019-06-11_14-13_loss_PolarRegularGrid_12-12_64-64.png]]
+
+I guess it really shows that while optimisation is occuring fairly
+alright, the decoder it trains against needs to be fairly good at
+distinguishing garbage from non-garbage. 
+
+*** Training the MNIST Decoder on More Garbage + Larger Kernels
+:LOGBOOK:
+CLOCK: [2019-06-11 Tue 19:39]--[2019-06-11 Tue 22:22] =>  2:43
+CLOCK: [2019-06-11 Tue 14:50]--[2019-06-11 Tue 19:39] =>  4:49
+:END:
+
+| Git Commit Hash |  171fb8ce79b00e660ff43188ba04d8498a9d3c34 |
+| Grid | Polar Regular | 
+| Vector size | 12 x 12 = 144 | 
+
+So since it all depends on the decoder, I might as well if I can train
+the decoder to recognise the garbage better.
+
+I previously trained the decoder on =n//10= garbage samples, where n
+is the number of MNIST digits. I'll try training the decoder on =n=
+garbage samples (i.e. there are 10 times as many garbage samples as
+there are for any one individual digit), and see how that goes. I
+think this will take quite a while.
+
+I will also decrease the encoder back down to the decoder model + one
+output vector layer of 144. 
+
+---
+
+So training the MNIST decoder again - I think the "accuracy" may be a
+bit deceptive now that half the set of 120,000 digits is
+garbage. Hopefully, at the very least, this network will get very good
+at detecting garbage. 
+
+---
+
+I've visualised the kernels and they're actually somewhat edge like in
+the first layer. After that, since they're taking the input from
+kernels rather than the image, they no longer look as nice since of
+course they are now working on a 3D volume of kernels rather than the
+image, but I think it's still interesting to visualise. 
+
+--- 
+
+I've actually just realised I could have been using 2D convolutional
+kernels for the layers instead of 1! All I had to do was reshape the
+input to add an extra dimension. I don't know if this will give better
+results, but I feel like it might - since it's now working on the 2D
+representation of the image...I hope. Training the MNIST decoder takes
+quite a while now, but I think it may be worth it. Hopefully. 
+
+Yan's recommended me take every 2 or so days to self-reflect and write
+my ideas down and re-evaluate. I think I'll do that, I've been really
+meaning to try and give some order to what I'm going, I feel like
+things are a little bit messy at the moment. 
+
+--- 
+
+I left it to train and looking at the filters learned are quite
+interesting. It's not the novel part, but still interesting.
+
+These are the filters from the first 2D convolutional layer:
+
+[[./03-psychophysics/data/archive/kernel-shapes-mnist-2d.png]]
+
+This is important because this is what the decoder is training against
+(at least, in my opinion).
+
+Okay, I'm running another run with this 2D convolutional MNIST network
+that's been trained on 10 times more garbage samples. Fingers crossed!
+
+Log file for this run is
+[[./03-psychophysics\data\training-intermediate-data\training-losses\2019-06-11_19-00_loss_PolarRegularGrid_12-12_64-64.log][2019-06-11_19-00_loss_PolarRegularGrid_12-12_64-64.log]].
+
+After 2 epochs, it seems to be quite a bit better already! Hopefully
+it stays this way...Learning rate is 1e-2 so hopefully doesn't
+collapse. Training is about 50 seconds per epoch, acceptable still.
+
+Okay, it doesn't really change all that much after the first 8 or so
+epochs. Well that's expected I guess.
+
+Here's the gif:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-11_19-00_evolution_PolarRegularGrid_12-12_64-64.gif]]
+
+And the loss plot:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-11_19-00_loss_PolarRegularGrid_12-12_64-64.png]]
+
+The last loss is 0.033ish.
+
+Much better tha nthe output I had previously, though stil could be
+better. But I suppose I should account for the fact that the decoder
+at the start of the network is not always correct either.
+
+I saved the grid as
+=2019-06-11_19-00_grid_PolarRegularGrid_12-12_64-64.pkl= and the
+encoder as
+=2019-06-11_19-00_encoder_PolarRegularGrid_12-12_64-64.h5=. 
+
+*** Trying the Non-Linear Grid + Upping the Learning Rate Slightly
+
+I think it's time to see how this works for something for which it
+might actually be useful - and which it might actually fair better at
+than humans (possibly). 
+
+I'll:
+- Make the learning rate 5e-2, slightly more aggressive
+- Use the nonLinear grid
+- Same no-medium input architecture as before (i.e. no trainable
+  hidden layers). I actually wonder whether maybe hidden layers would
+  help the network be resilient against the imperfect iniital
+  decoder...not sure yet. Maybe I should try to improve the initial
+  decoder.
+
+It seems to be grey around the whole image. Not entirely sure why...
+Ah. I just realised, I need to retrian the MNIST decoder since that's
+where the garbage comes from!
+
+Okay, while I train the MNIST decoder, I might as well train the digit
+recogniser again.
+
+Ahh, I'm getting what looks like much much better accuracy this time
+for the digit decoder. That's good. Maybe that'll help things? I upped
+the training data to 10000 and added a convolutional layer and
+increased the kernel size, and it gets 100% accuracy, so much better
+than the 97% ish before.
+
+I started training and was wondering why the loss was decreasing
+well but the images looked pretty washed out with grey. I realised it
+was just because of the plotting function I was using for
+visualisation, I needed to set vmin=-1 and vmax=1 to ensure that the
+plot didn't autoscale to the lowest and highest values (which was a
+bigger problem for this grid because phosphenes combine through
+rescaling...). I have to think about whether this has any large
+implications. 
+
+Actually, now I'm a little bit puzzled. It seems like, for this grid,
+the minimum goes below -1 (which is why this is even a problem - since
+the minimum is below -1, it rescales weirdly). But it shouldn't get
+below -1 at all. Hm. At least the values from both my numpy and
+tensorflow render implementations match, though I'm not sure why
+values are going below -1...
+
+Ah I know. It's because the weights themselves are not guaranteed to
+be positive. I'm not sure if this is a problem for my past runs, but
+at least I'm aware of it now. I should probably repeat the past runs
+after and limit them to between 0 and 1 to prevent using negative
+weights as combiners - but considering the last network was a regular
+grid, I don't think it should be too much of a problem. Maybe it
+matters more for this grid where phosphenes are much more likely to
+overlap, but I'll have to come back to this. 
+
+I've fixed it now (by that I mean, now the UniqueElectrode grids
+normalise between -1 and 1, just like the Electrode grids), but I
+guess there's still questionability on how "real-life" like it is. But
+at the very least, the nonLinear grid should give values between -1
+and 1 like the MNIST (and this was already the case for the
+polarRegular grid which clips them between those two values anyway). 
+
+Training time is slightly longer, about 100 seconds an epoch. I think
+that's alright for now.
+
+---
+
+Okay, I've retrained the MNIST decoder network with the rescaled
+images and with better random inputs (or at least random inputs more
+like what it's going to get from the encoder. We'll see how it goes.
+
+** [2019-06-12 Wed]
+
+*** Using Softmax for th Encoder Output
+:LOGBOOK:
+CLOCK: [2019-06-12 Wed 09:30]--[2019-06-12 Wed 10:52] =>  1:22
+:END:
+
+The results don't look terrible, but they're still washed out. I think
+I realise the problem now - I should have been using softmax on the
+output of the encoder to ensure that the outputs are between 0
+and 1. I should probably repeat the previous ones as that might
+change the performance. 
+
+I'll run the "nonLinear" interaction grid with as softmax output layer
+now and see how it goes.
+
+---
+
+It seems to have gone much better. Since the inputs to the renderer
+are now between 0 and 1, that means it looks like other grids. Though,
+I think removing the colour lowered the distortion somewhat. I've
+tried experimentally with the "nonLinear" grid and it's not too hard
+to decode the digit with the brightness rather than colour random
+values. 
+
+The training gif:
+
+[[./03-psychophysics/./data/training-intermediate-data/training-gifs/2019-06-12_10-01_evolution_NonLinearInteractionGrid_12-12_64-64.gif]]
+
+And the loss curve:
+
+[[./03-psychophysics/./data/training-intermediate-data/training-graphs/2019-06-12_10-01_loss_NonLinearInteractionGrid_12-12_64-64.png]]
+
+It's much harder to see the granularity on the loss because at the
+very start, it's so high.
+
+I think the output is fairly reasonable and I think its encouraging
+that the network can still do this even when its available space of
+phosphenes is distorted. 
+
+*** Meeting :meeting:
+
+Been continuing on with encoder training with additional improvements
+to:
+1. MNIST decoder architecture - 2D convolutional layer, larger
+   kernels, more garbage data to train on 
+2. Encoder training - softmax for the output layer, no hidden layers, 
+3. Digit decoder (the stable network part of the encoder), more data
+   to train on, one more convolutional layer for better performance
+
+The Polar Regular grid seems to get fairly reasonable results now, so
+I am working on extending it to the "non-linear" (maybe needs a better
+name, because it's really the /most/ linear of the grids since the
+other grids to addition then clipping. Maybe I shold call this the
+"rescaling" grid) and irregular grids, and testing this 
+
+I'm still not sure if having more hidden layers on the encoder is
+beneficial or not.
+
+- Also, regarding "usefulness" - I think this is interesting, but I'm
+  still not confident this will actually get better performance than
+  the nonLinear grid with scanning. From what I've felt when testing,
+  scanning the image is really helpful, even with poor grids. 
+
+
+* July 2019
  
-* Utilities
+* August 2019
+* September 2019
 
-This is not chronological.
+   #+begin_quote
+   [2019-09-25 Wed] - Department Oral No. 2
+   #+end_quote
 
-** Loss Plot
+* October 2019
 
-   #+BEGIN_SRC python
-       from matplotlib import pyplot as plt
-       import numpy as np
+   #+begin_quote
+   [2019-10-29 Tue] - Thesis Due
 
-       def plot_loss(logpath):
-           with open(logpath) as infile:
-               loss_raw = infile.readlines()
+   [2019-10-29 Tue] - Faculty Oral and Poster upload to Moodle Due
 
-           loss_data = np.array(list(map(float, loss_raw)))
+   [2019-10-30 Wed] and [2019-10-31 Thu] - Faculty Oral and Poster Days
+   #+end_quote
 
-           plt.plot(range(loss_data.shape[0]), loss_data)
-           plt.ylabel("Categorical Cross Entropy between\nPrediction and One-Hot Class")
-           plt.xlabel("Training Batch (each containing 500 images)")
-           plt.title("Decoder Loss per Epoch")
-   #+END_SRC
+
