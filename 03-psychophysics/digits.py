@@ -8,7 +8,9 @@ This script runs a digit recognition psychophysics session.
 import numpy as np
 import json
 import phosphenes
-from phosphenes import Stimulus
+import cv2
+import pickle
+from phosphenes import *
 from datetime import datetime
 from argparse import ArgumentParser
 from psychopy import visual, core, gui, event
@@ -53,13 +55,19 @@ argspec = {
         'type': str,
         'nargs': '?',
         'default': 'polarRegular',
-        'help': 'The grid type for rendering. One of regular, irregular, polarRegular, polarRegularUnique, or nonLinear.'
+        'help': 'The grid type for rendering. One of regular, irregular, polarRegular, polarRegularUnique, or nonLinear, or a filepath to the grid to load.'
     },
     'processor': {
         'type': str,
         'nargs': '?',
         'default': 'direct',
-        'help': 'The processor for the session. One of brightness of learner.'
+        'help': 'The processor for the session. One of direct or net.'
+    },
+    'encoder': {
+        'type': str,
+        'nargs': '?',
+        'default': None,
+        'help': 'If the processor is a net, specify the filepath of the encoder to be used. '
     },
     'no-numpad': {
         'action': 'store_const',
@@ -81,6 +89,7 @@ config.NCUES          = args.ncues
 config.GRID_TYPE      = args.grid
 config.PROCESSOR_TYPE = args.processor
 config.NO_NUMPAD      = args.noNumpad
+config.ENCODER        = args.encoder
 
 
 # First, we define the constants for the window size of the experiment.
@@ -89,11 +98,13 @@ config.NO_NUMPAD      = args.noNumpad
 # electrodes there are). 
 # `SCALE` links the two. 
 
-config.XSIZE  = 128
-config.YSIZE  = 128
+config.XSIZE  = 144
+config.YSIZE  = 144
 config.SCALE  = 12
 config.EXSIZE = config.XSIZE // config.SCALE
 config.EYSIZE = config.YSIZE // config.SCALE
+config.INPUT_XSIZE = 64
+config.INPUT_YSIZE = 64
 
 # Next, we load the stimulus. Opening the image files can be expensive
 # so we're doing at this at the very start and loading them into a 
@@ -112,7 +123,10 @@ config.IMAGE_SIZE = np.shape(imread(config.IMAGE_TEMPLATE.format(0)))
 config.IMAGE_SCALE = config.EXSIZE / config.IMAGE_SIZE[0]  
 
 # `IMAGES` holds the original digit images.
-config.IMAGES = [np.flipud(color.rgb2gray(imread(config.IMAGE_TEMPLATE.format(digit)))) for digit in range(10)]
+config.IMAGES = [cv2.cvtColor(cv2.resize(np.flipud(imread(config.IMAGE_TEMPLATE.format(digit))),
+                                         dsize=(config.INPUT_XSIZE, config.INPUT_YSIZE)),
+                              cv2.COLOR_RGBA2RGB)
+                            for digit in range(10)]
 
 # `STIMULI` contains a list of numpy arrays.
 # Each element in the list holds the image data (in greyscale at the moment) 
@@ -128,16 +142,22 @@ grids = {
     'irregular': lambda: phosphenes.IrregularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE, randomPos=0.1, xsize=config.XSIZE, ysize=config.YSIZE),
     'polarRegular': lambda: phosphenes.PolarRegularGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE, xsize=config.XSIZE, ysize=config.YSIZE),
     'polarRegularUnique': lambda: phosphenes.PolarRegularUniqueGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE, xsize=config.XSIZE, ysize=config.YSIZE),
-    'nonLinear': lambda: phosphenes.NonLinearInteractionGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE, xsize=config.XSIZE, ysize=config.YSIZE),
+    'nonLinear': lambda: phosphenes.NonLinearInteractionGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE, xsize=config.XSIZE, ysize=config.YSIZE),    
 }
 
-config.GRID = grids[config.GRID_TYPE]()
+try:
+    grid = grids[config.GRID_TYPE]()
+except KeyError:
+    with open(config.GRID_TYPE, 'rb') as infile:
+        grid = pickle.load(infile)
+
+config.GRID = grid
 
 # We initiate the stimulus processor type.
 
 processors = {
     'direct': phosphenes.Stimulus,
-    'net': phosphenes.StimulusNet,
+    'net': lambda image, grid: phosphenes.StimulusNet(image, grid, config.ENCODER),
 }
 
 config.PROCESSOR = processors[config.PROCESSOR_TYPE]
@@ -146,14 +166,16 @@ config.PROCESSOR = processors[config.PROCESSOR_TYPE]
 config.DATETIME_FORMAT       = '%Y-%m-%d_%H-%M-%S'
 config.DIGIT_SOUND_TEMPLATE  = './data/digit-voice/{}-alt.wav'
 
+base_dir = './data/psychophysics-sessions/'
+
 if config.TESTING:
-    config.CONFIG_FILE_TEMPLATE  = './data/sessions/tests/{}_{}_config.json'
-    config.SESSION_FILE_TEMPLATE = './data/sessions/tests/{}_{}_session.csv'
-    config.MOUSE_FILE_TEMPLATE   = './data/sessions/tests/{}_{}_mouse.csv'
+    config.CONFIG_FILE_TEMPLATE  = base_dir + 'tests/{}_{}_config.json'
+    config.SESSION_FILE_TEMPLATE = base_dir + 'tests/{}_{}_session.csv'
+    config.MOUSE_FILE_TEMPLATE   = base_dir + 'tests/{}_{}_mouse.csv'
 else:
-    config.CONFIG_FILE_TEMPLATE  = './data/sessions/participants/{}_{}_config.json'
-    config.SESSION_FILE_TEMPLATE = './data/sessions/participants/{}_{}_session.csv'
-    config.MOUSE_FILE_TEMPLATE   = './data/sessions/participants/{}_{}_mouse.csv'
+    config.CONFIG_FILE_TEMPLATE  = base_dir + 'participants/{}_{}_config.json'
+    config.SESSION_FILE_TEMPLATE = base_dir + 'participants/{}_{}_session.csv'
+    config.MOUSE_FILE_TEMPLATE   = base_dir + 'participants/{}_{}_mouse.csv'
 
 # Parameters for sound.
 config.CORRECT_NOTE   = 'G'
@@ -181,7 +203,7 @@ config.END_TEXT    = "Thank you. \n\nPress any key to exit."
 # If testing, the blank image.
 if config.TESTING:
     config.BLANK_FILE = config.IMAGE_TEMPLATE.format('blank')
-    config.BLANK_IMAGE = np.flipud(color.rgb2gray(imread(config.BLANK_FILE)))
+    config.BLANK_IMAGE = cv2.resize(np.flipud(imread(config.BLANK_FILE)), dsize=(config.INPUT_XSIZE, config.INPUT_YSIZE))
     config.TEST_WINDOW_XSIZE = 480
     config.TEST_WINDOW_YSIZE = 480
 

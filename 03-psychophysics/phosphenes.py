@@ -75,7 +75,8 @@ class UniqueElectrode:
         self.x = bound(x + (random.random() - 0.5) * randomPos, 0, 1)
         self.y = bound(y + (random.random() - 0.5) * randomPos, 0, 1)
         self.size = PBASE * (0.5 + (4 * np.sqrt((self.x - 0.5) ** 2 + (self.y - 0.5) ** 2)) ** 2)
-        self.colour = np.random.random(3)
+        #self.colour = np.random.random(3)
+        self.brightness = np.random.random()
         # xmod and ymod modify the shape of the phosphene
         self.xmod = 1 + (random.random()-0.5) * 3
         self.ymod = 1 + (random.random()-0.5) * 3
@@ -88,8 +89,11 @@ class UniqueElectrode:
         xmin, xmax = safebound(self.xsize * self.x, self.size*self.xmod, 0, self.xsize)
         ymin, ymax = safebound(self.ysize * self.y, self.size*self.ymod, 0, self.ysize)
 
-        base = np.zeros((self.ysize, self.xsize, 3))
-        base[ymin:ymax, xmin:xmax, :] = self.colour
+        # base = np.zeros((self.ysize, self.xsize, 3))
+        # base[ymin:ymax, xmin:xmax, :] = self.colour
+        base = np.zeros((self.ysize, self.xsize))
+        base[ymin:ymax, xmin:xmax] = self.brightness
+        # base = base.reshape((self.ysize, self.xsize))
 
         return gaussian_filter(base, self.size * (random.random() ** 0.3))
 
@@ -212,25 +216,39 @@ class NonLinearInteractionGrid:
             for rho in range(1, nrho+1)
             for theta in range(ntheta)
         ]
+        
+        self.renders = tf.convert_to_tensor(np.array([e.rendered for e in self.grid]), dtype=tf.float32)
 
     def render(self, values):
+        # Assume all inputs are in the range 0 and 1
         product = [v * e.rendered for (v, e) in zip(values, self.grid)]
         summed = sum(product)
         summax = np.max(summed)
-        #return np.clip(summed, 0, 1)
         return (summed / summax) * 2 - 1
-
+    
+    def render_tensor(self, tensor):
+        # Assume all inputs are in the range 0 and 1
+        reshaped = tf.transpose(tf.reshape(tf.tile(tensor, tf.constant([64])), (64, 144, 1)), perm=[1, 0, 2])
+        product = reshaped * self.renders
+        summed = tf.reduce_sum(product, axis=0)
+        summax = tf.reduce_max(summed)
+        return tf.divide(summed, summax) * 2 - 1
         
         
 # STIMULUS
 
 class Stimulus:
     def __init__(self, image, grid, xpos=0, ypos=0):
-        self.original = image
-        self.shape = self.original.shape
+        self.shape = image.shape
         
-        self.padder = np.zeros((3 * self.shape[0], 3 * self.shape[1]))
-        self.padder[self.shape[0]:2*self.shape[0], self.shape[1]:2*self.shape[1]] = self.original
+        if len(self.shape) == 2:
+            self.original = image.reshape(*self.shape, 1)
+            self.shape = self.original.shape
+        else:
+            self.original = image
+        
+        self.padder = np.zeros((3 * self.shape[0], 3 * self.shape[1], self.shape[2]))
+        self.padder[self.shape[0]:2*self.shape[0], self.shape[1]:2*self.shape[1], :] = self.original
         
         self.xpos = xpos
         self.ypos = ypos
@@ -249,7 +267,7 @@ class Stimulus:
         xmin = bound(int(self.shape[1] * x - self.sampleWidth // 2), 0, self.shape[1] - 1)            
         xmax = bound(int(self.shape[1] * x + self.sampleWidth // 2), 0, self.shape[1] - 1)
 
-        vals  = self.image[ymin:ymax, xmin:xmax]
+        vals  = self.image[ymin:ymax, xmin:xmax, :]
         return np.mean(vals)
     
     def getImage(self):
@@ -259,7 +277,7 @@ class Stimulus:
         xstart = self.shape[0] - int(self.xpos * self.shape[0])
         ystart = self.shape[1] - int(self.ypos * self.shape[1])
         
-        return self.padder[ystart:ystart+self.shape[1], xstart:xstart+self.shape[0]]
+        return self.padder[ystart:ystart+self.shape[1], xstart:xstart+self.shape[0], :]
 
     def process(self):
         """ Converts the stimulus into a brightness vector for the
@@ -284,20 +302,20 @@ import tensorflow as tf
 tf.executing_eagerly()
 import keras
 
-input_shape = (72, 72)
+# input_shape = (72, 72)
 
-def make_encoder_model():
-    model = tf.keras.Sequential()
-    model.add(tf.keras.layers.Flatten(input_shape=input_shape))
-    model.add(tf.keras.layers.Dense(10*10*6))
-    model.add(tf.keras.layers.Dense(10*10))
-    #print(model.output_shape)
-    return model
+# encoder_path = "./data/models/encoder_model.h5"
+# encoder = tf.keras.models.load_model(encoder_path)
 
-encoder = make_encoder_model()
+# encoder = make_encoder_model()
 
 class StimulusNet(Stimulus):
+
+    def __init__(self, image, grid, encoder_path):
+        self.encoder = tf.keras.models.load_model(encoder_path)
+        Stimulus.__init__(self, image, grid)
     
     def process(self):
-        image_tensor = tf.convert_to_tensor(np.array([color.rgb2gray(self.image)]), dtype=tf.float32)
-        return encoder(image_tensor).numpy()[0]
+        image_tensor = tf.convert_to_tensor(np.array([self.image]), dtype=tf.float32)
+        print(image_tensor.shape)
+        return self.encoder(image_tensor).numpy()[0]
