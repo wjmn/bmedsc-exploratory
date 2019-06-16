@@ -3659,6 +3659,18 @@ normalised between 0 and 1, which I've had to change because now the
 Stimulus class takes 3 dimensional RGB data rather than the grayscale
 data.
 
+I've managed to get hook the trained encoder and grid up to the digit
+experiment successfully now. I had some issues with normalising the
+images from the image files and orienting them in the correct
+direction (I originally had the up-down flip in the image loading
+section, but I have moved it to post-render). 
+
+Here's an example of a command to run the experiment with a
+"nonLinear" interaction grid, and pretrained processor, with scanning.
+
+#+BEGIN_SRC sh
+python .\digits.py --testing --ncues 10 --ntrials 1 --grid ".\data\training-intermediate-data\training-grids\2019-06-12_10-01_grid_NonLinearInteractionGrid_12-12_64-64.pkl" --encoder ".\data\training-intermediate-data\training-encoders\2019-06-12_10-01_encoder_NonLinearInteractionGrid_12-12_64-64.h5" --processor net --with-scanning
+#+END_SRC
 
 
 

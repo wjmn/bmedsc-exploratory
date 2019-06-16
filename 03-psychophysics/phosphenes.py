@@ -246,6 +246,9 @@ class Stimulus:
             self.shape = self.original.shape
         else:
             self.original = image
+            
+        # Normalise between -1 and 1
+        self.original = 2 * (self.original / np.max(self.original)) - 1
         
         self.padder = np.zeros((3 * self.shape[0], 3 * self.shape[1], self.shape[2]))
         self.padder[self.shape[0]:2*self.shape[0], self.shape[1]:2*self.shape[1], :] = self.original

@@ -131,14 +131,15 @@ config.IMAGE_SIZE = np.shape(imread(config.IMAGE_TEMPLATE.format(0)))
 config.IMAGE_SCALE = config.EXSIZE / config.IMAGE_SIZE[0]  
 
 # `IMAGES` holds the original digit images.
-config.IMAGES = [cv2.cvtColor(cv2.resize(np.flipud(imread(config.IMAGE_TEMPLATE.format(digit))),
+config.IMAGES = [cv2.cvtColor(cv2.resize(imread(config.IMAGE_TEMPLATE.format(digit)),
                                          dsize=(config.INPUT_XSIZE, config.INPUT_YSIZE)),
                               cv2.COLOR_RGBA2RGB)
                             for digit in range(10)]
 
 # `STIMULI` contains a list of numpy arrays.
-# Each element in the list holds the image data (in greyscale at the moment) 
-# for the digit equal to its index.
+# Each element in the list holds the image data 
+# for the digit equal to its index. Normalised to 
+# between -1 and 1
 config.STIMULI = [
     np.array(Image.fromarray(image).resize((config.EXSIZE, config.EYSIZE)))
     for image in config.IMAGES
@@ -312,7 +313,7 @@ if __name__ == "__main__":
                 
                 # If this is a testing run, also draw the original image.
                 if config.TESTING:
-                    originalImage = visual.ImageStim(testWin, image=color.rgb2gray(image), size=(2,2))
+                    originalImage = visual.ImageStim(testWin, image=np.flipud(color.rgb2gray(image)), size=(2,2))
                     originalImage.draw(); testWin.flip()
                     
                 # Clear the event buffer
@@ -334,13 +335,11 @@ if __name__ == "__main__":
                     while not keypressRaw:
                         # Set the stimulus in the right half of the grid
                         stimulus.setPos(0.20, 0)
-                        print(stimulus.vector)
-                        rendered = config.GRID.render(stimulus.vector)
+                        rendered = np.flipud(config.GRID.render(stimulus.vector))
                         imstim = visual.ImageStim(win, image=rendered, size = (2 * win.size[1] / win.size[0], 2))
                         imstim.draw(); win.flip()
 
                         keypresses = event.waitKeys(keyList=config.KEY_LIST, clearEvents=True)
-                        print(keypresses)
                         if keypresses:
                             keypressRaw = keypresses[0]                    
                 else:
@@ -368,7 +367,7 @@ if __name__ == "__main__":
                             mouseRecord.reset()
 
                         # Render the stimulus
-                        rendered = config.GRID.render(stimulus.vector)
+                        rendered = np.flipud(config.GRID.render(stimulus.vector))
 
                         # Create an image stimulus out of the rendered image.
                         # Then show the stimulus.
