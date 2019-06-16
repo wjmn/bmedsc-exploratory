@@ -3572,11 +3572,15 @@ images and with better random inputs (or at least random inputs more
 like what it's going to get from the encoder. We'll see how it goes.
 
 ** [2019-06-12 Wed]
-
+   
 *** Using Softmax for th Encoder Output
 :LOGBOOK:
 CLOCK: [2019-06-12 Wed 09:30]--[2019-06-12 Wed 10:52] =>  1:22
 :END:
+
+| Git commit hash | b0b1e5d2139dae22bcaffce9f229d52bfef8a2b6 | 
+| Grid | "nonLinear" (to rename to "rescaling") | 
+| Vector size | 12 x 12 = 144 | 
 
 The results don't look terrible, but they're still washed out. I think
 I realise the problem now - I should have been using softmax on the
@@ -3634,6 +3638,28 @@ beneficial or not.
   still not confident this will actually get better performance than
   the nonLinear grid with scanning. From what I've felt when testing,
   scanning the image is really helpful, even with poor grids. 
+
+
+** [2019-06-17 Mon]
+
+*** Preliminary Analysis
+:LOGBOOK:
+CLOCK: [2019-06-17 Mon 08:59]
+:END:
+
+I think what I'll try to do today is to just get some preliminary
+results and analysis for a small hypothesis - that a machine learned
+algorithm to statically map digits to simulated phosphenes provides
+beter classification accuracy than a brightness-based approach, for a
+map of irregular phosphenes. 
+
+I've added a command line flag to digits.py to enable or disable
+scanning. I've also made 100% sure that original image vector is
+normalised between 0 and 1, which I've had to change because now the
+Stimulus class takes 3 dimensional RGB data rather than the grayscale
+data.
+
+
 
 
 * July 2019

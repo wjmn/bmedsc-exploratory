@@ -75,6 +75,13 @@ argspec = {
         'default': False,
         'dest': 'noNumpad',
         'help': 'Flags that normal number keys instead of numpad should be used.'
+    },
+    'with-scanning': {
+        'action': 'store_const',
+        'const': True,
+        'default': False,
+        'dest': 'withScanning',
+        'help': 'Flags that scanning with the mouse should be enabled.'
     }
 }
 
@@ -90,6 +97,7 @@ config.GRID_TYPE      = args.grid
 config.PROCESSOR_TYPE = args.processor
 config.NO_NUMPAD      = args.noNumpad
 config.ENCODER        = args.encoder
+config.WITH_SCANNING  = args.withScanning
 
 
 # First, we define the constants for the window size of the experiment.
@@ -322,44 +330,58 @@ if __name__ == "__main__":
                 # Set the mouse recording clock to 0
                 mouseRecord.reset()
                 
-                # Loop until the keypress
-                while not keypressRaw:
-                    
-                    # Get the mouse position and set the stimulus to the position.
-                    newPos = mouse.getPos()
-                    stimulus.setPos(*newPos)
-                    
-                    if mouseRecord.getTime() > config.MOUSE_RECORD_INTERVAL:
-                    
-                        mouseRow = config.MOUSE_ROW_TEMPLATE.format(
-                            trial=trial,
-                            cue=cue,
-                            digit=digit,
-                            xmouse=newPos[0],
-                            ymouse=newPos[1],
-                            cuetime=clockCue.getTime(),
-                            trialtime=clockTrial.getTime(),
-                            sessiontime=clockSession.getTime(),
-                        )
-                        mousefile.write(mouseRow)
-                        
-                        mouseRecord.reset()
-                
-                    # Render the stimulus
-                    rendered = config.GRID.render(stimulus.vector)
+                if not config.WITH_SCANNING:
+                    while not keypressRaw:
+                        # Set the stimulus in the right half of the grid
+                        stimulus.setPos(0.20, 0)
+                        print(stimulus.vector)
+                        rendered = config.GRID.render(stimulus.vector)
+                        imstim = visual.ImageStim(win, image=rendered, size = (2 * win.size[1] / win.size[0], 2))
+                        imstim.draw(); win.flip()
 
-                    # Create an image stimulus out of the rendered image.
-                    # Then show the stimulus.
-                    # Ensure stimulus is square on full screen window, assuming window has greater x dim than y dim.
-                    imstim = visual.ImageStim(win, image=rendered, size = (2 * win.size[1] / win.size[0], 2))
-                    imstim.draw(); win.flip()
-                    
-                    # Wait for a keypress. 
-                    # We only need the first keypress, and want the key input from the numpage.
-                    keypresses = event.getKeys(keyList = config.KEY_LIST)
-                    if keypresses:
-                        keypressRaw = keypresses[0]
-                    #keypressRaw, *_ = event.waitKeys(clearEvents=True, keyList=config.KEY_LIST)
+                        keypresses = event.waitKeys(keyList=config.KEY_LIST, clearEvents=True)
+                        print(keypresses)
+                        if keypresses:
+                            keypressRaw = keypresses[0]                    
+                else:
+                    # Loop until the keypress
+                    while not keypressRaw:
+
+                        # Get the mouse position and set the stimulus to the position.
+                        newPos = mouse.getPos()
+                        stimulus.setPos(*newPos)
+
+                        if mouseRecord.getTime() > config.MOUSE_RECORD_INTERVAL:
+
+                            mouseRow = config.MOUSE_ROW_TEMPLATE.format(
+                                trial=trial,
+                                cue=cue,
+                                digit=digit,
+                                xmouse=newPos[0],
+                                ymouse=newPos[1],
+                                cuetime=clockCue.getTime(),
+                                trialtime=clockTrial.getTime(),
+                                sessiontime=clockSession.getTime(),
+                            )
+                            mousefile.write(mouseRow)
+
+                            mouseRecord.reset()
+
+                        # Render the stimulus
+                        rendered = config.GRID.render(stimulus.vector)
+
+                        # Create an image stimulus out of the rendered image.
+                        # Then show the stimulus.
+                        # Ensure stimulus is square on full screen window, assuming window has greater x dim than y dim.
+                        imstim = visual.ImageStim(win, image=rendered, size = (2 * win.size[1] / win.size[0], 2))
+                        imstim.draw(); win.flip()
+
+                        # Wait for a keypress. 
+                        # We only need the first keypress, and want the key input from the numpage.
+                        keypresses = event.getKeys(keyList = config.KEY_LIST)
+                        if keypresses:
+                            keypressRaw = keypresses[0]
+                        #keypressRaw, *_ = event.waitKeys(clearEvents=True, keyList=config.KEY_LIST)
                 
                 # Check if their input was correct. 
                 # Numpad keys are prepended with 'num_', so we strip it out.

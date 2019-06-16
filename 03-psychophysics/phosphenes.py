@@ -284,6 +284,7 @@ class Stimulus:
         """
 
         params = [self.get_params(e.x, e.y) for e in self.grid.grid]
+        params /= np.max(params)
         return params
         #flattened = self.image.flatten(order="C")
     
@@ -317,5 +318,4 @@ class StimulusNet(Stimulus):
     
     def process(self):
         image_tensor = tf.convert_to_tensor(np.array([self.image]), dtype=tf.float32)
-        print(image_tensor.shape)
         return self.encoder(image_tensor).numpy()[0]
