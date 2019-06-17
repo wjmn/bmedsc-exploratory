@@ -335,7 +335,10 @@ if __name__ == "__main__":
                     while not keypressRaw:
                         # Set the stimulus in the right half of the grid
                         stimulus.setPos(0.20, 0)
+                        print(stimulus.vector)
                         rendered = np.flipud(config.GRID.render(stimulus.vector))
+                        print(np.min(rendered))
+                        print(np.max(rendered))
                         imstim = visual.ImageStim(win, image=rendered, size = (2 * win.size[1] / win.size[0], 2))
                         imstim.draw(); win.flip()
 

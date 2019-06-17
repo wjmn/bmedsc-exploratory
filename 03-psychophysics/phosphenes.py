@@ -286,7 +286,9 @@ class Stimulus:
         """ Converts the stimulus into a brightness vector for the
         """
 
-        params = [self.get_params(e.x, e.y) for e in self.grid.grid]
+        params = np.array([self.get_params(e.x, e.y) for e in self.grid.grid])
+        # Normalise to between 0 and 1
+        params = params - (np.min(params))
         params /= np.max(params)
         return params
         #flattened = self.image.flatten(order="C")
@@ -316,7 +318,7 @@ import keras
 class StimulusNet(Stimulus):
 
     def __init__(self, image, grid, encoder_path):
-        self.encoder = tf.keras.models.load_model(encoder_path)
+        self.encoder = tf.keras.models.load_model(encoder_path)        
         Stimulus.__init__(self, image, grid)
     
     def process(self):
