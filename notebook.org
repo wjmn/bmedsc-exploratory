@@ -3659,7 +3659,7 @@ normalised between 0 and 1, which I've had to change because now the
 Stimulus class takes 3 dimensional RGB data rather than the grayscale
 data.
 
-I've managed to get hook the trained encoder and grid up to the digit
+I've managed to hook the trained encoder and grid up to the digit
 experiment successfully now. I had some issues with normalising the
 images from the image files and orienting them in the correct
 direction (I originally had the up-down flip in the image loading
@@ -3762,6 +3762,7 @@ affect the result.
 
 *** Preliminary Analysis - Analysis
 :LOGBOOK:
+CLOCK: [2019-06-17 Mon 11:50]--[2019-06-17 Mon 12:10] =>  0:20
 CLOCK: [2019-06-17 Mon 10:30]--[2019-06-17 Mon 11:49] =>  1:19
 :END:
 
@@ -3864,6 +3865,67 @@ uniform - the 9 for the pretrained net classifier, for example, gets
 chosen much more frequently than the 4. Perhaps this indicates that
 the 4 just looks too much like a 9.
 
+I suppose once I get more participants, I could do a t-test to compare
+between specific groups. I don't know if it's meaningful to compare
+within an individual, or actually what test I should use. I suppose
+whether the digit is correct or not, as a binary variable, could be
+modelled with a logistic regression. I'll have to think about that. 
+
+But I'm not surprised with these results. I'm not finished with the
+encoder yet, but I guess it's interesting to take this quick detour
+back into the experimental zone. 
+
+*** Progress Review
+:LOGBOOK:
+CLOCK: [2019-06-17 Mon 13:12]
+CLOCK: [2019-06-17 Mon 12:12]--[2019-06-17 Mon 12:44] =>  0:32
+:END:
+
+My biggest dissatisfaction with the current approach is the inability
+to scan when using the pretrained CNN processor. Scanning, from my
+literature review and also from my observations when doing the
+experiment, is really quite helpful to make up for loss of information
+from the distortions and gaps in the grid. My initial thought was that
+there was a compromise between location-information and
+form-information for a digit-recognition task on a grid, and that a
+CNN-based decoder would optimise form-information at the cost of
+location-information (which may be an acceptable tradeoff for certain
+tasks), but now I sort of believe that scanning can compensate for the
+lack of form-information because you have an additional, controllable
+input -  your position in space. 
+
+It seems like scanning is another channel of information which you can
+control. And the assumption that the digit is static in form means
+that you can use that channel effectively because any changes must be
+due to changes in location, not in form - by scanning, you can take
+advantage of these assumptions. I guess, conversely, by removing
+scanning and by keeping stationary for a pretrained CNN decoder which
+is purely form-based, you can infer that any changes in appearance
+must be changes in form, and not in location - but this inference is
+much less useful in real life it seems. Most informative information
+from a reading perspective, for example, is static in form.
+
+I guess there is one additional advantage of non-scanning - you don't
+have to move to get a good picture, and pictures are relatively
+stable. This experiment simulates scanning with a mouse, but I was
+moving it quite quickly. 
+
+Here's a plot on the first trial of mouse movements (at a rate of
+approximately 5Hz, with each measurement corresponding to a dot).
+
+[[file:./03-psychophysics/data/archive/2019-06-17-mouse-movements-direct-with-scanning.png]]
+
+The x and y axis correspond directly to the x and y axis of the
+stimulus screen (scale -1 to 1 where -1 is bottom left, 1 is top
+right). The line and markers become lighter with time. 
+
+So what should be the direction from here? 
+
+Maybe I will try to get the digit forms to look better. But as I
+mentioned, even at the end, this approach has very clear limitations. 
+But I still think it would be interesting. And I guess trying to think
+about the real-life implications is maybe a bit premature. There's not
+really a reason why both couldn't exist. 
 
 * July 2019
  
