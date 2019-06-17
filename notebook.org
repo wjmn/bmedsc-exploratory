@@ -3877,7 +3877,7 @@ back into the experimental zone.
 
 *** Progress Review
 :LOGBOOK:
-CLOCK: [2019-06-17 Mon 13:12]
+CLOCK: [2019-06-17 Mon 13:12]--[2019-06-17 Mon 13:26] =>  0:14
 CLOCK: [2019-06-17 Mon 12:12]--[2019-06-17 Mon 12:44] =>  0:32
 :END:
 
@@ -3926,6 +3926,127 @@ mentioned, even at the end, this approach has very clear limitations.
 But I still think it would be interesting. And I guess trying to think
 about the real-life implications is maybe a bit premature. There's not
 really a reason why both couldn't exist. 
+
+
+*** Using a Regular Grid and Increasing the Number of Electrodes
+
+I'm going to increase the number of electrodes to 24 x 24 and see if
+that gets better digits, and I'll just use the regular grid this time
+too. I'll keep the rendered grid at 64 x 64 pixels. 
+
+I think the =phosphenes.py= file could use a good refactor. The grids
+could all inherit from a single class, which would reduce the amount
+of repetition in the code at the moment. But I'll do that later, just
+making a note now. 
+
+Generating the training data for the MNIST digit decoder is...quite
+time consuming. It's been at least 5 minutes and still going. I guess
+that makes sense considering the garbage is now 4 times as large. 
+
+I ended up interrupting the kernel, I think I'll decrease the amount
+of garbage data I need to make.
+
+I've reduced the Gaussian filter PBASE paramter from 2 to 1, because
+it was bleaching the PolarRegularGrid now with the clipping done. 
+
+I've reduced the amount of garbage by a factor of 10, back to where I
+had it before. It took about 1 minute to generate the data. I'm not
+sure if this might reduce the quality of the results though.
+
+Actually, nevermind that, I decided to try again with the full garbage
+data. I don't really want to compromise on that to be honest, as it's
+that which is keeping the output from looking very poor. - actually,
+I'll do a compromise, I'll do 2 times, not 10 times.  It took about 1
+minute as well, I think it's a reasonable compromise...I think I'd
+prefer more data of course, but I'll leave it for now.
+
+I'm also going to try adding another layer to the decoder - a 32x32
+kernel, which is half the original image. We'll see if that helps. 
+
+Training with this extra layer is going quite slowly - about 7 minutes
+per epoch - but hopefully it will be worth it. I just wonder whether
+having a large kernel may be better in providing more "holistic"
+classification, rather than granular lines. 
+
+While I'm waiting for the MNIST decoder to train, I think I need to
+specify out the questions for my project again:
+
+1. Can a pretrained image encoding network produce phosphene-versions
+   of digits that improve human classification accuracy compared to
+   static direct encodings?
+2. If so, what encoding network architecture and training method best improves the human
+   classification accuracy of the resulting phosphene digits?
+3. How does a pretrained image encoding network for static digits
+   compare to a direct encoding which allows scanning movements? 
+4. In what map distortion settings can this image encoding network be
+   useful?
+
+I think the fourth question is probably the most real-life
+applicable. I think what I should aim to demonstrate is that these
+methods are more robust against distortions, not necessarily that they
+are better than direct encoding for all cases. I doubt it will be
+better than a direct encoding for cases where the distortion is
+minimal, but the full range of distortions of phosphenes are not yet
+well known. Being able to demonstrate robustness to map distortions
+would be important in such a case. 
+
+But how exactly does one demonstrate robustness? One could compare
+accuracies across different distortions, but you would have to attempt
+to prove equivalence, which I think may be quite hard. 
+
+Back to the MNIST decoder training - it seems the accuracy isn't quite
+as good, though to be honest, that might just be because I reduced the
+amount of garbage data (which would be fairly easy to separate). (That
+being said, it's not terrible - 97-98% at the start of epoch 5). 
+
+Training is *much* slower with the 24x24 grid. It takes at least a few
+seconds to do a single batch. Maybe I should stick with the 12 x 12
+grid. Though it could also be because of the extra MNIST decoder layer
+(though I sort of doubt it - it's not being trained). Hm. I probably
+should have tried just changing one of those things first, but to be
+honest, this is purely just a "see if it gets better results with more
+pixels."
+
+But I think it's taking a bit too long. I think I'll reduce it down to
+a 16 x 16 grid instead. 
+
+I'm going to repeat what I did, but with a 16 x 16 regular grid this time.
+
+*** 16 x 16 Regular Grid, Extra MNIST Layer. 
+:LOGBOOK:
+CLOCK: [2019-06-17 Mon 15:10]
+:END:
+
+Training MNIST again. I'm trying to think about what might be a good
+way to improve how the digit representations look. Loss function is
+what's guiding it, maybe there are better approaches to what I'm
+currently attempting. 
+
+Training the encoder is slightly faster than the 24x24 round. It's
+bearable. 
+
+I got a rather weird error message regarding unable to reshape and it
+looked like it was because the last batch had 0 images. I'm not
+entirely sure why that was the case or why it only occurs for the
+last loop, but I've set a conditional to avoid this problem now.
+
+It seems to be training very slowly though. The encoder, at
+initialisation, outputs very small values which means the image is
+very dark. I've upped the learning rate to 1e-1, we'll see how that
+goes. 
+
+Training is really poor for this run. I'm not entirely sure why. I
+think I'll try upping the learning rate up to 1. 
+
+But even so, it's not training very well at all. Maybe it's because
+the phosphenes are so much more spread out, or because it starts with
+a rather poor configuration. I'm not entirely sure. 
+
+I think I'd also like to just spend some time doing some extra
+reading.
+
+I think I'll stop this one here. I'll retry the polar grid with 16 x
+16 electrodes instead. 
 
 * July 2019
  

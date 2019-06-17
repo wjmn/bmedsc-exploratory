@@ -10,7 +10,7 @@ from skimage import color
 
 XSIZE = 64
 YSIZE = 64
-PBASE = 2
+PBASE = 1
 SCALE = 6
 EXSIZE = XSIZE // SCALE
 EYSIZE = YSIZE // SCALE
@@ -107,13 +107,14 @@ class RegularGrid:
             exsize: int - x size of electrode grid 
             eysize: int - y size of electrode grid
         """
-        self.exsize = EXSIZE
-        self.eysize = EYSIZE
+        self.exsize = exsize
+        self.eysize = eysize
         self.grid = [
             Electrode(x / exsize, y / eysize, xsize=xsize, ysize=ysize)
             for x in range(exsize)
             for y in range(eysize)
         ]
+        self.renders = tf.convert_to_tensor(np.array([e.rendered for e in self.grid]), dtype=tf.float32)
 
     def render(self, values):
         product = [v * e.rendered for (v, e) in zip(values, self.grid)]
@@ -121,6 +122,13 @@ class RegularGrid:
         summax = np.max(summed)
         return np.clip(summed, 0, 1) * 2 - 1
         # return (summed / summax) * 2 - 1
+        
+    def render_tensor(self, tensor):
+        reshaped = tf.transpose(tf.reshape(tf.tile(tensor, tf.constant([64])),
+                                           (64, self.exsize*self.eysize, 1)), perm=[1, 0, 2])
+        product = reshaped * self.renders
+        summed = tf.reduce_sum(product, axis=0)
+        return tf.clip_by_value(summed, 0, 1) * 2 - 1
 
 class IrregularGrid:
     def __init__(self, randomPos=2, exsize=EXSIZE, eysize=EYSIZE, xsize=XSIZE, ysize=YSIZE):
@@ -165,7 +173,7 @@ class PolarRegularGrid:
         # return (summed / summax) * 2 - 1
         
     def render_tensor(self, tensor):
-        reshaped = tf.transpose(tf.reshape(tf.tile(tensor, tf.constant([64])), (64, 144, 1)), perm=[1, 0, 2])
+        reshaped = tf.transpose(tf.reshape(tf.tile(tensor, tf.constant([64])), (64, self.nrho * self.ntheta, 1)), perm=[1, 0, 2])
         product = reshaped * self.renders
         summed = tf.reduce_sum(product, axis=0)
         return tf.clip_by_value(summed, 0, 1) * 2 - 1
@@ -196,7 +204,7 @@ class PolarRegularUniqueGrid:
         # return (summed / summax) * 2 - 1
         
     def render_tensor(self, tensor):
-        reshaped = tf.transpose(tf.reshape(tf.tile(tensor, tf.constant([64])), (64, 144, 1)), perm=[1, 0, 2])
+        reshaped = tf.transpose(tf.reshape(tf.tile(tensor, tf.constant([64])), (64, self.nrho * self.ntheta, 1)), perm=[1, 0, 2])
         product = reshaped * self.renders
         summed = tf.reduce_sum(product, axis=0)
         return tf.clip_by_value(summed, 0, 1) * 2 - 1
@@ -228,7 +236,7 @@ class NonLinearInteractionGrid:
     
     def render_tensor(self, tensor):
         # Assume all inputs are in the range 0 and 1
-        reshaped = tf.transpose(tf.reshape(tf.tile(tensor, tf.constant([64])), (64, 144, 1)), perm=[1, 0, 2])
+        reshaped = tf.transpose(tf.reshape(tf.tile(tensor, tf.constant([64])), (64, self.nrho * self.ntheta, 1)), perm=[1, 0, 2])
         product = reshaped * self.renders
         summed = tf.reduce_sum(product, axis=0)
         summax = tf.reduce_max(summed)
