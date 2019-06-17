@@ -3684,10 +3684,10 @@ change as well.
 
 *** Preliminary Analysis - Experiment
 :LOGBOOK:
-CLOCK: [2019-06-17 Mon 09:58]
+CLOCK: [2019-06-17 Mon 09:58]--[2019-06-17 Mon 10:11] =>  0:13
 :END:
 
-Here's what I'll do. I'll do three conditions, with 30 cues per trial
+Here's what I'll do. I'll do three conditions, with 20 cues per trial
 for 10 trials. I'll keep the audio feedback (both correct/incorrect
 and the digit class) on - actually, I'm not sure whether I should turn
 it off at all for the experiment. 
@@ -3709,7 +3709,160 @@ the "nonLinear" component (i.e. the rescaling of phosphenes to other
 phosphenes) is not actually that large. I don't think the results are
 going to be particularly interesting. 
 
+Okay, time to run the experiment. 
 
+**** Condition 1
+:LOGBOOK:
+CLOCK: [2019-06-17 Mon 10:13]--[2019-06-17 Mon 10:18] =>  0:05
+:END:
+
+Here's what I'll start with.
+
+#+BEGIN_SRC sh
+python .\digits.py --ncues 20 --ntrials 10 --processor direct --grid ".\data\training-intermediate-data\training-grids\2019-06-12_10-01_grid_NonLinearInteractionGrid_12-12_64-64.pkl" 
+#+END_SRC
+
+I'll save it as JW. No scanning is the default, so no with-scanning
+flag is fine.
+
+It went alright. It was surprisingly hard to tell the difference
+between some numbers, like the 2 and 7, or the 9 and 5. 
+
+**** Condition 2
+:LOGBOOK:
+CLOCK: [2019-06-17 Mon 10:18]--[2019-06-17 Mon 10:23] =>  0:05
+:END:
+
+For the next condition:
+
+#+BEGIN_SRC sh
+python .\digits.py --ncues 20 --ntrials 10 --processor net --grid ".\data\training-intermediate-data\training-grids\2019-06-12_10-01_grid_NonLinearInteractionGrid_12-12_64-64.pkl" --encoder ".\data\training-intermediate-data\training-encoders\2019-06-12_10-01_encoder_NonLinearInteractionGrid_12-12_64-64.h5" 
+#+END_SRC
+
+That was also surprisingly hard. Some were obvious, like the 7 and 2
+and 5, but distinguishing the 4, 9, 8 and 3 were extremely difficult.
+
+**** Condition 3
+:LOGBOOK:
+CLOCK: [2019-06-17 Mon 10:24]--[2019-06-17 Mon 10:29] =>  0:05
+:END:
+
+Here's condition 3 with scanning.
+
+#+BEGIN_SRC sh
+python .\digits.py --ncues 20 --ntrials 10 --with-scanning --processor direct --grid ".\data\training-intermediate-data\training-grids\2019-06-12_10-01_grid_NonLinearInteractionGrid_12-12_64-64.pkl" 
+#+END_SRC
+
+That was much easier than either of the other two. I already know that
+the score is going to be much higher. 
+
+Maybe I should actually get rid of the feedback for the "testing"
+phase - I guess you could argue that more encouraging feedback may
+affect the result. 
+
+*** Preliminary Analysis - Analysis
+:LOGBOOK:
+CLOCK: [2019-06-17 Mon 10:30]--[2019-06-17 Mon 11:49] =>  1:19
+:END:
+
+Here are the three files, all under the directory 
+
+First, loading the input (running this from /within/ the
+=03-psychophysics= directory
+
+#+BEGIN_SRC python :session prelim :noeval
+import glob
+import json
+import numpy as np
+import pandas as pd
+from matplotlib import pyplot as plt
+from sklearn.metrics import confusion_matrix
+
+data_dir = "./data/psychophysics-sessions/participants/"
+
+sessions = glob.glob(data_dir + "*_config.json")
+
+data_sessions = [pd.read_csv(f.replace("_config.json", "_session.csv")) for f in sessions]
+
+data_configs = []
+for f in sessions:
+    with open(f) as infile:
+        data_configs.append(json.load(infile))
+
+data = list(zip(data_configs, data_sessions))
+#+END_SRC
+
+First, comparing mean accuracy. 
+
+#+BEGIN_SRC python :noeval :session prelim
+fig, axes = plt.subplots(1)
+
+colors = ['tomato', 'seagreen', 'royalblue']
+
+# d[0] corresponds to config, d[1] corresponds to session data
+accuracies = [sum(d[1]['digit'] == d[1]['keypress'])/len(d) for d in data]
+labels = [f"{d[0]['PROCESSOR_TYPE']}, {('no scanning', 'with scanning')[d[0]['WITH_SCANNING']]}" for d in data]
+          
+plt.bar(range(n_data), accuracies, align='center', color=colors, tick_label=labels)
+plt.ylim((0,100))
+plt.title("Mean Digit Classification Accuracy by Processing Method\n{}".format("JW:2019-06-17_10-01_grid_NonLinearInteractionGrid_12-12_64-64.pkl"))
+plt.ylabel("Percentage Accuracy")
+plt.axhline(10, color='r', linestyle=':')
+#+END_SRC
+
+[[file:./03-psychophysics/data/archive/2019-06-17-mean-digit-classification-accuracy-preliminary.png]]
+
+I'm not surprised since this is also the general impression I got
+during the trials. 
+
+Comparing the mean time for each condition: 
+
+#+BEGIN_SRC python :noeval :session prelim
+fig, axes = plt.subplots(1)
+
+# d[0] corresponds to config, d[1] corresponds to session data
+times = [d[1]['cuetime'].mean() for d in data]
+stds = [d[1]['cuetime'].std() for d in data]
+          
+plt.bar(range(n_data), times, align='center', color=colors, tick_label=labels, yerr=stds)
+plt.title("Mean Time to Classification per Cue by Processing Method\n{}".format("JW:2019-06-17_10-01_grid_NonLinearInteractionGrid_12-12_64-64.pkl"))
+
+plt.ylabel("Time to Classification (seconds)")
+#+END_SRC
+
+Error bars show standard deviation. 
+
+[[file:./03-psychophysics/data/archive/2019-06-17-mean-classification-time-preliminary.png]]
+
+I'm not too surprised. I'm biased; maybe I should have spent more time
+on the direct, no scanning condition.
+
+Plotting the confusion matrices:
+
+#+BEGIN_SRC python :noeval :session prelim
+import seaborn as sn
+
+fig, axes = plt.subplots(1, n_data, figsize=(12, 4))
+
+for i in range(n_data):
+    sn.heatmap(confusion_matrix(data[i][1]['digit'], data[i][1]['keypress'], labels=range(10)),
+               annot=True, 
+               ax=axes[i],
+               cbar=False)
+    axes[i].set(xlabel='Predicted digit', ylabel='True digit', title="Confusion matrix, {}".format(labels[i]))
+
+fig.suptitle("JW:2019-06-17_10-01_grid_NonLinearInteractionGrid_12-12_64-64.pkl")
+#+END_SRC
+
+[[file:./03-psychophysics/data/archive/2019-06-17-confusion-matrices.png]]
+
+I think it's rather amusing that I literally never got the 4 right in
+the pretrained net processor. Comparing across rows and along columns,
+it's also clear that while the digit frequencies were relatively
+similar (as they should be), my classification choices were not
+uniform - the 9 for the pretrained net classifier, for example, gets
+chosen much more frequently than the 4. Perhaps this indicates that
+the 4 just looks too much like a 9.
 
 
 * July 2019
