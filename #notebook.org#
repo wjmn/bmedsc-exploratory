@@ -2711,7 +2711,7 @@ Deadlines:
        alldata = list(zip(configs, data))
    #+END_SRC
 
-   At the moment, I only have data to compare GRID (i.e. renderers), as
+   At the moment, I only have data to compare GRID (i.e.Â renderers), as
    I've only implemented one processor.
 
    #+BEGIN_SRC python
@@ -2966,7 +2966,7 @@ Deadlines:
     number of modifications which became clear during this feasibility
     test, including the need to pre-render all the electrodes and wrap the
     final render under Tensorflow).
-  - In this particular case, you can see /mode collapse/ (i.e. they all
+  - In this particular case, you can see /mode collapse/ (i.e.Â they all
     look the same! even though the random seeds are different). Probably
     won't be such a big issue when takes the actual digit, rather than a
     random seed, as the input.
@@ -3147,7 +3147,7 @@ So this is part of a series of attempts at digit generation.
 
   Lessons learnt:
 
-  - Not shown here, but loss actually minimised really well i.e. the MNIST
+  - Not shown here, but loss actually minimised really well i.e.Â the MNIST
     decoder was able to decode the digit from these representations with
     high accuracy (> 90%!). So, while the encoder is learning well, it is
     learning in a way optimised for the MNIST decoder features. Some of
@@ -4282,7 +4282,7 @@ better.
 Loss got below 0.1, but the results still look completely
 unintelligible. 
 
-[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-18_15-18_loss_CartesianGrid_12-12_64-64.gif]]
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-18_15-18_evolution_CartesianGrid_12-12_64-64.gif]]
 
 * July 2019
  
