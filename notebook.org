@@ -4081,7 +4081,7 @@ contours to merge.
 CLOCK: [2019-06-18 Tue 09:03]--[2019-06-18 Tue 11:11] =>  2:08
 :END:
 
-| Git Commit Hash | |
+| Git Commit Hash | 7cef1cf8540624a3cfcefe948e44696a1f50744a|
 | Grid | PolarRegularGrid | 
 | Vector size | 12 x 12 = 144 |
 
@@ -4192,6 +4192,43 @@ there must be knowledge of multiple identities at once. But I think
 there is a real use case for such a tool, whereas for the digit
 recognition task, I am not so sure. 
 
+Ah, but I should just focus on the current task, even if it's less
+useful than a detection task. I think they're orthogonal - I can much
+more easily think of a use case for an object detection task that
+would be hard to replace with another modality, but that doesn't
+necessarily mean it's better. They're just focusing on different
+approaches. 
+
+*** 16 x 16 Regular Grid, Sigmoid Activation
+:LOGBOOK:
+CLOCK: [2019-06-18 Tue 11:31]
+:END:
+
+| Git Commit Hash | |
+| Grid | Regular Grid | 
+| Vector size | 16 x 16 = 256 | 
+
+I'm going to try this again now that I figured out the problem with
+softmax. I'm reusing the [[./03-psychophysics/data/training-intermediate-data/training-decoders/2019-06-17_15-30_mnist_decoder_RegularGrid_16-16_64-64.h5][MNIST decoder I trained for this grid
+previously.]]
+
+[2019-06-18 Tue 11:47]
+It doesn't appear to be working very well either. I have an inkling
+it's because of the max brightness limit, it definitely doesn't appear
+very uniform (with much higher brightness near the edges where the
+Gaussian blur is most significant). I don't really have much hope
+after the first 10 or so epochs. I'll keep it running but I don't
+expect to reach much better. 
+
+[2019-06-18 Tue 12:24]
+Loss decreased very well, but the results look very poor. 
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-18_11-28_loss_RegularGrid_16-16_64-64.png]]
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-18_11-28_evolution_RegularGrid_16-16_64-64.gif]]
+
+Maybe I should just try a completely regular grid i.e. absolutely no
+size distortions whatsoever. 
 
 * July 2019
  
