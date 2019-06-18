@@ -4201,7 +4201,7 @@ approaches.
 
 *** 16 x 16 Regular Grid, Sigmoid Activation
 :LOGBOOK:
-CLOCK: [2019-06-18 Tue 11:31]
+CLOCK: [2019-06-18 Tue 11:31]--[2019-06-18 Tue 12:00] =>  0:29
 :END:
 
 | Git Commit Hash | e011de74dc8d0a59602e2073d8222b147c05481|
@@ -4229,6 +4229,28 @@ Loss decreased very well, but the results look very poor.
 
 Maybe I should just try a completely regular grid i.e. absolutely no
 size distortions whatsoever. 
+
+*** Refactoring =phosphenes.py=
+:LOGBOOK:
+CLOCK: [2019-06-18 Tue 13:16]
+:END:
+
+I spent some time refactoring =phosphenes.py= to:
+
+1) Make sure values are scaled so that the max brightness is always
+   white
+2) Change how the radius is spread is done, so peripheral phosphenes
+   are smaller and less aggressively spread
+3) Increase the rescaling ( by squaring and dividing by the square of
+   the max) of the rescaling grid
+
+I also cleaned it up and made it more idiomatic so it is easier to
+extend.
+
+I've also updated =digits.py= accordingly.
+
+I think this will make it much easier to test, now that the
+=phosphenes.py= parameters are much more modular.
 
 * July 2019
  

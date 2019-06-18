@@ -322,10 +322,10 @@ class Stimulus:
         else:
             self.original = image
             
-        # Normalise between -1 and 1
-        self.original = 2 * (self.original / np.max(self.original)) - 1
+        # Normalise between -1 and 1 for an RGB255 image
+        self.original = (self.original / 127.5) - 1
         
-        self.padder = np.zeros((3 * self.shape[0], 3 * self.shape[1], self.shape[2]))
+        self.padder = np.zeros((3 * self.shape[0], 3 * self.shape[1], self.shape[2])) - 1
         self.padder[self.shape[0]:2*self.shape[0], self.shape[1]:2*self.shape[1], :] = self.original
         
         self.xpos = xpos
@@ -364,9 +364,9 @@ class Stimulus:
         params = np.array([self.get_params(e.x, e.y) for e in self.grid.grid])
         # Normalise to between 0 and 1
         params = params - (np.min(params))
-        params /= np.max(params)
+        if np.max(params) > 0:
+            params /= np.max(params)
         return params
-        #flattened = self.image.flatten(order="C")
     
     def setPos(self, xpos: float, ypos: float):
         """Translate the image. xpos and ypos lie in the range (-1, 1)

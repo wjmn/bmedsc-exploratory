@@ -7,7 +7,6 @@ This script runs a digit recognition psychophysics session.
 
 import numpy as np
 import json
-import phosphenes
 import cv2
 import pickle
 from phosphenes import *
@@ -54,8 +53,8 @@ argspec = {
     'grid': {
         'type': str,
         'nargs': '?',
-        'default': 'polarRegular',
-        'help': 'The grid type for rendering. One of regular, irregular, polarRegular, polarRegularUnique, or nonLinear, or a filepath to the grid to load.'
+        'default': 'polar',
+        'help': 'The grid type for rendering. One of cartesian, polar, distortedPolar, or rescalingDistortedPolar, or a filepath to the grid to load.'
     },
     'processor': {
         'type': str,
@@ -106,9 +105,9 @@ config.WITH_SCANNING  = args.withScanning
 # electrodes there are). 
 # `SCALE` links the two. 
 
-config.XSIZE  = 144
-config.YSIZE  = 144
-config.SCALE  = 12
+config.XSIZE  = 100
+config.YSIZE  = 100
+config.SCALE  = 10
 config.EXSIZE = config.XSIZE // config.SCALE
 config.EYSIZE = config.YSIZE // config.SCALE
 config.INPUT_XSIZE = 64
@@ -147,11 +146,30 @@ config.STIMULI = [
 
 # We initiate a grid of electrodes.
 grids = {
-    'regular':   lambda: phosphenes.RegularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE, xsize=config.XSIZE, ysize=config.YSIZE),
-    'irregular': lambda: phosphenes.IrregularGrid(exsize=config.EXSIZE, eysize=config.EYSIZE, randomPos=0.1, xsize=config.XSIZE, ysize=config.YSIZE),
-    'polarRegular': lambda: phosphenes.PolarRegularGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE, xsize=config.XSIZE, ysize=config.YSIZE),
-    'polarRegularUnique': lambda: phosphenes.PolarRegularUniqueGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE, xsize=config.XSIZE, ysize=config.YSIZE),
-    'nonLinear': lambda: phosphenes.NonLinearInteractionGrid(nrho=config.EXSIZE, ntheta=config.EYSIZE, xsize=config.XSIZE, ysize=config.YSIZE),    
+    'cartesian': lambda: CartesianGrid(
+        config.EXSIZE,
+        config.EYSIZE, 
+        config.XSIZE, 
+        config.YSIZE
+    ),
+    'polar': lambda: PolarGrid(
+        config.EXSIZE, 
+        config.EYSIZE, 
+        config.XSIZE, 
+        config.YSIZE
+    ),
+    'distortedPolar': lambda: DistortedPolarGrid(
+        config.EXSIZE,
+        config.EYSIZE, 
+        config.XSIZE, 
+        config.YSIZE
+    ),
+    'rescalingDistortedPolar': lambda: RescalingDistortedPolarGrid(
+        config.EXSIZE, 
+        config.EYSIZE, 
+        config.XSIZE, 
+        config.YSIZE
+    ),
 }
 
 try:
@@ -165,8 +183,8 @@ config.GRID = grid
 # We initiate the stimulus processor type.
 
 processors = {
-    'direct': phosphenes.Stimulus,
-    'net': lambda image, grid: phosphenes.StimulusNet(image, grid, config.ENCODER),
+    'direct': Stimulus,
+    'net': lambda image, grid: StimulusNet(image, grid, config.ENCODER),
 }
 
 config.PROCESSOR = processors[config.PROCESSOR_TYPE]
@@ -335,10 +353,7 @@ if __name__ == "__main__":
                     while not keypressRaw:
                         # Set the stimulus in the right half of the grid
                         stimulus.setPos(0.20, 0)
-                        print(stimulus.vector)
                         rendered = np.flipud(config.GRID.render(stimulus.vector))
-                        print(np.min(rendered))
-                        print(np.max(rendered))
                         imstim = visual.ImageStim(win, image=rendered, size = (2 * win.size[1] / win.size[0], 2))
                         imstim.draw(); win.flip()
 
@@ -351,6 +366,7 @@ if __name__ == "__main__":
 
                         # Get the mouse position and set the stimulus to the position.
                         newPos = mouse.getPos()
+                        newPos = [newPos[0], -newPos[1]]
                         stimulus.setPos(*newPos)
 
                         if mouseRecord.getTime() > config.MOUSE_RECORD_INTERVAL:
