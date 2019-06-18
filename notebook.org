@@ -4254,7 +4254,7 @@ I think this will make it much easier to test, now that the
 
 *** Cartesian 12 x 12
 :LOGBOOK:
-CLOCK: [2019-06-18 Tue 15:51]
+CLOCK: [2019-06-18 Tue 15:51]--[2019-06-18 Tue 16:50] =>  0:59
 :END:
 
 | Git Commit Hash |  99ef69990e3f9bc3c7c7859a7fc7ef1d24a5fdff |
@@ -4280,7 +4280,12 @@ unintelligible.
 
 [2019-06-18 Tue 16:08]
 I'm going to quickly try putting the sum of the vector as part of the
-loss, so hopefully it will try to only preserve the bare minimum... hopefully.
+loss, so hopefully it will try to only preserve the bare
+minimum... hopefully.
+
+| Git Commit Hash | af39260c9a2ca0bf14b55e66c7868406b399e1a1|
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-18_15-18_evolution_CartesianGrid_12-12_64-64.gif]]
 
 While that's running.. what else is causing the outputs to not look
 like digits?
@@ -4293,6 +4298,44 @@ idea, that'll just lower the contrast even more. Instead, I should be
 trying to optimise for the standard deviation of values, or some other
 way to try and optimise for 0s and 1s. 
 
+I stopped it after 22 epochs. I think the idea was along the right
+longs, but not quite the right one. I'll try using the reciprocal of
+the standard deviation of the encoding vector instead and I'll reduce
+the learning rate again down to 5e-3. It'll be slower to train, that's
+for sure, but I'll see how it goes. 
+
+
+*** Cartesian 12x12, reciprocal of std loss
+
+Not sure how it'll go with the much slower learning rate, but we'll
+see. 
+
+[2019-06-18 Tue 21:52]
+After 50 epochs, it didn't really change much, but I could see the
+loss was still in the progress of climbing down.
+
+I'll retry the polar grid.
+
+*** Polar 12 x 12, reciprocal of std loss
+
+| Git commit hash | |
+| Grid | PolarGrid| 
+| Vector size | 12 x 12 = 144 |
+
+I'll make the decoder use the full 60000 garbage images again. I'll
+make the learning rate 5e-3, between what I'd tried before, and go for
+100 epochs overnight.
+
+[2019-06-19 Wed 09:22]
+This run wasn't particularly successful. Change stagnates after the
+first ten or so epochs again. 
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-18_22-17_loss_PolarGrid_12-12_64-64.png]]
+
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-18_22-17_evolution_PolarGrid_12-12_64-64.gif]]
+
+** [2019-06-19 Wed]
 * July 2019
  
 * August 2019
