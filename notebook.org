@@ -4054,7 +4054,7 @@ I think I'll stop this one here. I'll retry the polar grid with 16 x
 
 *** 16 x 16 Polar Grid, Extra MNIST Layer
 
-| Git Commit Hash | |
+| Git Commit Hash | 292c5be2b26976c70e82cc849e32a7612bdfd379|
 | Grid | PolarRegularGrid | 
 | Vector size | 16 x 16 = 256 |
 
@@ -4069,11 +4069,130 @@ which in some respects may be good.
 Not very happy with it. Kept for posterity, gif name at
 =2019-06-17_16-09_evolution_PolarRegularGrid_16-16_64-64.gif=.
 
+I sort of wonder whether this might also have to do with the fact that
+I changed the last layer to softmax. I think that would be the most
+significant change, and that would reduce the ability for some
+contours to merge. 
+
 ** [2019-06-18 Tue]
 
+*** 12 x 12 Polar Grid, Extra MNIST Layer
+:LOGBOOK:
+CLOCK: [2019-06-18 Tue 09:03]--[2019-06-18 Tue 11:11] =>  2:08
+:END:
+
+| Git Commit Hash | |
+| Grid | PolarRegularGrid | 
+| Vector size | 12 x 12 = 144 |
+
+I'm going to do what I should have probably done beforehand - 12 x 12
+Poalr Grid with the Extra MNIST Layer, and also using the softmax
+output I had done prior. 
+
+I'll leave it running in the background while I try to develop a more
+concrete plan.
+
+Just a side note - some ideas which might be good:
+- Stochastic noise to either the decoder, or the labels. 
+
+Actually, to be honest, the softmax may not be appropriate, at
+all. Actually, I made a big mistake with that I think. There's
+absolutely no reason the outputs should add to one, and that would
+explain why everything was so dim for the two previous attemps. Argh.
+
+I'll use sigmoid instead, that accomplishes what I need it to do
+(activation between 0 and 1). But I think that means I shouldn't take
+last two runs' failure too much to heart. 
+
+I think something that's becoming clear is that some intrinsic
+properties of the renderer are quite important in training the
+encoder. For example, when the renderer can no longer "bleach" the
+digits (and the phosphenes therefore have a set, maximum brightness),
+the results are markedly worse than when it can. 
+
+What I think would be important and very useful would be to determine
+a way to deal with this issue - style transfer, for example, could
+copy the style of random renders onto the mnist digits, and train
+against that. More networks. But that might give slightly better
+results than trying to train directly with MNIST. 
+
+[2019-06-18 Tue 11:11]
+I finished the run - the output really doesn't change much after the
+10th or so epoch. The output isn't very nice, but it's definitely
+better than the last two attempts when I was using softmax. 
+
+Training gif:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-18_09-01_evolution_PolarRegularGrid_12-12_64-64.gif]]
+
+And loss curve:
 
 
-*** 
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-18_09-01_loss_PolarRegularGrid_12-12_64-64.png]]
+
+The loss didn't descend to quite as small a value as some of the
+previous runs.
+
+*** Plan
+
+For the experimental portion, I think the experiment I've got so far
+is fine. I can determine the digit classification accuracy, timings
+and (with scanning), mouse movements of participants for
+analysis. With multiple participants, I can (I think) run some
+statistical tests to determine significance.  
+
+So I think my experimental portion will be comparing processors and
+renderers. I guess that's pretty much what I described in the original
+project outline.
+
+Processors:
+- Brightness
+- Per-renderer trained neural network
+
+Renderers:
+- Polar Regular Half-Grid
+- Deterministic Irregularly Shaped + Size + Brightness Half-Grid (but constant map)
+- Deterministic Non-Summative grid where brightness of phosphenes is
+  conditional on the brightness of other phosphenes
+
+That gives 2 x 3 = 6 total conditions to test, and I think it's
+feasible to test both processors in one subject (so just changing the
+renderers between subjects), so 9 participants would give three
+repeats of each. 
+
+I think that's fine for the experimental part. 
+
+I think it would be very interesting if I could incorporate a
+time-dependent renderer (or at least a renderer that depends on the
+previous input vector in some way). But I'll have to think about that
+and whether I have time. 
+
+On the theoretical front, I think it would be interesting to quantify
+the losses and visualise the kernels. And to describe the architecture
+of the network and the training process, though I think there probably
+needs to be some theoretical discussion behind the rationale for
+what's been chosen (which I will need to work on). 
+
+*** Object Detection(?)
+
+I've made a new directory, =04-detection= and a new conda environment
+(activating with =conda activate detection=) to test out the
+pretrained object detection models. I know this is a bit of a detour,
+but I am becoming increasingly convinced that maybe a simple,
+"highlight-this-object" approach is potentially more useful than the
+identity-focused approach I came to. 
+
+Importantly, it removes noisy information and is extremely simple to
+understand and interpret. And while I previously thought that the lack
+of depth encoding in this approach would make it useless, I think
+parallax motion and scanning could actually compensate fairly well.
+
+Clearly, this is not useful for certain tasks (e.g. reading), where
+there must be knowledge of multiple identities at once. But I think
+there is a real use case for such a tool, whereas for the digit
+recognition task, I am not so sure. 
+
+
 * July 2019
  
 * August 2019
