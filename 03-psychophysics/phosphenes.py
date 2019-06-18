@@ -1,27 +1,20 @@
 #!/usr/bin/env python
 
 import numpy as np
-from scipy.ndimage import gaussian_filter
 import random
-import math
+import tensorflow as tf
+import keras
+from math import e
+from scipy.ndimage import gaussian_filter
 from skimage import color
-
-# CONSTANTS
-
-XSIZE = 64
-YSIZE = 64
-PBASE = 1
-SCALE = 6
-EXSIZE = XSIZE // SCALE
-EYSIZE = YSIZE // SCALE
-
+from abc import ABC, abstractmethod
 
 def safebound(value: float, width: float, lower: float, upper: float):
     """ 
     Returns the bounded min and max about value with width.
     """
-    vmin = int(max(lower, value - width))
-    vmax = int(min(upper, value + width))
+    vmin = int(max(lower, value - width / 2))
+    vmax = int(min(upper, value + width / 2))
     return vmin, vmax
 
 def bound(value:float, lower: float, upper:float):
@@ -31,217 +24,291 @@ def bound(value:float, lower: float, upper:float):
     if value > lower:
         if value < upper:
             return value
-        else:
-            return upper
-    else:
-        return lower
+        return upper
+    return lower
 
 # Electrodes, which produce phosphenes.
 
 class Electrode:
-    def __init__(self, x: float, y: float, xsize : int = XSIZE, ysize : int = YSIZE, randomPos: float = 0):
+    """
+    Produces a phosphene for a single electrode.
+    """
+    def __init__(self,
+                 x: float,
+                 y: float,
+                 xsize: float,
+                 ysize: float,
+                 strength: float,
+                 xdim: int,
+                 ydim: int):
         """
-        Produces a phosphene for a single electrode.
-        
         Args:
             x: float         - position in range [0, 1]. 
             y: float         - position in range [0, 1]
-            randomPos: float - a scaling factor for random positioning. 
+            xsize: int       - x size of the electrode (in units of output image)
+            ysize: int       - y size of the electrode (in units of output image)
+            strength: float  - relative brightness of the electrode in range [0, 1]
+            xdim: int        - x dim of the output image
+            ydim: int        - y dim of the output image 
         """
-        self.randomPos = randomPos
-        self.x = bound(x + (random.random() - 0.5) * self.randomPos, 0, 1)
-        self.y = bound(y + (random.random() - 0.5) * self.randomPos, 0, 1)
+        self.x = x
+        self.y = y
+        self.xdim = xdim
+        self.ydim = ydim
         self.xsize = xsize
         self.ysize = ysize
-
-        self.size = PBASE * (0.5 + (4 * np.sqrt((self.x - 0.5) ** 2 + (self.y - 0.5) ** 2)) ** 2)
+        self.strength = strength
 
         self.rendered = self.render()
 
     def render(self):
-        xmin, xmax = safebound(self.xsize * self.x, self.size, 0, self.xsize)
-        ymin, ymax = safebound(self.ysize * self.y, self.size, 0, self.ysize)
+        xmin, xmax = safebound(self.xdim * self.x, self.xsize, 0, self.xdim)
+        ymin, ymax = safebound(self.ydim * self.y, self.ysize, 0, self.ydim)
 
-        base = np.zeros((self.ysize, self.xsize))
-        base[ymin:ymax, xmin:xmax] = 1
+        base = np.zeros((self.ydim, self.xdim))
+        base[ymin:ymax, xmin:xmax] = self.strength
+        
+        blurred = gaussian_filter(base, (self.xsize * self.ysize) ** 0.5, mode='constant')
+        
+        # Rescale up to 1
+        if blurred.max() <= 0:
+            return blurred
+        else:
+            return blurred / blurred.max()
 
-        return gaussian_filter(base, self.size)
-
-class UniqueElectrode:
+class DistortedElectrode(Electrode):
     """
-    This class implements electrodes with unique characteristics such as colour and shape.
+    This class introduced random distortions to the rendered phosphene.
     """
-    def __init__(self, x: float, y: float, xsize : int = XSIZE, ysize : int = YSIZE, randomPos: float = 0.001):
-        self.x = bound(x + (random.random() - 0.5) * randomPos, 0, 1)
-        self.y = bound(y + (random.random() - 0.5) * randomPos, 0, 1)
-        self.size = PBASE * (0.5 + (4 * np.sqrt((self.x - 0.5) ** 2 + (self.y - 0.5) ** 2)) ** 2)
-        #self.colour = np.random.random(3)
-        self.brightness = np.random.random()
-        # xmod and ymod modify the shape of the phosphene
-        self.xmod = 1 + (random.random()-0.5) * 3
-        self.ymod = 1 + (random.random()-0.5) * 3
-        self.xsize = xsize
-        self.ysize = ysize
-
-        self.rendered = self.render()
-
-    def render(self):
-        xmin, xmax = safebound(self.xsize * self.x, self.size*self.xmod, 0, self.xsize)
-        ymin, ymax = safebound(self.ysize * self.y, self.size*self.ymod, 0, self.ysize)
-
-        # base = np.zeros((self.ysize, self.xsize, 3))
-        # base[ymin:ymax, xmin:xmax, :] = self.colour
-        base = np.zeros((self.ysize, self.xsize))
-        base[ymin:ymax, xmin:xmax] = self.brightness
-        # base = base.reshape((self.ysize, self.xsize))
-
-        return gaussian_filter(base, self.size * (random.random() ** 0.3))
+    def __init__(self,
+                 x: float,
+                 y: float,
+                 xsize: float,
+                 ysize: float,
+                 xdim: int,
+                 ydim: int):
+        
+        x = bound(self.randomise(x), 0, 1)
+        y = bound(self.randomise(y), 0, 1)
+        xsize = max(0, int(self.randomise(xsize)))
+        ysize = max(0, int(self.randomise(ysize)))
+        strength = random.random()
+        
+        Electrode.__init__(self, x, y, xsize, ysize, strength, xdim, ydim)
+        
+    def randomise(self, value):
+        randomised = value * (1 + (random.random() - 1) / 10)
+        return randomised
 
 # Grids, which are composed of electrodes.
 
-class RegularGrid:
-    def __init__(self, exsize: int = EXSIZE, eysize: int = EYSIZE, xsize=XSIZE, ysize=YSIZE):
+class Grid(ABC): 
+    def __init__(self,
+                 ndim1: int, 
+                 ndim2: int, 
+                 xdim: int, 
+                 ydim: int):
         """
+        Base class for a rendering grid.
         
         Args:
-            exsize: int - x size of electrode grid 
-            eysize: int - y size of electrode grid
+            ndim1: int - number of electrodes for dimension 1
+            ndim2: int - number of electrodes for dimension 2
+            xdim: int  - x dimension of output image
+            ydim: int  - y dimension of output image
         """
-        self.exsize = exsize
-        self.eysize = eysize
-        self.grid = [
-            Electrode(x / exsize, y / eysize, xsize=xsize, ysize=ysize)
-            for x in range(exsize)
-            for y in range(eysize)
-        ]
-        self.renders = tf.convert_to_tensor(np.array([e.rendered for e in self.grid]), dtype=tf.float32)
-
-    def render(self, values):
-        product = [v * e.rendered for (v, e) in zip(values, self.grid)]
+        self.ndim1 = ndim1
+        self.ndim2 = ndim2
+        self.vector_size = ndim1 * ndim2
+        self.xdim = xdim
+        self.ydim = ydim
+        
+        self.grid = self.make_grid()
+        self.prerendered = np.array([electrode.rendered for electrode in self.grid])
+        self.prerendered_tensor = tf.convert_to_tensor(self.prerendered, dtype=tf.float32)
+        
+        super().__init__()
+        
+    @abstractmethod
+    def make_grid(self):
+        pass
+    
+    def render(self, values: np.ndarray):
+        
+        # Multiply the values with the renders and sum
+        product = values.reshape(self.vector_size, 1, 1) * self.prerendered
         summed = sum(product)
-        summax = np.max(summed)
-        return np.clip(summed, 0, 1) * 2 - 1
-        # return (summed / summax) * 2 - 1
+
+        # Clip, then scale between -1 and 1
+        scaled = np.clip(summed, 0, 1) * 2 - 1
         
-    def render_tensor(self, tensor):
-        reshaped = tf.transpose(tf.reshape(tf.tile(tensor, tf.constant([64])),
-                                           (64, self.exsize*self.eysize, 1)), perm=[1, 0, 2])
-        product = reshaped * self.renders
-        summed = tf.reduce_sum(product, axis=0)
-        return tf.clip_by_value(summed, 0, 1) * 2 - 1
-
-class IrregularGrid:
-    def __init__(self, randomPos=2, exsize=EXSIZE, eysize=EYSIZE, xsize=XSIZE, ysize=YSIZE):
-        self.exsize = EXSIZE
-        self.eysize = EYSIZE
-        self.grid = [
-            Electrode(0.5 + (x / exsize) / 2, y / eysize, xsize=xsize, ysize=ysize, randomPos=randomPos )
-            for x in range(exsize)
-            for y in range(eysize)
-        ]
-
-    def render(self, values):
-        product = [v * e.rendered for (v, e) in zip(values, self.grid)]
-        summed = sum(product)
-        summax = np.max(summed)
-        return np.clip(summed, 0, 1) * 2 - 1
-        # return (summed / summax) * 2 - 1
-
-class PolarRegularGrid:
-    def __init__(self, nrho, ntheta, xsize=XSIZE, ysize=YSIZE):
-        self.nrho   = nrho
-        self.ntheta = ntheta
-        self.grid = [
-            # Need to think of better way to scale.
-            Electrode(((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.cos((math.pi * theta / ntheta) - math.pi/2)) + 1) / 2,
-                      ((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.sin((math.pi * theta / ntheta) - math.pi/2)) + 1) / 2,
-                      xsize = xsize,
-                      ysize = ysize,
-                     )
-            # Ensure the central electrodes are actually visible by adding 1 to zero.
-            for rho in range(1, nrho+1)
-            for theta in range(ntheta)
-        ]
-        
-        self.renders = tf.convert_to_tensor(np.array([e.rendered for e in self.grid]), dtype=tf.float32)
-
-    def render(self, values):
-        product = [v * e.rendered for (v, e) in zip(values, self.grid)]
-        summed = sum(product)
-        summax = np.max(summed)
-        return np.clip(summed, 0, 1) * 2 - 1
-        # return (summed / summax) * 2 - 1
-        
-    def render_tensor(self, tensor):
-        reshaped = tf.transpose(tf.reshape(tf.tile(tensor, tf.constant([64])), (64, self.nrho * self.ntheta, 1)), perm=[1, 0, 2])
-        product = reshaped * self.renders
-        summed = tf.reduce_sum(product, axis=0)
-        return tf.clip_by_value(summed, 0, 1) * 2 - 1
-
-class PolarRegularUniqueGrid:
-    def __init__(self, nrho, ntheta, xsize=XSIZE, ysize=YSIZE):
-        self.nrho   = nrho
-        self.ntheta = ntheta
-        self.grid = [
-            # Need to think of better way to scale.
-            UniqueElectrode(((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.cos((math.pi * theta / ntheta) - math.pi/2)) + 1) / 2,
-                            ((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.sin((math.pi * theta / ntheta) - math.pi/2)) + 1) / 2,
-                            xsize = xsize,
-                            ysize = ysize,
-                           )
-            # Ensure the central electrodes are actually visible by adding 1 to zero.
-            for rho in range(1, nrho+1)
-            for theta in range(ntheta)
-        ]
-        
-        self.renders = tf.convert_to_tensor(np.array([e.rendered for e in self.grid]), dtype=tf.float32)
-
-    def render(self, values):
-        product = [v * e.rendered for (v, e) in zip(values, self.grid)]
-        summed = sum(product)
-        summax = np.max(summed)
-        return np.clip(summed, 0, 1)
-        # return (summed / summax) * 2 - 1
-        
-    def render_tensor(self, tensor):
-        reshaped = tf.transpose(tf.reshape(tf.tile(tensor, tf.constant([64])), (64, self.nrho * self.ntheta, 1)), perm=[1, 0, 2])
-        product = reshaped * self.renders
-        summed = tf.reduce_sum(product, axis=0)
-        return tf.clip_by_value(summed, 0, 1) * 2 - 1
-
-class NonLinearInteractionGrid:
-    def __init__(self, nrho, ntheta, xsize=XSIZE, ysize=YSIZE):
-        self.nrho   = nrho
-        self.ntheta = ntheta
-        self.grid = [
-            # Need to think of better way to scale.
-            UniqueElectrode(((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.cos((math.pi * theta / ntheta) - math.pi/2)) + 1) / 2,
-                            ((math.exp(rho**0.6) / math.exp(nrho**0.6) * math.sin((math.pi * theta / ntheta) - math.pi/2)) + 1) / 2,
-                            xsize = xsize,
-                            ysize = ysize,
-                           )
-            # Ensure the central electrodes are actually visible by adding 1 to zero.
-            for rho in range(1, nrho+1)
-            for theta in range(ntheta)
-        ]
-        
-        self.renders = tf.convert_to_tensor(np.array([e.rendered for e in self.grid]), dtype=tf.float32)
-
-    def render(self, values):
-        # Assume all inputs are in the range 0 and 1
-        product = [v * e.rendered for (v, e) in zip(values, self.grid)]
-        summed = sum(product)
-        summax = np.max(summed)
-        return (summed / summax) * 2 - 1
+        return scaled
     
     def render_tensor(self, tensor):
-        # Assume all inputs are in the range 0 and 1
-        reshaped = tf.transpose(tf.reshape(tf.tile(tensor, tf.constant([64])), (64, self.nrho * self.ntheta, 1)), perm=[1, 0, 2])
-        product = reshaped * self.renders
+        
+        # Preprocessing
+        tiled = tf.tile(tensor, tf.constant([self.xdim]))
+        reshaped = tf.reshape(tiled, (self.xdim, self.vector_size, 1))
+        transposed = tf.transpose(reshaped, perm=[1, 0, 2])
+        
+        # Multiply the values with the renders and sum
+        product = transposed * self.prerendered_tensor
+        summed = tf.reduce_sum(product, axis=0)
+        
+        # Clip, then scale by -1 and 1
+        scaled = tf.clip_by_value(summed, 0, 1) * 2 - 1
+        
+        return scaled
+        
+
+class CartesianGrid(Grid):
+    """
+    A regular grid of electrodes with even spacing and even size. 
+    """
+    def __init__(self,
+                 nxelectrode: int,
+                 nyelectrode: int,
+                 xdim: int,
+                 ydim: int):
+        """
+        Args:
+            nxelectrode: int - number of electrodes on x axis
+            nyelectrode: int - number of electrodes on y axis
+            xdim: int       - output x dimension of image
+            ydim: int       - output y dimension of image
+        """
+        Grid.__init__(self, nxelectrode, nyelectrode, xdim, ydim)
+        
+    def make_grid(self):
+        
+        grid = [
+            Electrode(x = x / self.ndim1,
+                      y = y / self.ndim2,
+                      xsize = np.sqrt(self.xdim // self.ndim1),
+                      ysize = np.sqrt(self.ydim // self.ndim2),
+                      strength = 1,
+                      xdim = self.xdim,
+                      ydim = self.ydim)
+            for x in range(self.ndim1)
+            for y in range(self.ndim2)
+        ]
+        
+        return grid
+
+class PolarGrid(Grid):
+    """
+    A polar regular grid of electrodes with even spacing 
+    and size increasing with eccentricity. 
+    """
+    def __init__(self,
+                 nradius: int,
+                 ntheta: int,
+                 xdim: int,
+                 ydim: int):
+        """
+        Args:
+            nradius: int - number of radii to place electrodes on
+            ntheta: int  - number of angles to place electrodes on
+            xdim: int    - output x dimension of image
+            ydim: int    - output y dimension of image
+        """
+        Grid.__init__(self, nradius, ntheta, xdim, ydim)
+        
+    def iangle(self, i):
+        """
+        Calculates the angle for angle of index i in range(self.ndim2)
+        """
+        angle = (np.pi / (self.ndim2 - 1) * i) - (np.pi / 2)
+        return angle
+        
+    def make_grid(self):
+        
+        k = self.xdim / 2 + self.ydim / 2
+        a = e * (self.xdim + self.ydim) / 128
+        
+        xys = [
+            (0.5 + (ir / self.ndim1 * np.cos(self.iangle(itheta))) / 2,
+             0.5 + (ir / self.ndim1 * np.sin(self.iangle(itheta))) / 2,)
+            for ir in range(1, self.ndim1 + 1)
+            for itheta in range(self.ndim2)
+        ]
+        
+        grid = [
+            Electrode(x = x,
+                      y = y,
+                      xsize = np.log(k * ((x-0.5)**2 + (y-0.5)**2) + a),
+                      ysize = np.log(k * ((x-0.5)**2 + (y-0.5)**2) + a),
+                      strength = 1,
+                      xdim = self.xdim,
+                      ydim = self.ydim)
+            for (x, y) in xys
+        ]
+        
+        return grid
+    
+class DistortedPolarGrid(PolarGrid):
+    """
+    A polar grid with distorted electrodes.
+    """
+        
+    def make_grid(self):
+        
+        k = self.xdim / 2 + self.ydim / 2
+        a = e * (self.xdim + self.ydim) / 128
+        
+        xys = [
+            (0.5 + (ir / self.ndim1 * np.cos(self.iangle(itheta))) / 2,
+             0.5 + (ir / self.ndim1 * np.sin(self.iangle(itheta))) / 2,)
+            for ir in range(1, self.ndim1 + 1)
+            for itheta in range(self.ndim2)
+        ]
+        
+        grid = [
+            DistortedElectrode(x = x,
+                               y = y,
+                               xsize = np.log(k * ((x-0.5)**2 + (y-0.5)**2) + a),
+                               ysize = np.log(k * ((x-0.5)**2 + (y-0.5)**2) + a),
+                               xdim = self.xdim,
+                               ydim = self.ydim)
+            for (x, y) in xys
+        ]
+        
+        return grid
+    
+class RescalingDistortedPolarGrid(DistortedPolarGrid):
+    """
+    A polar grid with distorted electrodes and non-summative rendering
+    (rendering rescales the brightness to max). 
+    """
+    
+    def render(self, values):
+        
+        # Multiply the values with the renders and sum
+        product = values.reshape(self.vector_size, 1, 1) * self.prerendered
+        summed = sum(product)
+        summax = np.max(summed)
+
+        # Rescale, then scale between -1 and 1
+        scaled = (summed ** 2 / summax ** 2) * 2 - 1
+        
+        return scaled
+    
+    def render_tensor(self, tensor):
+        
+        # Preprocessing
+        tiled = tf.tile(tensor, tf.constant([self.xdim]))
+        reshaped = tf.reshape(tiled, (self.xdim, self.vector_size, 1))
+        transposed = tf.transpose(reshaped, perm=[1, 0, 2])
+        
+        # Multiply the values with the renders and sum
+        product = transposed * self.prerendered_tensor
         summed = tf.reduce_sum(product, axis=0)
         summax = tf.reduce_max(summed)
-        return tf.divide(summed, summax) * 2 - 1
         
+        # Rescale, then scale between -1 and 1
+        scaled = tf.divide(summed ** 2, summax ** 2) * 2 - 1
+        
+        return scaled      
         
 # STIMULUS
 
@@ -308,20 +375,6 @@ class Stimulus:
         self.ypos = ypos
         self.image = self.getImage()
         self.vector = self.process()
-        
-        
-# TESTING ONLY 
-
-import tensorflow as tf
-tf.executing_eagerly()
-import keras
-
-# input_shape = (72, 72)
-
-# encoder_path = "./data/models/encoder_model.h5"
-# encoder = tf.keras.models.load_model(encoder_path)
-
-# encoder = make_encoder_model()
 
 class StimulusNet(Stimulus):
 
