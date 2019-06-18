@@ -4257,7 +4257,7 @@ I think this will make it much easier to test, now that the
 CLOCK: [2019-06-18 Tue 15:51]
 :END:
 
-| Git Commit Hash | |
+| Git Commit Hash |  99ef69990e3f9bc3c7c7859a7fc7ef1d24a5fdff |
 | Grid | Cartesian Grid | 
 | Vector size | 12 x 12 = 144 |
 
@@ -4275,14 +4275,28 @@ The loss is going down nicely, but the images /still/ look very
 poor. I think it may be time to reconsider my loss function. 
 
 I stopped it at 7 epochs because I didn't think it would get any
-better. 
+better. Loss got below 0.1, but the results were completely
+unintelligible.
 
-[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-18_15-18_loss_CartesianGrid_12-12_64-64.png]]
+[2019-06-18 Tue 16:08]
+I'm going to quickly try putting the sum of the vector as part of the
+loss, so hopefully it will try to only preserve the bare minimum... hopefully.
 
-Loss got below 0.1, but the results still look completely
-unintelligible. 
+While that's running.. what else is causing the outputs to not look
+like digits?
+1. Non-continuous connections between the digits
+2. Disjoint areas 
+3. Low contrast
 
-[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-18_15-18_evolution_CartesianGrid_12-12_64-64.gif]]
+I just realised penalising on the total sum of the image is not a good
+idea, that'll just lower the contrast even more. Instead, I should be
+trying to optimise for the standard deviation of values, or some other
+way to try and optimise for 0s and 1s. 
+
+I stopped it after 22 epochs. I think the idea was along the right
+longs, but not quite the right one. I'll try using the reciprocal of
+the standard deviation of the encoding vector instead and I'll r
+
 
 * July 2019
  
