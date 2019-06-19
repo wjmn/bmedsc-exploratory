@@ -4619,6 +4619,105 @@ I stopped the current run after 40 epochs, it wasn't changing much
 
 [[./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-19_13-01_evolution_PolarGrid_12-12_64-64.gif]]
 
+*** Polar Regular Grid, Many Many more Kernels
+:LOGBOOK:
+CLOCK: [2019-06-19 Wed 14:35]--[2019-06-19 Wed 15:26] =>  0:51
+:END:
+
+| Git commit hash |                    |
+| Grid            | Polar Regular Grid |
+| Vector size     | 12 x 12 = 144      |
+| Learning rate   | 1e-2               |
+| Loss            | MNIST only         |
+| Decoder         | 64x8x8 -> 128x4x4  |
+
+I sort of wonder whether the number of kernels is worth increasing
+even more. Perhaps this would increase the chance of having kernels
+that detect garbage features and would increase the decoder accuracy
+for garbage. 
+
+I've added 64 8x8 kernels to the first convolutional layer and 128 4x4
+kernels to the second convolutional layer. It's going to take much
+longer to train, but hopefully it is worth it.
+
+A paper to read based on multiclass, conditional GANs:
+
+[[https://arxiv.org/pdf/1806.07751.pdf]]
+
+I'm wondering whether it might be worth separating the GAN from the
+decoder network - i.e. just attempting to generate conditional upon
+digits for a particular map renderer. 
+
+The MNIST training takes around 5 minutes per epoch. The resulting
+kernels are interesting - there are some very clear ones which look at
+horizontal, vertical or angled lines, as well as loops. Many of them
+appear as noise, which I am hoping help exclude garbage. 
+
+For this run, I'm taking out the standard deviation part in the loss
+function. I'd rather just see how it goes without it first. 
+
+Also, I'm going to have to think about why the encoder always starts
+off with a really bright image. I'm not quite sure yet. 
+
+After 5 epochs, I have to say...I'm pretty impressed. It actually is
+starting to look like MNIST digits. So perhaps it is indeed the number
+of kernels which is a deciding factor. Maybe I should attempt to
+quantify this.
+
+I'm going to stop it at 20 epochs and reintroduce the standard
+deviation aspect. I'd like to see if it helps with the background
+suppression.
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-19_14-32_loss_PolarGrid_12-12_64-64.png]]
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-19_14-32_evolution_PolarGrid_12-12_64-64.gif]]
+
+
+*** Polar Regular Grid, Slower Learning Rate and reciprocal of standard deviation contribution to loss
+:LOGBOOK:
+CLOCK: [2019-06-19 Wed 15:29]
+:END:
+
+| Git commit hash |                                |
+| Grid            | Polar Regular Grid             |
+| Vector size     | 12 x 12 = 144                  |
+| Learning rate   | 5e-3                           |
+| Loss            | MNIST + 1 / standard deviation |
+| Decoder         | 64x8x8 -> 128x4x4              |
+
+I'm starting to think that perhaps it would indeed be a good idea to
+separate the generative network out and test it separately, then use
+participant data to test the encodings and see which ones
+work. That way there are more candidates for the digit representations
+to choose from, rather than being stuck with whatever the encoder
+eventually ended up with. 
+
+[2019-06-19 Wed 15:38]
+After 13 epochs, it doesn't really appear to be getting much
+darker. Maybe I need a better metric for the loss function to try and
+ensure there is  high contrast. I'm imagining something like a sine
+function with width 2 units, then find the sum. So the value 0.5 is
+the highest value, and 0 and 1 both give a 0 value. There clearly
+needs to be a constant applied to it to scale it so it doesn't
+overpower the MNIST decoder though, especially since this will be
+pretty much 0 at the start when the encoder gives very bright values.
+The downside is that this should probably be applied to the simulated
+render, not the input vector, which will probably make training
+slower. I'll have a try I think, after this run is over.
+
+So at the moment, I think there seem to be two strong possible
+candidates for further exploration:
+- Increasing the number of filter kernels
+- Incorporating a better loss function.
+
+I decided to stop this after 21 epochs, where it remained fairly stable.
+
+[[file:./03-psychophysics/./data/training-intermediate-data/training-graphs/2019-06-19_15-25_loss_PolarGrid_12-12_64-64.png]]
+
+[[file:./03-psychophysics/./data/training-intermediate-data/training-gifs/2019-06-19_15-25_evolution_PolarGrid_12-12_64-64.gif]]
+
+*** Polar Regular Grid, Mapped sine contribution to loss and more kernel filters. 
+
 
 
 * July 2019
