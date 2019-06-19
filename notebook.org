@@ -4574,6 +4574,52 @@ experimental setting.
    phosphenes in this experiment may be interpreted differently since 
    people can fixate directly on them. 
 
+   
+
+***  12 x 12 Grid Polar Regular Grid, Architecture of decoder change.
+
+| Git commit hash |               |
+| Grid            | Polar Regular |
+| Vector size     | 12 x 12 = 144 |
+
+I'll go back to a decoder with smaller initial kernels and see how
+that goes. 
+
+I think I need to remember that the /primary/ goal of the decoder is
+not actually decoding accuracy - it's more about learning useful
+features and discarding poor features. 
+
+I've changed the architecture:
+- Leaky ReLU instead of ReLU (I wonder if perhaps the negative values
+  of the input image could be impacting performance)
+- Many more filters, but only two convolutional layers
+- Dropout after both layers
+
+We'll see how it goes.
+
+NB: I attempted to put =tf.nn.leaky_relu= as the =activation= kwarg to
+the Keras layers API, but when loading the model, it threw an error
+saying =leaky_relu= was not recognised. I've split it into a separate
+layer - maybe this is because of the Tensorflow 2.0 API changing a few
+things, though I'm not quite sure. 
+
+[2019-06-19 Wed 14:22]
+Like before, it's pretty stagnant after 10 epochs. Discriminability is
+still an important issue. I know MNIST is supposed to be the arbiter
+of discriminability here, but maybe something greater is needed. It
+could be something easy, like the direct difference between intensity
+values of the resulting image. Or perhaps a quick metric would be the
+difference between intensity values of the input vector. I might try
+that. 
+
+I stopped the current run after 40 epochs, it wasn't changing much
+(although the loss was still gradually decreasing). 
+
+[[./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-19_13-01_loss_PolarGrid_12-12_64-64.png]]
+
+[[./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-19_13-01_evolution_PolarGrid_12-12_64-64.gif]]
+
+
 
 * July 2019
  
