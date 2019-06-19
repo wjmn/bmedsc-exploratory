@@ -4565,11 +4565,14 @@ experimental setting.
    2) Can a training architecture improve upon a brightness-based
       encoder on a certain dimension (e.g. accuracy, robustness)
    Number 2 is dependent on 1, but most of the experimental discussion
-   (at least as it stands) will be resting on 2. I think I would
-   prefer to have further discussion on 1 and actually for the
-   emphasis to mostly be on 1) since I feel that is the more
-   interesting aspect, but I'm not sure whether this would be seen as
-   "not research."
+   (at least as it stands) will be resting on 2. The analysis of 2 is
+   very basic (comparing accuracies). I think I would prefer to have
+   further discussion on 1 and actually for the emphasis to mostly be
+   on 1 since I feel that is the more interesting aspect.
+   
+7. Eye movements. Since phosphenes move with eye movements, peripheral
+   phosphenes in this experiment may be interpreted differently since 
+   people can fixate directly on them. 
 
 
 * July 2019
