@@ -4318,7 +4318,7 @@ I'll retry the polar grid.
 
 *** Polar 12 x 12, reciprocal of std loss
 
-| Git commit hash | |
+| Git commit hash | 78d551f1abac281acd17e210ef56fe84372de075 |
 | Grid | PolarGrid| 
 | Vector size | 12 x 12 = 144 |
 
@@ -4336,6 +4336,242 @@ first ten or so epochs again.
 [[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-18_22-17_evolution_PolarGrid_12-12_64-64.gif]]
 
 ** [2019-06-19 Wed]
+
+*** Meeting
+
+Progress: 
+1. Experimental + analysis plan for discussion
+2. Continuing to experiment with generation algorithms
+   
+**** Plan
+
+Status:
+- [X] Experimental task script.
+- [X] Per-phosphene map CNN-based encoder training.
+- [ ] High discriminability (atm gives similar performance to
+  local-brightness-based encoder for experimental run on myself,
+  though I am clearly biased)
+
+Ideally, the plan should be relatively stable now. The only thing
+that's left is to "slot in" the pretrained net, which I am continuing
+to work on. I've tested the pretrained net in the experiment and
+functionally it works fine, it's a matter of improving discriminability.
+
+***** Experimental conditions
+
+|------------+------------------+------------------------------------------------------------------------|
+| Conditions | Processor        | Renderer                                                               |
+|------------+------------------+------------------------------------------------------------------------|
+| 1A         | Local brightness | 144-phosphene polar regular right-half grid, no scanning               |
+| 1B         | Pretrained net   | 144-phosphene polar regular right-half grid, no scanning               |
+| 2A         | Local brightness | 144-phosphene polar irregular right-half grid, no scanning             |
+| 2B         | Pretrained net   | 144-phosphene polar irregular right-half grid, no scanning             |
+| 3A         | Local brightness | 144-phosphene polar irregular conditional right-half grid, no scanning |
+| 3C         | Pretrained net   | 144-phosphene polar irregular conditoinal right-half grid, no scanning |
+|------------+------------------+------------------------------------------------------------------------|
+
+***** Experimental Process
+
+Aiming for minimum 6 participants.
+
+On recruitment:
+
+1. Allocate to one of groups 1, 2, or 3 (both A and B
+   portions are done by one participant.
+   This gives 2 people per numerical group.
+   Of the 2 people, set one to start with condition A and set one to
+   start with condition B. 
+2. Schedule a 1 hour session block with rest between A and B. 
+
+During experiment session:   
+
+1. Explain nature of experiment and gain consent.
+2. Explain the task - along the lines of "You will be shown simulated
+   images that represent digits. We would like you to press the digit
+   you think it is. Immediately afterwards, you'll get feedback on
+   whether you were correct or not, and what the actual digit is. This
+   will be repeated 20 times, for 25 trials and should take about 15
+   minutes."
+3. Allow a trial run (should I record form this?) of one trial to let
+   them be familiar with the experiment.
+4. Start the experiment script with =--ntrials 25 --ncues 20= and
+   appropriate processor and grid parameters for experimental group,
+   with either condition A or B.
+   
+   This will produce 500 datapoints for each condition for each
+   participant, or 1000 data points for each condition across
+   participants. 
+
+   Digits for the local-brightness based decoder will
+   space-invariant...maybe. 
+   - On one hand, if they are in different positions, then could argue
+     that people can't train to recognise them
+   - On the other hand, if they are in the same position, then could
+     argue that it's just the particular position which is bad
+
+5. At the end of the experiment, allow the paticipant to take a rest.
+6. Start the experiment again with the condition A or B that was not
+   tested before. 
+7. On conclusion, debrief. 
+
+***** Analysis and Discussion for Thesis
+
+Main question - *is a pretrained net more /robust/ against different
+renderers than a brightness-based encoder?* (or more adequately able
+to preserve classification accuracy when distortions are introduced to
+the renderer). 
+
+The intended tie-back to CVPs is that there are many distortions to
+in-vivo phosphene percepts, many of which we already know about
+(e.g. size and brightness), but many others of which are currently
+unpredictable or uncontrollable (precise location, shape), or are
+currently unknown or not-well-established (interactions of multiple
+phosphenes). Being able to find methods which are capable to being
+/robust/ to distortions /could/ be useful to cope with unpredictable
+or unknown percept distortions. 
+
+At the moment, the training is confined to a simulated setting. I
+originally thought that training could be done during training, but
+the huge data requirements are probably not feasible at the moment.
+
+- What was the accuracy /between/ renderers? :: Previously, I showed
+     the basic analysis of this on an earlier prototype. 
+
+     Outputs:
+        1. Bar chart of mean accuracy (I'm not sure what error bar would
+            exactly be meaningful for this graphic).
+        2. ANOVA between the three renderer groups (n = 2 participants for each
+            renderer) for difference in mean accuracy
+
+- What was the accuracy /between/ processors? :: Very similar to the
+     previous, but comparing between processors instead of 
+
+- What was the difference in timing /between/ renderers? ::
+     similar. To inform discussion whether difference in accuracy may
+     be attributable to differences in time spent.
+
+- What was the difference in timing /between/ processors? ::
+     similar. To inform discussion whether difference in accuracy may
+     be attributable to differences in time spent.
+     
+- For each condition, what digits were often confused? :: To inform
+     discussion on what digits were easy or hard to discriminate and
+     what particular use cases of a different encoder based on
+     features of these digits may be.
+
+     Outputs:
+     1. Confusion matrix per condition. 
+
+- Which processor was more robust against the three renderers? :: I am
+     not yet sure what the best analysis for this would be or how to
+     test the significance of this. 
+
+     A simple measure would be a measure of spread of the
+     classification accuracies for each processor (e.g. variance or
+     standard deviation), but for only three renderers, I do not know
+     how meaningful this would be. 
+     
+     The previous analyses of accuracy and confusion could inform the
+     discussion of this point. 
+        
+I would also like to incorporate some non-experimental analysis of the
+performance of the encoder training.
+
+- Comparison of encoder training architectures :: I've tried many, and
+     am continuing to try many. I would like to incorporate some
+     visualisation of the various encoder architectures I've tried,
+     though maybe only a brief discussion. I can visualise the end
+     result after n-epochs and the loss curve.
+     
+- Assessment of "intrinsic" discriminability between digits for each processor and renderer :: I think this would be useful to inform
+  the discussion on the limitations of the non-experimental training
+     and why the non-experimental training differs from experimental
+     results, and potentially how these could be bridged.
+     
+- Kernels for adversarial decoder :: I've done a few of these, and I
+     know it's pretty abstract, but I think it may be useful to know
+     what features the decoder is decoding against in the first
+     place. I haven't fully investigated this yet, but I believe that
+     this is crucial to the training, and is this is currently wha
+     the optimising against. 
+
+I believe these would contribute to a discussion in the thesis of what
+the intended basis for this project was and, depending on the
+experimental results, why or why it does not translate to an
+experimental setting.
+
+***** Timeline
+
+|----------------+------------------------------------------|
+| Week Starting  | Task                                     |
+|----------------+------------------------------------------|
+| July 1st       | Begin recruiting participants            |
+| July 8th       | Run 2 participants, continue recruitment |
+| July 15th      | Assess first batch                       |
+| July 22nd      | Run 2 participants, continue recruitment |
+| July 29th      | Run 2 participants                       |
+| August 5th     | Conduct analysis                         |
+| August 12th    | If necessary, run more participants      |
+| August 19th    |                                          |
+| August 26th    |                                          |
+| September 2nd  | Start writing thesis                     |
+| September 9th  |                                          |
+| September 16th |                                          |
+| September 23rd |                                          |
+| September 30th |                                          |
+| October 7th    |                                          |
+| October 14th   |                                          |
+| October 21st   |                                          |
+| October 28th   | Thesis and Faculty Oral + Poster Due     |
+|----------------+------------------------------------------|
+
+***** Potential Criticisms
+
+1. No incorporation of what is "lost" with pretrained net - i.e. the
+   inability to scan / the static nature of render. This is intrinsic
+   to the processing method of the net, and I imagine this will be a
+   very strong criticism of why this particluar experimental method 
+   is not readily transferrable to a real-life situation. Scanning
+   provides an extra, user-controlled channel of information that is
+   really useful to increase the knowledge about the data, but is not
+   assessed in this methodology.
+   
+2. Spatial position of digits for the brightness encoder (discussed
+   above) - this comes down to the question of "what is a fair
+   comparison". 
+
+3. Lack of "control" - e.g. completely random render, or a completely
+   clean render. You would /think/ that the former would have 10%
+   accuracy, and the latter close to 100% accuracy but I don't know if
+   I need to explicitly prove that. I would think not. 
+
+4. Small sample size. 
+   
+5. Confined to simulated setting. Incorporating training data from
+   participants would be useful, but from my results so far, the data
+   requirements are absolutely massive (10,000 digits per epoch, and
+   it takes about 5-10 or so epochs, from what I have so far, until it
+   is relatively stable). It's also a question of how to do the
+   backpropogation properly, but I don't think it's feasible to
+   collect the data to do so anyway, so I will confine the training to
+   prior to the experiment (though I do believe there is some novelty
+   with this approach, as the training takes the specific renderer as
+   an input and trains /for/ that renderer). 
+  
+6. This isn't a criticism, but I sort of see this as confronting two
+   aspects. 
+   1) What training architecture produces the best human
+      discriminability, and
+   2) Can a training architecture improve upon a brightness-based
+      encoder on a certain dimension (e.g. accuracy, robustness)
+   Number 2 is dependent on 1, but most of the experimental discussion
+   (at least as it stands) will be resting on 2. I think I would
+   prefer to have further discussion on 1 and actually for the
+   emphasis to mostly be on 1) since I feel that is the more
+   interesting aspect, but I'm not sure whether this would be seen as
+   "not research."
+
+
 * July 2019
  
 * August 2019
