@@ -4624,7 +4624,7 @@ I stopped the current run after 40 epochs, it wasn't changing much
 CLOCK: [2019-06-19 Wed 14:35]--[2019-06-19 Wed 15:26] =>  0:51
 :END:
 
-| Git commit hash |                    |
+| Git commit hash |  70cbd1809681fb6ffd12db6c6d7e75e370a4b3ae                  |
 | Grid            | Polar Regular Grid |
 | Vector size     | 12 x 12 = 144      |
 | Learning rate   | 1e-2               |
@@ -4674,16 +4674,13 @@ suppression.
 
 
 *** Polar Regular Grid, Slower Learning Rate and reciprocal of standard deviation contribution to loss
-:LOGBOOK:
-CLOCK: [2019-06-19 Wed 15:29]
-:END:
 
-| Git commit hash |                                |
-| Grid            | Polar Regular Grid             |
-| Vector size     | 12 x 12 = 144                  |
-| Learning rate   | 5e-3                           |
-| Loss            | MNIST + 1 / standard deviation |
-| Decoder         | 64x8x8 -> 128x4x4              |
+| Git commit hash | 70cbd1809681fb6ffd12db6c6d7e75e370a4b3ae |
+| Grid            | Polar Regular Grid                       |
+| Vector size     | 12 x 12 = 144                            |
+| Learning rate   | 5e-3                                     |
+| Loss            | MNIST + 1 / standard deviation           |
+| Decoder         | 64x8x8 -> 128x4x4                        |
 
 I'm starting to think that perhaps it would indeed be a good idea to
 separate the generative network out and test it separately, then use
@@ -4718,6 +4715,56 @@ I decided to stop this after 21 epochs, where it remained fairly stable.
 
 *** Polar Regular Grid, Mapped sine contribution to loss and more kernel filters. 
 
+| Git commit hash |                                            |
+| Grid            | Polar Regular Grid                         |
+| Vector size     | 12 x 12 = 144                              |
+| Learning rate   | 5e-3                                       |
+| Loss            | MNIST + map sin(x*pi) over image, then sum |
+| Decoder         | 128x8x8 -> 128x2x2                         |
+
+With this new MNIST decoder of many more kernels, it takes about 10
+minutes per epoch. Decoding accuracy is also worse, though I don't
+know if that's necessarily something to worry about...((though that may
+also be because I reduced the kernel size for the second layer). I
+mean, could there be such a thing as "too" flexible for the decoder?
+Especially given that the primary task is not about decoding per se,
+but about discrimination with garbage first and foremost, and then
+amongst each other.
+
+[2019-06-19 Wed 16:55]
+The decoder is one large file - 17MB. Yikes. Not sure if I should just
+gitignore it for now.
+
+I've made the constant multiplier to the sin mapped over the encoded
+images to be 1 over the (batch size multiplied by number of pixels in
+the image) i.e. simply the average. The sin mapped sum will simply be
+the average of that function over all the pixels.
+
+Each epoch is approximately 80 seconds, so not too bad.
+
+[2019-06-20 Thu 09:15]
+After hvaing let it run overnight, the digits look pretty similar to
+before, except I'm still not getting the contrast I want, and the loss
+is actually negative?! That makes me think I didn't use the sine
+function correctly. Ah...and I think I know why. I'm using the encoded
+images so the output is between -1 and 1...gr. I was still thinking
+along the lines of using the encoded values which are between 0
+and 1. So that would explain a lot. I should rerun this with the
+cosine function, that would be very easy. 
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-19_15-48_loss_PolarGrid_12-12_64-64.png]]
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-19_15-48_evolution_PolarGrid_12-12_64-64.gif]]
+
+I think I should also try to start with non-bleached images. I have to
+figure out why they're bleached though.
+
+Just out of interest, here are the kernels for the MNIST decoder for
+this run.
+
+[[./03-psychophysics/data/archive/2019-06-20-kernels-polar-regular-128.png]]
+
+*** [2019-06-20 Thu]
 
 
 * July 2019
