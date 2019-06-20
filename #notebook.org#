@@ -2711,7 +2711,7 @@ Deadlines:
        alldata = list(zip(configs, data))
    #+END_SRC
 
-   At the moment, I only have data to compare GRID (i.e. renderers), as
+   At the moment, I only have data to compare GRID (i.e.Â renderers), as
    I've only implemented one processor.
 
    #+BEGIN_SRC python
@@ -2966,7 +2966,7 @@ Deadlines:
     number of modifications which became clear during this feasibility
     test, including the need to pre-render all the electrodes and wrap the
     final render under Tensorflow).
-  - In this particular case, you can see /mode collapse/ (i.e. they all
+  - In this particular case, you can see /mode collapse/ (i.e.Â they all
     look the same! even though the random seeds are different). Probably
     won't be such a big issue when takes the actual digit, rather than a
     random seed, as the input.
@@ -3147,7 +3147,7 @@ So this is part of a series of attempts at digit generation.
 
   Lessons learnt:
 
-  - Not shown here, but loss actually minimised really well i.e. the MNIST
+  - Not shown here, but loss actually minimised really well i.e.Â the MNIST
     decoder was able to decode the digit from these representations with
     high accuracy (> 90%!). So, while the encoder is learning well, it is
     learning in a way optimised for the MNIST decoder features. Some of
@@ -4802,9 +4802,9 @@ quickly and increasing the contribution of cosine.
 
 [[file:./03-psychophysics//data/training-intermediate-data/training-gifs/2019-06-20_09-33_evolution_PolarGrid_12-12_64-64.gif]]
 
-*** Increasing the contribution of cosine to the loss function
+*** Increasing the contribution of cosine to the loss function by factor of 1000
 :LOGBOOK:
-CLOCK: [2019-06-20 Thu 11:09]
+CLOCK: [2019-06-20 Thu 11:09]--[2019-06-20 Thu 11:42] =>  0:33
 :END:
 
 
@@ -4837,7 +4837,44 @@ aggressive, but at least I know this is usable.
 
 [[./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-20_11-03_evolution_PolarGrid_12-12_64-64.gif]]
 
+*** Increasing contribution of cosine to the loss function by factor of 100
+:LOGBOOK:
+CLOCK: [2019-06-20 Thu 11:43]
+:END:
 
+| Git commit hash | |
+| Grid            | Polar Regular Grid                                     |
+| Vector size     | 12 x 12 = 144                                          |
+| Learning rate   | 1e-2                                                   |
+| Loss            | MNIST + 50 * average of map cos(pi/2 * x) over image |
+| Decoder         | 128x8x8 -> 128x2x2                                     |
+
+Similar to before, but by 100 instead of 1000 - hopefully during the
+earlier generations, the contribution will be less so the decoder can
+steer the network towards forms rather than trying to optimise for the
+cosine straightaway.
+
+[2019-06-20 Thu 12:59]
+100 was interesting. It started off like the ones prior to
+incorporating the cosing, but after about 10 or so epochs, it started
+to "bleed" the brightness (so the digits became larger and more
+blob-like) and gradually the greys turned to black. I'm going to
+repeat with 50 instead of 100 because I don't think the 100 results
+were very compelling, but I think it might be interesting to see what
+happens if the cosine contribution is delayed even further. 
+
+[2019-06-20 Thu 13:52]
+I've stopped it at 29 epochs, it doesn't seem to be changing
+much. Still bleeds out a little too much, but I think it's a step in
+the right direction, maybe.
+
+[[./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-20_13-15_loss_PolarGrid_12-12_64-64.png]]
+
+[[./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-20_13-15__PolarGrid_12-12_64-64.png]]
+
+*** Adding an extra layer to the generative network
+
+*** Using many, and larger, kernels on the MNIST decoder. 
 * July 2019
  
 * August 2019
