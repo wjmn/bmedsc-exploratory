@@ -4715,7 +4715,7 @@ I decided to stop this after 21 epochs, where it remained fairly stable.
 
 *** Polar Regular Grid, Mapped sine contribution to loss and more kernel filters. 
 
-| Git commit hash |                                            |
+| Git commit hash |649076929c92673b81e4da21ae5040d0354397e4                                            |
 | Grid            | Polar Regular Grid                         |
 | Vector size     | 12 x 12 = 144                              |
 | Learning rate   | 5e-3                                       |
@@ -4764,8 +4764,43 @@ this run.
 
 [[./03-psychophysics/data/archive/2019-06-20-kernels-polar-regular-128.png]]
 
-*** [2019-06-20 Thu]
+** [2019-06-20 Thu]
 
+*** Adding Cosine to the Loss Function Instead of Sine
+:LOGBOOK:
+CLOCK: [2019-06-20 Thu 09:50]
+CLOCK: [2019-06-20 Thu 09:40]--[2019-06-20 Thu 09:50] =>  0:10
+:END:
+
+| Git commit hash | |
+| Grid            | Polar Regular Grid                         |
+| Vector size     | 12 x 12 = 144                              |
+| Learning rate   | 2e-3                                     |
+| Loss            | MNIST + map cos(pi/2 * x) over image, then sum |
+| Decoder         | 128x8x8 -> 128x2x2                         |
+
+It seems that the bleaching is simply because of the additive and
+clipping effect. When the encoder starts, the values are mostly 0.5 -
+and when I decrease all those values by a scale of 10, the image gets
+dimmer. I don't think it's necessarily something to worry about at
+this point.
+
+Time to run this with cosine in the loss function now - hopefully
+there's a bit more distinction between the digit and the
+background. Then I'll try and concentrate back on the forms again.
+
+I reckon I'll try a slower learning rate too - clearly, there's not
+much change in later epochs, so I think I can afford it. 
+
+[2019-06-20 Thu 10:59]
+It's at the 34th epoch and it still doesn't seem to be getting enough
+contrast. Not sure why though. I might try upping the learning rate
+quickly and increasing the contribution of cosine. 
+
+[[file:./03-psychophysics//data/training-intermediate-data/training-graphs/2019-06-20_09-33_loss_PolarGrid_12-12_64-64.png]]
+
+
+[[file:./03-psychophysics//data/training-intermediate-data/training-gifs/2019-06-20_09-33_evolution_PolarGrid_12-12_64-64.gif]]
 
 * July 2019
  
