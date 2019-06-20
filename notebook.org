@@ -4719,7 +4719,7 @@ I decided to stop this after 21 epochs, where it remained fairly stable.
 | Grid            | Polar Regular Grid                         |
 | Vector size     | 12 x 12 = 144                              |
 | Learning rate   | 5e-3                                       |
-| Loss            | MNIST + map sin(x*pi) over image, then sum |
+| Loss            | MNIST + map sin(x*pi) over image, then average |
 | Decoder         | 128x8x8 -> 128x2x2                         |
 
 With this new MNIST decoder of many more kernels, it takes about 10
@@ -4768,15 +4768,15 @@ this run.
 
 *** Adding Cosine to the Loss Function Instead of Sine
 :LOGBOOK:
-CLOCK: [2019-06-20 Thu 09:50]
+CLOCK: [2019-06-20 Thu 09:50]--[2019-06-20 Thu 11:09] =>  1:19
 CLOCK: [2019-06-20 Thu 09:40]--[2019-06-20 Thu 09:50] =>  0:10
 :END:
 
-| Git commit hash | |
+| Git commit hash | 0dce5db96ec538c7f31adc4ac450f4958ddad966|
 | Grid            | Polar Regular Grid                         |
 | Vector size     | 12 x 12 = 144                              |
 | Learning rate   | 2e-3                                     |
-| Loss            | MNIST + map cos(pi/2 * x) over image, then sum |
+| Loss            | MNIST + map cos(pi/2 * x) over image, then average |
 | Decoder         | 128x8x8 -> 128x2x2                         |
 
 It seems that the bleaching is simply because of the additive and
@@ -4801,6 +4801,42 @@ quickly and increasing the contribution of cosine.
 
 
 [[file:./03-psychophysics//data/training-intermediate-data/training-gifs/2019-06-20_09-33_evolution_PolarGrid_12-12_64-64.gif]]
+
+*** Increasing the contribution of cosine to the loss function
+:LOGBOOK:
+CLOCK: [2019-06-20 Thu 11:09]
+:END:
+
+
+| Git commit hash |                                                      |
+| Grid            | Polar Regular Grid                                   |
+| Vector size     | 12 x 12 = 144                                        |
+| Learning rate   | 1e-2                                                 |
+| Loss            | MNIST + 1000 * average of map cos(pi/2 * x) over image |
+| Decoder         | 128x8x8 -> 128x2x2                                   |
+
+I think it's very interesting that the digits the network comes up
+with are very similar between the different loss functions and
+learning rates. Probably a consequence of the decoder. I should
+definitely separate out the generative network and try and get more
+candidate renders.
+
+[2019-06-20 Thu 11:16] 
+Frustratingly, the contrast is still not very
+good (I initially tried with 10 times the average cosine). It looks
+almost exactly the same as the others. Maybe I'll try absolutely
+blasting the contribution of cosine...just to see what it gets.  (I
+guess it's understandable though, over half the image is guaranteed to
+be -1, making the average probably very low...)
+
+[2019-06-20 Thu 11:40]
+This time, it achieved what I wanted, I think I need to make it less
+aggressive, but at least I know this is usable.
+
+[[./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-20_11-03_loss_PolarGrid_12-12_64-64.png]]
+
+[[./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-20_11-03_evolution_PolarGrid_12-12_64-64.gif]]
+
 
 * July 2019
  
