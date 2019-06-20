@@ -4905,11 +4905,29 @@ quite early at 7 epochs, but it doesn't seem to be changing much.
 | Git commit hash | |
 | Grid | Polar Regular Grid |
 | Vector size | 12 x 12 = 144 | 
-| Learning rate | 1e-2 | 
-| Loss | MNIST + 50 * average of map(cos(pi/2 * x)) over image | 
+| Learning rate | 5e-3 | 
+| Loss | MNIST + 1 * average cos (as before) | 
 | Decoder | 128x16x16 -> 64x8x8 -> 32x4x4
 
+So it seems that what has made the most difference so far
+is the number of filter kernels in the MNIST decoder (or perhaps more
+generally, the MNIST decoder architecture). So I'll change that up.
 
+To speed things up a little too, I'm also going to reduce the number
+of phosphenes/electrodes. The outputs will probably be more limited,
+but I'd like to see how it fares anyway. 
+
+[2019-06-20 Thu 15:18]
+Nevermind, I attempted to reduce it down to 8, but the results were
+indecipherable. I'll just continue with 12 for now.
+
+[2019-06-21 Fri 09:14]
+Results are poor but the loss gets down quite low. I really need to
+think about why that is. 
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-20_15-18_loss_PolarGrid_12-12_64-64.png]]
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-20_15-18_evolution_PolarGrid_12-12_64-64.gif]]
 
 * July 2019
  
