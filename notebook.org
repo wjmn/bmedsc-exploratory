@@ -4802,9 +4802,9 @@ quickly and increasing the contribution of cosine.
 
 [[file:./03-psychophysics//data/training-intermediate-data/training-gifs/2019-06-20_09-33_evolution_PolarGrid_12-12_64-64.gif]]
 
-*** Increasing the contribution of cosine to the loss function
+*** Increasing the contribution of cosine to the loss function by factor of 1000
 :LOGBOOK:
-CLOCK: [2019-06-20 Thu 11:09]
+CLOCK: [2019-06-20 Thu 11:09]--[2019-06-20 Thu 11:42] =>  0:33
 :END:
 
 
@@ -4836,6 +4836,79 @@ aggressive, but at least I know this is usable.
 [[./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-20_11-03_loss_PolarGrid_12-12_64-64.png]]
 
 [[./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-20_11-03_evolution_PolarGrid_12-12_64-64.gif]]
+
+*** Increasing contribution of cosine to the loss function by factor of 100
+:LOGBOOK:
+CLOCK: [2019-06-20 Thu 11:43]--[2019-06-20 Thu 13:54] =>  2:11
+:END:
+
+| Git commit hash |a3bcdf05839d5bf509368d706527c26e20a6f905 |
+| Grid            | Polar Regular Grid                                     |
+| Vector size     | 12 x 12 = 144                                          |
+| Learning rate   | 1e-2                                                   |
+| Loss            | MNIST + 50 * average of map cos(pi/2 * x) over image |
+| Decoder         | 128x8x8 -> 128x2x2                                     |
+
+Similar to before, but by 100 instead of 1000 - hopefully during the
+earlier generations, the contribution will be less so the decoder can
+steer the network towards forms rather than trying to optimise for the
+cosine straightaway.
+
+[2019-06-20 Thu 12:59]
+100 was interesting. It started off like the ones prior to
+incorporating the cosing, but after about 10 or so epochs, it started
+to "bleed" the brightness (so the digits became larger and more
+blob-like) and gradually the greys turned to black. I'm going to
+repeat with 50 instead of 100 because I don't think the 100 results
+were very compelling, but I think it might be interesting to see what
+happens if the cosine contribution is delayed even further. 
+
+[2019-06-20 Thu 13:52]
+I've stopped it at 29 epochs, it doesn't seem to be changing
+much. Still bleeds out a little too much, but I think it's a step in
+the right direction, maybe.
+
+[[./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-20_13-15_loss_PolarGrid_12-12_64-64.png]]
+
+[[./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-20_13-15_evolution_PolarGrid_12-12_64-64.gif]]
+
+*** Adding an extra layer to the generative network
+
+| Git commit hash | |
+| Grid | Polar Regular Grid |
+| Vector size | 12 x 12 = 144 | 
+| Learning rate | 1e-3 | 
+| Loss | MNIST + 10 * average of map(cos(pi/2 * x)) over image | 
+| Decoder | 128x8x8 -> 128x2x2
+
+I'm rather curious what will happen if I try to add an extra layer to
+the network. I don't think it will end up with better output, but I
+don't see any harm in trying.
+
+[2019-06-20 Thu 13:58]
+After the first epoch - woah, it really changed fast. I think that
+might indicate the learning rate needs to be much slower with this
+extra layer added. (currently 1e-2). I'm going to rerun this with 1e-3
+as the loss instead.
+
+[2019-06-20 Thu 14:09]
+I think this one's not working, they all look the same. I'm stopping
+quite early at 7 epochs, but it doesn't seem to be changing much.
+
+[[./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-20_13-55_loss_PolarGrid_12-12_64-64.png]]
+
+[[./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-20_13-55_evolution_PolarGrid_12-12_64-64.gif]]
+
+
+*** Using many, and larger, kernels on the MNIST decoder. 
+
+| Git commit hash | |
+| Grid | Polar Regular Grid |
+| Vector size | 12 x 12 = 144 | 
+| Learning rate | 1e-2 | 
+| Loss | MNIST + 50 * average of map(cos(pi/2 * x)) over image | 
+| Decoder | 128x16x16 -> 64x8x8 -> 32x4x4
+
 
 
 * July 2019
