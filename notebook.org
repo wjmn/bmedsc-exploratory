@@ -5074,7 +5074,7 @@ it).
 CLOCK: [2019-06-21 Fri 12:59]--[2019-06-21 Fri 14:21] =>  1:22
 :END:
 
-| Git commit hash | |
+| Git commit hash |d0b24265a97e19b4f7f11cd13b1faabb4471ee04 |
 | Grid | Polar Grid |
 | Vector size | 12 x 12 = 144 | 
 | Learning rate | Various | 
@@ -5181,6 +5181,82 @@ rigorously. It was fine when I was exploring, but I think I'm ready to
 start actually experimentally checking this.
 
 *** Planning 
+:LOGBOOK:
+CLOCK: [2019-06-21 Fri 14:23]
+:END:
+
+Just to get things clearer in my head, what I think I can do now is:
+
+1. Tabulate the different parameters for the network, record the loss
+   and compare. 
+
+   There are too many dimensions to really compare, so I think I could
+   probably just compare:
+   1. Learning rate (important hyperparameter that I should
+      rationalise)
+   2. Loss functions
+   3. Decoder architecture
+   4. Grid type
+
+   Points 2 and 3 are, what I think, the most important aspects of
+   getting the output to look nice. The other parameters (number of
+   electrodes, batch size) I think I can keep fairly static. I could
+   rationalise using 144 electrodes (12 x 12 grid) by saying that's
+   sort of a middle ground between the maximum known before (64) and
+   the proposed dimensions of future prosthesis (~400s), on the more
+   conservative side. 
+
+   There are 4 dimensions of conditions, all of which are
+   important. Hm. 
+
+   If I test 4 grid types, 3 decoder architectures (all
+   convolutional), 2 loss functions, and 3 learning rates, that
+   gives...72 conditions. I could probably just run them all for 10
+   epochs (though I guess learning rate might not be well assessed in
+   those situations). So that's about half an hour, times 72, which is
+   36 hours. That's doable! I think. 
+
+2. Separate the random generation of digits out from the decoder. 
+
+   I guess the intention with this is that I'm getting digits, but I
+   don't know if there are better candidates. This could /actually/
+   make the experimental data useful as a refinement technique rather
+   than just a testing technique, but I need to think about the
+   architecture of how this should be done exactly. In this manner,
+   this would be much more like a typical GAN. 
+
+   I think I should decide on this second point before I do the first
+   point - because this might be a better way to run it anyway. In
+   this sort of paradigm, I guess you could randomise the noise each
+   trial, then fix the noise at whatever produces the best
+   response. But if the noise is continuous, that's meaningless. Maybe
+   I can do this for interest, but it's harder to think exactly about
+   how to choose an exactly matching digit. I don't think it's
+   meaningful to give people multiple different renders of the same
+   thing, which is what the GAN would be able to do.
+
+3. Working with experimental data.
+
+   Considering I've mostly decided on using static digits, maybe this
+   isn't such an issue, but I should definitely be recording the
+   positions of digits with the experimental data. I guess I am (with
+   the mouse position), I should be able to recreate the exact image
+   the participant saw at any given point in time. I think I can do
+   that already considering the processors are stable and the
+   renderers are either stable or loaded from a saved file, and the
+   digit positions should be static, but I still think I should
+   absolutely triple check this.
+
+   Then I could potentially analyse the differences between conditions
+   on a image-feature level by comparing the features and not just the
+   results. I don't have a really good idea of what this would look
+   like yet, but I think it would be interesting. 
+
+   
+I think a combination of 1 and 3 (using the results of 1 to inform 3),
+would be the best way to go for now. 2 is better for generating
+candidates, but I don't know a good way to select exactly between
+candidates when the noise is continuous on many dimensions. 
 
 
 * July 2019
