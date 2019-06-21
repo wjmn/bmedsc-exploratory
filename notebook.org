@@ -5258,7 +5258,88 @@ would be the best way to go for now. 2 is better for generating
 candidates, but I don't know a good way to select exactly between
 candidates when the noise is continuous on many dimensions. 
 
+*** Distorted Polar Grid, same parameters
+:LOGBOOK:
+CLOCK: [2019-06-21 Fri 14:53]--[2019-06-21 Fri 15:40] =>  0:47
+:END:
 
+
+| Git commit hash ||
+| Grid | Distorted Polar Grid |
+| Vector size | 12 x 12 = 144 | 
+| Learning rate | Various | 
+| Loss | Various | 
+| Decoder | 64x8x8 -> 64x4x4 -> 64x2x2
+
+I'm going to just briefly try this again with the distorted polar
+grid, just quickly. I don't think I'm going to be able to execute my
+plan on a Friday afternoon with my other jobs in mind, so I'll run this
+while I multitask. 
+
+Now firstly just running this with only the MNIST decoder, then I'll
+have a go at running this with the extra contrast loss measures. 
+
+---
+
+This first run is MNIST-only, 5e-2 learning rate. 
+
+[2019-06-21 Fri 15:13]
+It's seems to be getting some...interesting results. Contrast would
+really help. 
+
+After 10 epochs, it doesn't really change much.
+
+Here it is:
+
+[[file:./03-psychophysics/data/archive/2019-06-21-generated-images-epoch-10-distorted-polar-mnist-only-5e-2.png]]
+
+Not the  best, but I think there are some visible patterns. The real
+issue is with contrast. 
+
+--- 
+
+I'm going to try with a more aggressive learning rate - 1e-1, still
+MNIST-only. That seemed to help with contrast even just with the MNIST
+decoder on the last one.
+
+[2019-06-21 Fri 15:23]
+Loss is about 0.001 after 10 epochs. Here's what it looks like:
+
+[[file:./03-psychophysics/data/archive/2019-06-21-generated-images-epoch-10-distorted-polar-mnist-only-1e-1.png]]
+
+This sort of suggests that I really don't need to be doing more epochs
+when the learning rate is this high. 
+
+--- 
+
+I'm now going to try with this same learning rate (1e-1) and with the
+cosine added (but not the average pixel). Maybe extra brightness would
+be better for this particular grid. Loss got done to about 0.002.
+
+Here it is after 5 epochs:
+
+[[file:./03-psychophysics/data/archive/2019-06-21-generated-images-epoch-10-distorted-polar-mnist-cosine-1e-1.png]]
+
+Interesting, but not much  better.
+
+---
+
+Finally, testing with both the cosine and average pixel loss
+additions. 
+
+After the first epoch, loss was already in the negatives. I guess the
+MNIST decoder must really just be bale to use these features to get
+what it needs. 
+
+Here it is after 3 epochs. Like before, the gray areas just keep
+getting dimmer, no drastic changes.
+
+[[file:./03-psychophysics/data/archive/2019-06-21-generated-images-epoch-10-distorted-polar-mnist-cosine-average-1e-1.png]]
+
+Also not terriblly better. I think you can see the features, but
+deciphering it without prior knowledge would be hard. Maybe that's
+just an intrinsic limitation of the grid. I wonder whether I should be
+attempting to train on other datasets other than just MNIST...hmm. 
 * July 2019
  
 * August 2019
