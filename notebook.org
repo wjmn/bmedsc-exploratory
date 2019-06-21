@@ -4902,11 +4902,11 @@ quite early at 7 epochs, but it doesn't seem to be changing much.
 
 *** Using many, and larger, kernels on the MNIST decoder. 
 
-| Git commit hash | |
+| Git commit hash |6389889b78625c940679cf4e066585ded4efb268 |
 | Grid | Polar Regular Grid |
 | Vector size | 12 x 12 = 144 | 
 | Learning rate | 5e-3 | 
-| Loss | MNIST + 1 * average cos (as before) | 
+| Loss | MNIST + 10 * average cos (as before) | 
 | Decoder | 128x16x16 -> 64x8x8 -> 32x4x4
 
 So it seems that what has made the most difference so far
@@ -4929,6 +4929,145 @@ think about why that is.
 
 [[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-20_15-18_evolution_PolarGrid_12-12_64-64.gif]]
 
+** [2019-06-21 Fri]
+
+*** Cartesian Grid, many large kernels
+:LOGBOOK:
+CLOCK: [2019-06-21 Fri 09:30]--[2019-06-21 Fri 10:40] =>  1:10
+:END:
+
+| Git commit hash | 6389889b78625c940679cf4e066585ded4efb268|
+| Grid | Cartesian Grid |
+| Vector size | 12 x 12 = 144 | 
+| Learning rate | 5e-1 | 
+| Loss | MNIST          | 
+| Decoder | 128x16x16 -> 32x8x8 -> 32x4x4
+
+It seems like the digi representations most often occur at the
+"center" of the image. I wonder if that's a consequence of the
+training data digits being centered by center of mass. Maybe I should
+attempt to relocate the MNIST training data (or at least embed on one
+side) to compensate for this. 
+
+I'm going to try the cartesian grid, just to see maybe whether this
+gives better results (since it covers the whole field rather than just
+one hemisphere). 
+
+In terms of separating out the generator - affixing a random seed to
+the class labels is possible. 
+
+[2019-06-21 Fri 10:27]
+I'm not getting great performance. Maybe large kernels are actually
+not a good idea? Perhaps I should go back to smaller (but still
+numerous) kernels?
+
+[2019-06-21 Fri 10:35] Out of utter curiosity, I wanted to see what
+would happen if I made the learning rate really high (I set it to 1) -
+and wow, the loss shot down extremely quickly (about 1e-4 after the
+first epoch). The things it produces are...interesting, but not really
+recognisable.
+
+Interestingly, I halved it and it shot down even quicker (1e-7 after
+the first epoch!). Maybe I can be a bit more aggressive with the
+learning rate. 
+
+The digits are still not really recognisable though. They
+look...malformed. You can sort of tell that there are features, but
+they don't like well put-together. I suppose that's a consequence of
+the decoder.
+
+I stopped after 2 epochs because it wasn't really changing after that.
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-21_09-34_loss_CartesianGrid_12-12_64-64.png]]
+
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-21_09-34_evolution_CartesianGrid_12-12_64-64.gif]]
+
+*** Cartesian Grid, many smaller kernels
+:LOGBOOK:
+CLOCK: [2019-06-21 Fri 11:06]
+:END:
+
+| Git commit hash | |
+| Grid | Cartesian Grid |
+| Vector size | 12 x 12 = 144 | 
+| Learning rate | Various | 
+| Loss | MNIST | 
+| Decoder | 64x8x8 -> 64x4x4 -> 64x2x2
+
+From what I can tell, it seems many small kernels works better than
+many large kernels. I'll try using smaller kernels this time. 
+
+I'm starting to think I should do a comparison of learning rates. I
+feel like I'm going in blind at the moment trying to find what
+learning rate is best. 
+
+I might also reduce the batch size so the loss output is a bit more
+granular. 
+
+I've tested learning rates of 5e-1, 1e-1 and 5e-2, and the results of
+each of these learning rates seem quite similar. And the images don't
+really change after the first epoch. For posterity, here's one with a
+learning rate of 5e-2: (with a Batch Size of 250 instead of 500). 
+
+[[file:./03-psychophysics/data/archive/2019-06-21-generated-images-epoch-4-cartesian.png]]
+
+I'm going to see what happens if I increaese the Batch Size to 1000,
+with a learning rate of 5e-2.
+
+(Results are comparable). 
+
+I'll go back to using 5e-2 with a batch size of 250, and I'm going to
+see what happens if I put back in the cosine now (with 10 times
+multiplier). 
+
+Here it is after 3 epochs (and it just keeps getting brighter).
+
+[[file:./03-psychophysics/data/archive/2019-06-21-generated-images-epoch-3-cartesian-cosine-10.png]]
+
+I'll try again without the 10 times multiplier. Possibly, the cosine
+is dominating the loss and it just ends up trying to optimise for the
+cosine function too early.
+
+It produces something pretty similar after 4 epochs, albeit
+slower. Maybe I should add another element to the loss function, the
+total sum, to steer it away from becoming obscenely bright...
+
+[2019-06-21 Fri 11:24]
+They definitelly look a bit cleaner, but it sort of seems they get
+trapped in a configuration and don't really change after that. I
+wonder how to prevent that from happening. 
+
+[2019-06-21 Fri 11:36]
+So, I've now added a small part to the loss function that is simply
+the average brightness of each pixel - so it should try and reduce the
+brightness of the whole image as part of the loss too now. The output
+is interesting, it now feels like it's really trying to limit how many
+phosphenes it turns on at once and reduce it to the minimum. Which is
+good in some ways since it looks cleaner, but sometimes it does seem
+to be remove somethings that seemed initially useful. 
+
+Here's the results after 25 epochs.
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-21_10-42_loss_CartesianGrid_12-12_64-64.png]]
+
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-21_10-42_evolution_CartesianGrid_12-12_64-64.gif]]
+
+Probably the best looking digits so far, though this is "easy mode"
+considering it's just a 12 x 12 regular cartesian grid (though at
+least it does have to cope with the Gaussian blur...and it's producing
+a 144 vector only, not the actual image, so there's that too). Loss
+decreases below 0 because of course the final output image has pixels
+between -1 and 1 and it is not being incorporated into the loss.
+
+I think I'm going to try and repeat this exact configuration, but with
+the polar grid now. Though, I have a hunch it will not produce results
+looking anywhere near as good as this - partly because I think that
+the fact the training digits are centered may be the reason the digits
+produced with the polar grid always appear strangely to tend towards
+the center too (even though this may not be the best way to represent
+it). 
 * July 2019
  
 * August 2019
