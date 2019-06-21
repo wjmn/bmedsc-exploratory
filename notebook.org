@@ -4985,14 +4985,14 @@ I stopped after 2 epochs because it wasn't really changing after that.
 
 *** Cartesian Grid, many smaller kernels
 :LOGBOOK:
-CLOCK: [2019-06-21 Fri 11:06]
+CLOCK: [2019-06-21 Fri 11:06]--[2019-06-21 Fri 12:04] =>  0:58
 :END:
 
-| Git commit hash | |
+| Git commit hash | 0e3f254e7aa4ff725fdd743cb92505ea7978aa6b|
 | Grid | Cartesian Grid |
 | Vector size | 12 x 12 = 144 | 
 | Learning rate | Various | 
-| Loss | MNIST | 
+| Loss | MNIST + Various | 
 | Decoder | 64x8x8 -> 64x4x4 -> 64x2x2
 
 From what I can tell, it seems many small kernels works better than
@@ -5068,6 +5068,121 @@ the fact the training digits are centered may be the reason the digits
 produced with the polar grid always appear strangely to tend towards
 the center too (even though this may not be the best way to represent
 it). 
+
+*** Polar Grid, many smaller kernels
+:LOGBOOK:
+CLOCK: [2019-06-21 Fri 12:59]--[2019-06-21 Fri 14:21] =>  1:22
+:END:
+
+| Git commit hash | |
+| Grid | Polar Grid |
+| Vector size | 12 x 12 = 144 | 
+| Learning rate | Various | 
+| Loss | Various | 
+| Decoder | 64x8x8 -> 64x4x4 -> 64x2x2
+
+So this is the exact same as before, just with a Polar Regular Grid
+(and therefore another trained MNIST decoder, but the same
+architecture as prior).  - so learning rate of 1e-2.
+
+---
+
+Here's the gif:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-21_11-47_evolution_PolarGrid_12-12_64-64-with-cosine-and-average-pixel-1e-2.gif]]
+
+It's a shame, it seemed to be doing well, and then I think the average
+pixel decided to reduce it too much. I'm going to run it again, but
+I'm going to remove the average pixel part of the loss (so otherwise
+exact same parameters). 
+
+---
+
+[2019-06-21 Fri 13:36]
+This time it sort of went the opposite way - it's too bright now. I'm
+going to try just without either of them and see how that goes now too
+I think.
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-21_11-47_evolution_PolarGrid_12-12_64-64-with-cosine-only-1e-2.gif]]
+
+The loss curve is pretty similar. It seems like there's a need to
+reach a compromise between the two methods. Perhaps there's a better
+way than the cosine function and average pixel though...
+
+---
+
+[2019-06-21 Fri 14:02]
+I've just tried with /only/ the MNIST decoder i.e. no cosine or
+average in sight. There's basically no change after the first few epochs so I'll stop
+it after 35. I think it sort of shows though that without /something/, the
+contrast is going to be a little bit poor. 
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-21_11-47_evolution_PolarGrid_12-12_64-64-mnist-only-1e-2.gif]]
+
+
+It strikes me that I'm keeping very poor track of what parameters I'm
+testing, I guess because it's so messy and there are simply so many
+parameters to tune. At the moment, i've looked at:
+
+1. Number of electrodes in the grid (i.e. vector size)
+2. Learning rate
+3. Loss functions
+4. Decoder architectures
+5. Grid types
+6. Batch sizes
+  
+I think there's more to add to that list...but I think there needs to
+come a point where I start very deliberately comparing each of
+these. I think I started off just exploring because I was still
+getting the hang of how to do this at all, but now that I have 'the
+hang', I should transition to rigorously testing and comparing these
+in more depth. I've recorded all the Git hashes and saved the data,
+but I fear this repository is only going to increase in size...
+
+---
+
+As a final check, I'm going to see what happens if I blast the
+learning rate up to 1e-1. 
+
+[2019-06-21 Fri 14:10]
+Woah, maybe not so final. A loss rate of 1e-1 seems to get much
+cleaner digits - you almost can't tell it's a polar grid anymore. 
+
+The loss decreased so quickly after the very first batch...that's interesting.
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-21_11-47_evolution_PolarGrid_12-12_64-64-1e-1.gif]]
+
+The change is so sudden. Unfortunately, I'm not actually recording the
+loss before the very first batch - mental note to do this when I start
+comparing them rigorously.
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-21_11-47_loss_PolarGrid_12-12_64-64-1e-1.png]]
+
+
+---
+
+I think I'll try one more time, now with a learning rate of 1. See
+what that gets us. 
+
+[2019-06-21 Fri 14:17]
+Okay, clearly there's a balance.
+
+I ran it now with a learning rate of 1. 
+
+Here's the output: (no point in a gif, since I stopped it at epoch 2,
+I soubted it would change much).
+
+[[file:./03-psychophysics/data/archive/2019-06-21-generated-images-epoch-2-polar-mnist-only-1e-0.png]]
+
+--- 
+
+So I guess the lesson learnt is that I should start keeping track of these variables much more
+rigorously. It was fine when I was exploring, but I think I'm ready to
+start actually experimentally checking this.
+
+*** Planning 
+
+
 * July 2019
  
 * August 2019
