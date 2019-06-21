@@ -5182,7 +5182,7 @@ start actually experimentally checking this.
 
 *** Planning 
 :LOGBOOK:
-CLOCK: [2019-06-21 Fri 14:23]
+CLOCK: [2019-06-21 Fri 14:23]--[2019-06-21 Fri 14:40] =>  0:17
 :END:
 
 Just to get things clearer in my head, what I think I can do now is:
