@@ -5264,7 +5264,7 @@ CLOCK: [2019-06-21 Fri 14:53]--[2019-06-21 Fri 15:40] =>  0:47
 :END:
 
 
-| Git commit hash ||
+| Git commit hash | 4aff722b8d9c119bf6311ba54f13a470c89f8ffb|
 | Grid | Distorted Polar Grid |
 | Vector size | 12 x 12 = 144 | 
 | Learning rate | Various | 
@@ -5340,6 +5340,41 @@ Also not terriblly better. I think you can see the features, but
 deciphering it without prior knowledge would be hard. Maybe that's
 just an intrinsic limitation of the grid. I wonder whether I should be
 attempting to train on other datasets other than just MNIST...hmm. 
+
+
+** [2019-06-24 Mon]
+
+*** Grid and Decoder for Testing Today
+
+| Git commit hash ||
+| Grid | Polar Grid |
+| Vector size | 12 x 12 = 144 | 
+| Learning rate | 2e-1| 
+| Loss | MNIST only | 
+| Decoder | 64x8x8 -> 64x4x4 -> 64x2x2
+
+I'm going to rerun the regular polar grid with a learning rate of 1e-1
+to test today with the experiment. The digits still are not as
+decipherable as I would like still, but I think it can still be used
+for testing. 
+
+I chose 2e-1 since it seems that for most of the learning rates above
+1e-2, the digits really don't change after the first epoch or so, but
+the higher the learning rate, the higher the brightness contrast
+(which seems to be beneficial). Here it is with 2e-2 after 3 epochs:
+
+[[file:./03-psychophysics/data/archive/2019-06-24-generated-images-epoch-3-polar-mnist-only-2e-1.png]]
+
+It looked pretty much the same after the first epoch, and didn't
+change much after this either.
+
+I just realised though, the grid shouldn't matter for the polar
+regular one - they should be exactly the same, so I don't need to keep
+saving different ones. That'll save some space, since each one is 10
+MB...
+
+
+
 * July 2019
  
 * August 2019
