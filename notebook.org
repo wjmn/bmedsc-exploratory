@@ -5264,7 +5264,7 @@ CLOCK: [2019-06-21 Fri 14:53]--[2019-06-21 Fri 15:40] =>  0:47
 :END:
 
 
-| Git commit hash | 4aff722b8d9c119bf6311ba54f13a470c89f8ffb|
+| Git commit hash |f7c511f72a4e23b133d407f651935349826a92c5 |
 | Grid | Distorted Polar Grid |
 | Vector size | 12 x 12 = 144 | 
 | Learning rate | Various | 
@@ -5346,7 +5346,7 @@ attempting to train on other datasets other than just MNIST...hmm.
 
 *** Grid and Decoder for Testing Today
 
-| Git commit hash ||
+| Git commit hash | 5c124635e42766f4fe7e412fe4a8f275f93857f3|
 | Grid | Polar Grid |
 | Vector size | 12 x 12 = 144 | 
 | Learning rate | 2e-1| 
@@ -5373,7 +5373,80 @@ regular one - they should be exactly the same, so I don't need to keep
 saving different ones. That'll save some space, since each one is 10
 MB...
 
+For the testing today here are the commands for the regular polar grid:
 
+For the direct processor:
+
+#+BEGIN_SRC 
+python digits.py --ncues 25 --ntrials 20 --grid ".\data\training-intermediate-data\training-grids\2019-06-24_09-15_grid_PolarGrid_12-12_64-64.pkl" --processor direct
+#+END_SRC
+
+For the net processor:
+
+#+BEGIN_SRC 
+python digits.py --ncues 25 --ntrials 20 --grid ".\data\training-intermediate-data\training-grids\2019-06-24_09-15_grid_PolarGrid_12-12_64-64.pkl" --processor net --encoder ".\data\training-intermediate-data\training-encoders\2019-06-24_09-15_encoder_PolarGrid_12-12_64-64.h5"
+#+END_SRC
+
+Actually...maybe not. It strikes me that the direct processor is super
+easy to decipher.  I guess I can use this if I need to, but I should
+really have a go with the distorted grid.
+
+*** Distorted Grid, increasing kernels per layer
+
+| Git commit hash | |
+| Grid | |
+| Vector size | 12 x 12 = 144 | 
+| Learning rate |3e-1 | 
+| Loss | MNIST only | 
+| Decoder |16x8x8 -> 32x4x4 -> 64x2x2 (less dropout) |
+
+I'm going to try increasing the number of kernels with each new layer
+for the distorted run. At least I can compare it to the previous
+architecure where all layers had the same number of kernels.
+
+It occurred to me that I should try using the digit decoder rather
+than the MNIST decoder at some point. Maybe that will be more likely
+to get non-handwritten-looking digits...The input shapes are only
+different in so far as the digit decoder takes RGB rather than
+grayscale values, but it just means there should be an extra
+conversion step for the digits. Ah, I guess that also means i need to
+train a new decoder with garbage...
+
+I'll leave that for another time I think. 
+
+But anyway, this architecture I've just tried is now a little
+different - it has /less/ kernels and smaller dropout. It actually
+achieves better accuracy than the previous kernels. 
+
+--
+
+[2019-06-24 Mon 11:24]
+It seems to do better. Here are the results after 6 epochs (though it
+didn't change much after the first epoch)
+
+[[file:./03-psychophysics/data/archive/2019-06-24-generated-images-epoch-6-distorted-polar-mnist-only.png]]
+
+The loss curve:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-24_10-25_loss_DistortedPolarGrid_12-12_64-64.png]]
+
+So this afternoon, I'll run for the direct processor:
+
+
+#+BEGIN_SRC 
+python digits.py --ncues 25 --ntrials 10 --grid ".\data\training-intermediate-data\training-grids\2019-06-24_10-25_grid_DistortedPolarGrid_12-12_64-64.pkl" --processor direct
+#+END_SRC
+
+And for the net processor:
+
+#+BEGIN_SRC 
+python digits.py --ncues 25 --ntrials 10 --grid ".\data\training-intermediate-data\training-grids\2019-06-24_10-25_grid_DistortedPolarGrid_12-12_64-64.pkl" --processor net --encoder ".\data\training-intermediate-data\training-encoders\2019-06-24_10-25_encoder_DistortedPolarGrid_12-12_64-64.h5"
+#+END_SRC
+
+( I think I'll just run half the trials). 
+
+Ah...it strikes me this is still much to easy on the regular
+grid. Maybe I should try the extra distortions...
 
 * July 2019
  
