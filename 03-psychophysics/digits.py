@@ -355,7 +355,7 @@ if __name__ == "__main__":
                         # Set the stimulus in the right half of the grid
                         stimulus.setPos(0.20, 0)
                         rendered = np.flipud(config.GRID.render(stimulus.vector))
-                        imstim = visual.ImageStim(win, image=rendered, size =  ( win.size[1] / win.size[0], 1))
+                        imstim = visual.ImageStim(win, image=rendered, size =  ( win.size[1] / (1.5 * win.size[0]), 1 / 1.5))
                         imstim.draw(); win.flip()
 
                         keypresses = event.waitKeys(keyList=config.KEY_LIST, clearEvents=True)

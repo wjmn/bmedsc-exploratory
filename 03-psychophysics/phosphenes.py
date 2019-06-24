@@ -88,16 +88,18 @@ class DistortedElectrode(Electrode):
                  xdim: int,
                  ydim: int):
         
-        x = bound(self.randomise(x), 0, 1)
-        y = bound(self.randomise(y), 0, 1)
+        #x = bound(self.randomise(x), 0, 1)
+        x = (random.random() + 1) / 2 # for hemisphere
+        #y = bound(self.randomise(y), 0, 1)
+        y = random.random()
         xsize = max(0, int(self.randomise(xsize)))
         ysize = max(0, int(self.randomise(ysize)))
-        strength = random.random()
+        strength = random.random() #** 10
         
         Electrode.__init__(self, x, y, xsize, ysize, strength, xdim, ydim)
         
     def randomise(self, value):
-        randomised = value * (1 + (random.random() - 1) / 5)
+        randomised = value * (1 + (random.random() - 1) * 2)
         return randomised
 
 # Grids, which are composed of electrodes.
@@ -289,7 +291,7 @@ class RescalingDistortedPolarGrid(DistortedPolarGrid):
         summax = np.max(summed)
 
         # Rescale, then scale between -1 and 1
-        scaled = (summed ** 2 / summax ** 2) * 2 - 1
+        scaled = (summed / summax ) * 2 - 1
         
         return scaled
     
@@ -306,7 +308,7 @@ class RescalingDistortedPolarGrid(DistortedPolarGrid):
         summax = tf.reduce_max(summed)
         
         # Rescale, then scale between -1 and 1
-        scaled = tf.divide(summed ** 2, summax ** 2) * 2 - 1
+        scaled = tf.divide(summed, summax ) * 2 - 1
         
         return scaled      
         
@@ -379,7 +381,7 @@ class Stimulus:
 class StimulusNet(Stimulus):
 
     def __init__(self, image, grid, encoder_path):
-        self.encoder = tf.keras.models.load_model(encoder_path)        
+        self.encoder = tf.keras.models.load_model(encoder_path)      
         Stimulus.__init__(self, image, grid)
     
     def process(self):
