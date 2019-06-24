@@ -5393,8 +5393,8 @@ really have a go with the distorted grid.
 
 *** Distorted Grid, increasing kernels per layer
 
-| Git commit hash | |
-| Grid | |
+| Git commit hash | 1748c847909ce50fda65a8683f0574e6af515f46  |
+| Grid | DistortedGrid |
 | Vector size | 12 x 12 = 144 | 
 | Learning rate |3e-1 | 
 | Loss | MNIST only | 
@@ -5432,7 +5432,6 @@ The loss curve:
 
 So this afternoon, I'll run for the direct processor:
 
-
 #+BEGIN_SRC 
 python digits.py --ncues 25 --ntrials 10 --grid ".\data\training-intermediate-data\training-grids\2019-06-24_10-25_grid_DistortedPolarGrid_12-12_64-64.pkl" --processor direct
 #+END_SRC
@@ -5447,6 +5446,53 @@ python digits.py --ncues 25 --ntrials 10 --grid ".\data\training-intermediate-da
 
 Ah...it strikes me this is still much to easy on the regular
 grid. Maybe I should try the extra distortions...
+
+*** Reducing the size of experiment window
+
+I think maybe the experiment window being fullscreen is a bit too
+much. I think I'll scale it down to one fourth. I guess it's debatable
+whether that is representative of what people actually see considering
+it's supposed to be similar to the visual fields, but I can change
+this later if need be.
+
+*** Rescaling Distorted Grid - 
+
+| Git commit hash ||
+| Grid | RescalingDistortedGrid |
+| Vector size | 12 x 12 = 144 | 
+| Learning rate |2e-2 | 
+| Loss | MNIST only | 
+| Decoder |32x8x8 -> 48x4x4 -> 64x2x2 (less dropout) |
+
+I've slightly upped the number of kernels. I get the feeling this
+particular grid is intrinsically hard, but we'll see. 
+
+I'll save the grid. It's really hard to differentiate between digits..
+But interestingly, loss still goes down pretty low.
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-24_11-34_evolution_RescalingDistortedPolarGrid_12-12_64-64.gif]]
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-24_11-34_loss_RescalingDistortedPolarGrid_12-12_64-64.png]]
+
+[2019-06-24 Mon 12:26]
+Minor note - it actually does change, very slightly, after the first
+few epochs. I guess that's good in a way.
+
+I let it run for 20 epochs.
+
+So here are two new commands for this rescaling distorted grid:
+
+#+BEGIN_SRC 
+python digits.py --ncues 25 --ntrials 10 --grid ".\data\training-intermediate-data\training-grids\2019-06-24_11-34_grid_RescalingDistortedPolarGrid_12-12_64-64.pkl" --processor direct
+#+END_SRC
+
+And for the net processor:
+
+#+BEGIN_SRC 
+python digits.py --ncues 25 --ntrials 10 --grid ".\data\training-intermediate-data\training-grids\2019-06-24_11-34_grid_RescalingDistortedPolarGrid_12-12_64-64.pkl" --processor net --encoder ".\data\training-intermediate-data\training-encoders\2019-06-24_11-34_encoder_RescalingDistortedPolarGrid_12-12_64-64.h5"
+#+END_SRC
+
+
 
 * July 2019
  

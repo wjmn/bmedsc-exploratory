@@ -21,6 +21,7 @@ from imageio import imread
 from random import random, choices
 from PIL import Image
 
+
 # I'm setting up a config dictionary with dot-syntax so it can be serialised 
 # and saved with the session. I prefer explicitly keeping track of state.
 
@@ -354,7 +355,7 @@ if __name__ == "__main__":
                         # Set the stimulus in the right half of the grid
                         stimulus.setPos(0.20, 0)
                         rendered = np.flipud(config.GRID.render(stimulus.vector))
-                        imstim = visual.ImageStim(win, image=rendered, size = (2 * win.size[1] / win.size[0], 2))
+                        imstim = visual.ImageStim(win, image=rendered, size =  ( win.size[1] / win.size[0], 1))
                         imstim.draw(); win.flip()
 
                         keypresses = event.waitKeys(keyList=config.KEY_LIST, clearEvents=True)
@@ -391,7 +392,7 @@ if __name__ == "__main__":
                         # Create an image stimulus out of the rendered image.
                         # Then show the stimulus.
                         # Ensure stimulus is square on full screen window, assuming window has greater x dim than y dim.
-                        imstim = visual.ImageStim(win, image=rendered, size = (2 * win.size[1] / win.size[0], 2))
+                        imstim = visual.ImageStim(win, image=rendered, size =  ( win.size[1] / win.size[0], 1))
                         imstim.draw(); win.flip()
 
                         # Wait for a keypress. 

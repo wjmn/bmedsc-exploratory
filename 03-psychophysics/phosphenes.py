@@ -97,7 +97,7 @@ class DistortedElectrode(Electrode):
         Electrode.__init__(self, x, y, xsize, ysize, strength, xdim, ydim)
         
     def randomise(self, value):
-        randomised = value * (1 + (random.random() - 1) / 10)
+        randomised = value * (1 + (random.random() - 1) / 5)
         return randomised
 
 # Grids, which are composed of electrodes.
