@@ -99,7 +99,7 @@ class DistortedElectrode(Electrode):
         Electrode.__init__(self, x, y, xsize, ysize, strength, xdim, ydim)
         
     def randomise(self, value):
-        randomised = value * (1 + (random.random() - 1) * 2)
+        randomised = value * (random.random() * 3)
         return randomised
 
 # Grids, which are composed of electrodes.
@@ -142,9 +142,9 @@ class Grid(ABC):
         summed = sum(product)
 
         # Clip, then scale between -1 and 1
-        scaled = np.clip(summed, 0, 1) * 2 - 1
+        clipped = np.clip(summed, 0, 1) * 2 - 1
         
-        return scaled
+        return clipped
     
     def render_tensor(self, tensor):
         
@@ -158,9 +158,9 @@ class Grid(ABC):
         summed = tf.reduce_sum(product, axis=0)
         
         # Clip, then scale by -1 and 1
-        scaled = tf.clip_by_value(summed, 0, 1) * 2 - 1
+        clipped = tf.clip_by_value(summed, 0, 1) * 2 - 1
         
-        return scaled
+        return clipped
         
 
 class CartesianGrid(Grid):
@@ -290,10 +290,13 @@ class RescalingDistortedPolarGrid(DistortedPolarGrid):
         summed = sum(product)
         summax = np.max(summed)
 
-        # Rescale, then scale between -1 and 1
-        scaled = (summed / summax ) * 2 - 1
+        # Rescale
+        scaled = (summed / summax )
         
-        return scaled
+        # Clip below 0.5, then scale between -1 and 1
+        clipped = np.clip(scaled, 0.5, 1) * 4 - 3 
+        
+        return clipped
     
     def render_tensor(self, tensor):
         
@@ -307,10 +310,13 @@ class RescalingDistortedPolarGrid(DistortedPolarGrid):
         summed = tf.reduce_sum(product, axis=0)
         summax = tf.reduce_max(summed)
         
-        # Rescale, then scale between -1 and 1
-        scaled = tf.divide(summed, summax ) * 2 - 1
+        # Rescale
+        scaled = tf.divide(summed, summax ) 
         
-        return scaled      
+        # Clip below 0.5, then scale between -1 and 1
+        clipped = tf.clip_by_value(summed, 0.5, 1) * 4 - 3
+        
+        return clipped   
         
 # STIMULUS
 

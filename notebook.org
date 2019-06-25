@@ -5682,6 +5682,16 @@ now is comparatively minimal. When there is such minimal distortion,
 a masking approach is definitely easier. I think experimentally, it
 will be important to show what distortions a masking approach can and
 cannot cope with.
+
+*** Adding further distortions
+
+I have made the size multiplier larger (random float between 0 and 3)
+and clipped the rescaling grid below 0.5, so now the conditional-ism
+of the grid is greater. 
+
+I have also changed the =digits.py= script to ensure no two digits
+occur in a row.
+
 * July 2019
  
 * August 2019

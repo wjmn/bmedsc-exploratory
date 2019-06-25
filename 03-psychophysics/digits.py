@@ -18,7 +18,7 @@ from psychopy.sound.backend_pygame import SoundPygame
 from psychopy.tools.filetools import fromFile, toFile
 from skimage import color
 from imageio import imread
-from random import random, choices
+from random import randint
 from PIL import Image
 
 
@@ -318,15 +318,23 @@ if __name__ == "__main__":
             bg     = visual.GratingStim(win, tex=None, mask=None, size=2, units='norm', color=0)
             prompt = visual.TextStim(win, text=config.PROMPT_TEXT.format(trial * 100 // config.NTRIALS))
             bg.draw(); prompt.draw(); win.flip(); event.waitKeys(clearEvents=True)
-
-            # Create a stream of digits of length NCUES for the trial.
-            stream = choices(range(10), k=config.NCUES)
+            
+            previousDigit = False
 
             # Start the cue loop.
             for cue in range(config.NCUES):
                 
-                # Get a digit from the stream and initialise the stimulus.
-                digit    = stream.pop()
+                # Create a random digit
+                digit = randint(0, 9)
+                
+                # Ensure it is not the same as the previous digit
+                while digit == previousDigit:
+                    digit = randint(0, 9)
+                
+                # Set the new previous digit
+                previousDigit = digit
+                
+                # Initialise the stimulus    
                 image    = config.IMAGES[digit]
                 stimulus = config.PROCESSOR(image, config.GRID)
                 
