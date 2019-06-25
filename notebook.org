@@ -5779,7 +5779,7 @@ I'll probably just stick to MNIST...
 
 *** Attempt to Train Decoder Garbage
 
-| Git commit hash | | 
+| Git commit hash | 6316d106c3ff66f3de1317b5f8bec04d1a9f9313  | 
 | Grid | Cartesian Grid | 
 | Grid Size | 12 x 12 = 144 | 
 | Testing | Adversarial network with decoder in training (pretrained) |    
@@ -5820,6 +5820,40 @@ And the loss curves, now with both the training losses plotted:
 
 [[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-25_13-18_loss_CartesianGrid_12-12_64-64.png]]
  
+*** Adversarial - no pretrained network
+
+| Git commit hash | | 
+| Grid | Cartesian Grid | 
+| Grid Size | 12 x 12 = 144 | 
+| Testing | Adversarial network with no pretraining of decoder  |
+
+I'm going to try the same thing - except the decoder will be trained
+from scratch during the encoder training. We'll see how it goes. 
+
+| Encoder learning rate | 1e-2  |
+| Decoder learning rate | 1e-2 | 
+
+Because the decoder is now naive, I'm setting the decoder learning
+rate to the same as the encoder learning rate. 
+
+[2019-06-25 Tue 15:39]
+I've stopped it after Epoch 26. It takes a while, but it gets (what
+seems to be, to me at least) fairly acceptable results even without
+pretraining. It might get better with time if I went for more epochs.
+
+Evolution:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-25_14-47_evolution_CartesianGrid_12-12_64-64.gif]]
+
+And loss curves:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-25_14-47_loss_CartesianGrid_12-12_64-64.png]]
+
+It seems like the decoder is still training a bit fast. Maybe it could
+be a little slower than the encoder? 
+
+But I think I'd like to try this for the polar grid now.
+
 
 * July 2019
  
