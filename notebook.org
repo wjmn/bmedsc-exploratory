@@ -5820,9 +5820,9 @@ And the loss curves, now with both the training losses plotted:
 
 [[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-25_13-18_loss_CartesianGrid_12-12_64-64.png]]
  
-*** Adversarial - no pretrained network
+*** Adversarial - no pretrained network, cartesian
 
-| Git commit hash | | 
+| Git commit hash |3654bfc650b4f5189177bbb4334ac2f2b185774e  | 
 | Grid | Cartesian Grid | 
 | Grid Size | 12 x 12 = 144 | 
 | Testing | Adversarial network with no pretraining of decoder  |
@@ -5845,6 +5845,10 @@ Evolution:
 
 [[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-25_14-47_evolution_CartesianGrid_12-12_64-64.gif]]
 
+At epoch 26:
+
+[[file:/03-psychophysics/data/archive/2019-06-25-generated-images-epoch-26-adversarial-cartesian.png]]
+
 And loss curves:
 
 [[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-25_14-47_loss_CartesianGrid_12-12_64-64.png]]
@@ -5853,6 +5857,56 @@ It seems like the decoder is still training a bit fast. Maybe it could
 be a little slower than the encoder? 
 
 But I think I'd like to try this for the polar grid now.
+
+*** Adversarial - no pretrained network, polar
+    
+| Git commit hash || 
+| Grid | Polar Grid | 
+| Grid Size | 12 x 12 = 144 | 
+| Testing | Adversarial network with no pretraining of decoder for a polar grid |
+
+Exactly the same as before, but just a different grid now.
+
+| Encoder learning rate | 5e-2  |
+| Decoder learning rate | 1e-2 | 
+
+First attempt doesn't look particularly nice at all. I think the fact
+that digits are centered in MNIST might have a role. I'll see if I can
+shift the images a little bit to the right.
+
+[2019-06-25 Tue 16:11]
+I've made the MNIST sizes the same as the original and I've rolled
+them to the right by a quarter of the image dimension. Going to
+rerun - let's see how it goes.
+
+I'll also try increasing the learning rate of the encoder to 5e-2.
+
+[2019-06-25 Tue 22:24]
+I can barely see the digits - I'll try upscaling the MNIST digits that
+it's trained on so they're not too thin.
+
+(There were a few specks of light in the middle, but definitely not
+full digits or anything like it). 
+
+[2019-06-26 Wed 09:36]
+It's interesting - it seems to look most "digit-like" at Epoch 10,
+then sort of degrades afterwards. 
+
+Here it is at Epoch 10:
+
+[[file:./03-psychophysics/data/archive/2019-06-26-generated-images-epoch-10-polar-adversarial.png]]
+
+And at epoch 50:
+
+[[file:./03-psychophysics/data/archive/2019-06-26-generated-images-epoch-50-polar-adversarial.png]]
+
+The full training gif:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-25_15-42_evolution_PolarGrid_12-12_64-64.gif]]
+
+And the loss curve, though it's sort of hard to see:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-25_15-42_loss_PolarGrid_12-12_64-64.png]]
 
 
 * July 2019
