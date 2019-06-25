@@ -5724,7 +5724,7 @@ decoder should learn more garbage as it's being produced.
 *** Cartesian and Font Digits with Training
 
 
-| Git commit hash ||
+| Git commit hash | 27c77120691a759cc1af2d550db32608ea3bc159|
 | Grid | Cartesian Grid |
 | Vector size | 12 x 12 = 144 | 
 | Learning rate | 5e-1 | 
@@ -5737,7 +5737,7 @@ The first thing  I'm going to try is with the cartesian grid again.
 again which is a pain. And tensorflow is a little fickle with
 installation...Had a problem with DLL load failing with tensorflow, so
 I reinstalled using conda using =conda install tensorflow-gpu= and
-then installing tensorflow-2.0.0 with =pip install
+then installit ng tensorflow-2.0.0 with =pip install
 tensorflow==2.0.0-beta1=, and that seems to have worked. 
 
 [2019-06-25 Tue 12:46] The results are not particularly good. Here it
@@ -5747,6 +5747,33 @@ is after 3 epochs (loss goes down to 4e-05!)
 
 I'm just going to try with only the font images and garbage now..then
 I think I need to make a bit of a stronger decision about what to do.
+
+*** Cartesian and Only Font Training Digits
+
+| Git commit hash | |
+| Grid | Cartesian Grid |
+| Vector size | 12 x 12 = 144 | 
+| Learning rate | 5e-2 | 
+| Loss | Font (no MNIST)  | 
+| Decoder | 32x8x8 -> 64x4x4 -> 72x2x2|
+
+I'm not expecting this run to actually perform that well, considering
+I think the whole point was that the MNIST dataset is supposed to be
+fairly generic and extract features rather than digits themselves
+(which I would guess is going to happen for this font decoder). Still,
+I think it would be interesting to test. 
+
+...THe computer almost froze again when I was trying to run this. I
+have a feeling it's the "make garbage" - probably too much is being
+made and it has to hold all of it in memory. I'll reduce it down to a tenth. 
+
+[2019-06-25 Tue 13:15]
+I'm not sure whether this is a consequence of having trained on less
+garbage samples, but the output is definitely not very good. 
+
+Here it is:
+
+[[file:./03-psychophysics/data/archive/2019-06-25-generated-images-epoch-5-font-only.png]]
 
 
 * July 2019

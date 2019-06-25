@@ -38,3 +38,5 @@ virtualenv/
 .#*
 
 scratchpad.ipynb
+
+Thumbs.db
