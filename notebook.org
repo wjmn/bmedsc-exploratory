@@ -5555,7 +5555,7 @@ from Yan )
 
 ** [2019-06-25 Tue]
 
-*** Looking at Preliminar Results
+*** Looking at Preliminary Results
 
 Here are some plots of results from the test run yesterday:
 
@@ -5689,8 +5689,65 @@ I have made the size multiplier larger (random float between 0 and 3)
 and clipped the rescaling grid below 0.5, so now the conditional-ism
 of the grid is greater. 
 
-I have also changed the =digits.py= script to ensure no two digits
-occur in a row.
+I have also changed the =digits.py= script to ensure two of the same
+digit do not occur in a row. 
+
+*** Using MNIST digits instead of Font Digits for the Experiment?
+
+I wonder if perhaps it would be fairer to compare using the MNIST
+digits as the "underlying base" of the digit experiment, rather than
+using the font digits directly. It feels more like you are directly
+comparing processors in this case, because it's possible the MNIST
+digits are less recognisable than the computer font digits. The only
+issue is, I feel that the digits have to be equivalently learnable in
+both conditions - i.e. digits must be consistent, which clearly cannot
+be the case when using MNIST digits as the digits all vary.
+
+*** Adding Computer Font Digits to Training
+
+I might try adding the computer font digits to the training and see
+whether that might produce more recognisable patterns. 
+
+[2019-06-25 Tue 10:46]
+I've added the font digit images to the training data so we'll see how
+it performs.
+
+I think the other issue with what's produced at the moment is...it's
+just not clean. There are a lot of extraneous phosphenes. Lines are
+not well-joined. I'm not entirely sure how I can combat that -
+previously I've been trying to do so in the loss function, but perhaps
+this is something that would be better incorporated into the decoder. 
+
+Maybe there needs to be more of an adversarial component - like the
+decoder should learn more garbage as it's being produced. 
+
+*** Cartesian and Font Digits with Training
+
+
+| Git commit hash ||
+| Grid | Cartesian Grid |
+| Vector size | 12 x 12 = 144 | 
+| Learning rate | 5e-1 | 
+| Loss | MNIST  with Font| 
+| Decoder | 32x8x8 -> 64x4x4 -> 72x2x2|
+
+The first thing  I'm going to try is with the cartesian grid again.
+
+...the computer froze. Unfortunately, I have to install everything
+again which is a pain. And tensorflow is a little fickle with
+installation...Had a problem with DLL load failing with tensorflow, so
+I reinstalled using conda using =conda install tensorflow-gpu= and
+then installing tensorflow-2.0.0 with =pip install
+tensorflow==2.0.0-beta1=, and that seems to have worked. 
+
+[2019-06-25 Tue 12:46] The results are not particularly good. Here it
+is after 3 epochs (loss goes down to 4e-05!)
+
+[[file:./03-psychophysics/data/archive/2019-06-25-generated-images-epoch-3-mnist-combined-cartesian.png]]
+
+I'm just going to try with only the font images and garbage now..then
+I think I need to make a bit of a stronger decision about what to do.
+
 
 * July 2019
  
