@@ -5775,6 +5775,51 @@ Here it is:
 
 [[file:./03-psychophysics/data/archive/2019-06-25-generated-images-epoch-5-font-only.png]]
 
+I'll probably just stick to MNIST...
+
+*** Attempt to Train Decoder Garbage
+
+| Git commit hash | | 
+| Grid | Cartesian Grid | 
+| Grid Size | 12 x 12 = 144 | 
+| Testing | Adversarial network with decoder in training (pretrained) |    
+
+So I'm going to try to train the decoder to better recognise garbage
+/during/ the encoder training. I think it's going to be very hard to
+get a good balance though, considering the decoder is
+"pretrained"...but actually, maybe I shouldn't pretrain the decoder on
+garbage if I'm going to train it later?
+
+On my first try, I set:
+
+| Encoder learning rate | 5e-2 | 
+| Decoder learning rate | 1e-2 | 
+
+I've finally managed to hook things up with the adversarial
+network. The first run is..interesting. The digits actually train more
+than just after the first epoch now, which I think is good - so I
+probably shouldn't stop after one epoch anymore. 
+
+But it's very interesting - it gets better, and then it gets
+worse. I'm not sure why - I mean I guess it makes sense that it starts
+seeing the "good" encoded digits as garbage, but if it gets too far
+away from MNIST, I would assume that it would have to pull back again
+because then it would have an easy way to distinguish between garbage
+and MNIST. 
+
+I guess it's worth noting as well that this decoder was
+pretrained. Perhaps I should try with a non-trained network..and
+possibly a slower learning rate for both.
+
+Here's the gif:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-25_13-18_evolution_CartesianGrid_12-12_64-64.gif]]
+
+
+And the loss curves, now with both the training losses plotted:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-25_13-18_loss_CartesianGrid_12-12_64-64.png]]
+ 
 
 * July 2019
  
