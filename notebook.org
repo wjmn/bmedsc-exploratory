@@ -5860,7 +5860,7 @@ But I think I'd like to try this for the polar grid now.
 
 *** Adversarial - no pretrained network, polar
     
-| Git commit hash || 
+| Git commit hash | a2e54559ae62c0b642a5f563c906ee2a87f525d5 | 
 | Grid | Polar Grid | 
 | Grid Size | 12 x 12 = 144 | 
 | Testing | Adversarial network with no pretraining of decoder for a polar grid |
@@ -5907,6 +5907,85 @@ The full training gif:
 And the loss curve, though it's sort of hard to see:
 
 [[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-25_15-42_loss_PolarGrid_12-12_64-64.png]]
+
+I would like to see how this fares for the distorted grid.
+
+*** Adversarial - no pretrained network, distorted polar
+  
+| Git commit hash | | 
+| Grid | Distorted Polar Grid | 
+| Grid Size | 12 x 12 = 144 | 
+| Testing | Adversarial network with no pretraining of decoder for a distorted polar grid |
+
+[2019-06-26 Wed 10:34]
+It's very interesting what happens during training - it seems like it
+was not going to change very much after the first few epochs...then
+all of a sudden, it changes drastically and both encoder and decoder
+loss skyrocket. 
+
+[2019-06-26 Wed 11:45]
+I'm going to increase the buffer size to 60,000 in line with the MNIST
+grid, so each EPOCH should go through the whole MNIST data. I'm also
+going to change the decoder to network to use smaller kernels.
+
+It takes so long to generate the digit images for input, I think I'm
+just going to have to repeat the digit images to fill the MNIST
+space of 60000 if I want to use the full MNIST dataset.
+
+The greater number of image will definitely increase the training time
+to about 600 seconds or ten minutes an epoch...we'll see how it goes. 
+
+[2019-06-26 Wed 12:04]
+I got a message bout exceeding 10% of system memory with
+tensorflow. Well...I guess I think I'll just try half the dataset for
+now and see how it goes.
+
+[2019-06-26 Wed 13:13]
+Smaller kernels do not work as well for this particular grid. I'll go
+back to a 64x8x8 -> 128x4x4 model.
+
+[2019-06-26 Wed 13:37]
+This didn't work particularly well. Here it is at epoch 11:
+
+[[./03-psychophysics/data/archive/2019-06-26-generated-images-epoch-11-distorted-polar-adversarial.png]]
+
+(Learning rate was 5e-2 for both encoder and decoder). 
+
+*** Adversarial - no pretrained network, polar, slower learning rate
+
+Out of interest, I want to see what happens if the learning rate is
+much smaller for the polar grid - say, 5e-3 for both the encoder and decoder.
+
+| Git commit hash | | 
+| Grid | Polar Grid | 
+| Grid Size | 12 x 12 = 144 | 
+| Testing | Slower adversarial learning rate |
+
+Learning rate of both encoder and decoder are 1e-3.
+
+[2019-06-27 Thu 09:53]
+This training run went well I think. I've saved the encoder - I think
+I would need to demonstrate parity with the direct processor for this
+particular regular grid.
+
+I tested whether it would run with the digit experiment, and it
+does. I don't need to save the grid as it's the same polar grid as the
+others.
+
+Here's a command to run it:
+
+#+BEGIN_SRC 
+python digits.py --grid .\data\training-intermediate-data\training-grids\2019-06-24_09-15_grid_PolarGrid_12-12_64-64.pkl --testing --encoder .\data\training-intermediate-data\training-encoders\2019-06-26_13-39_encoder_PolarGrid_12-12_64-64.h5 --processor net
+#+END_SRC
+
+Here's the training gif:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-26_13-39_evolution_PolarGrid_12-12_64-64.gif]]
+
+And the loss curves:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-26_13-39_loss_PolarGrid_12-12_64-64.png]]
+
 
 
 * July 2019
