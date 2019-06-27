@@ -5956,7 +5956,7 @@ This didn't work particularly well. Here it is at epoch 11:
 Out of interest, I want to see what happens if the learning rate is
 much smaller for the polar grid - say, 5e-3 for both the encoder and decoder.
 
-| Git commit hash | | 
+| Git commit hash |f59f6cb27c8037be461687314a465313b1989323 | 
 | Grid | Polar Grid | 
 | Grid Size | 12 x 12 = 144 | 
 | Testing | Slower adversarial learning rate |
@@ -5986,6 +5986,72 @@ And the loss curves:
 
 [[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-26_13-39_loss_PolarGrid_12-12_64-64.png]]
 
+
+**  [2019-06-27 Thu]
+
+*** Rescaling Distorted Grid - Same Parameters
+
+I'm going to test now on the rescaling distorted polar grid, which is
+the most distorted grid and the one whose distortions would be most
+interesting to overcome. 
+
+I'm using the same parameters as before for the polar grid. 
+
+[2019-06-27 Thu 10:31]
+Performance is not particularly good with the clipping. I think I need
+to have some way to guarantee that at least /something/ should be
+possible to make - maybe do a conditional version of the regular polar
+grid and distorted grid separately. 
+
+[2019-06-27 Thu 10:39]
+After 10 epochs, I don't see much improvement. I think I'll try the
+conditional on the regular polar grid first actually.
+
+Argh. I just realised for the rescaling paradigm, that I was
+normalising the renders anyway for the grid. I've removed that now.
+
+*** Rescaling Polar Grid - Same Parameters
+    
+This time, purely testing whether the network can withstand the
+conditional distortion. This isn't the most "interesting" part -
+really, it's just a problem of reconfiguring weights - but we'll see
+anyway. 
+
+[2019-06-27 Thu 11:12]
+At the learning rate of 1e-3 for both the encoder and decoder, the
+encoder was getting sort of stuck around a loss of 10 for a while. I
+decided to up the learning rate of the encoder to 1e-2 and keep the
+decoder at 1e-3. 
+
+[2019-06-27 Thu 13:06]
+This appeared to do much better - but it seemed best after the second
+epoch, and actually seems to do worse with more epochs. 
+
+Here it is at epoch 11:
+
+[[file:./03-psychophysics/data/archive/2019-06-27-generated-images-epoch-11-rescaling-polar.png]]
+
+And at epoch 38:
+
+[[file:./03-psychophysics/data/archive/2019-06-27-generated-images-epoch-38-rescaling-polar.png]]
+
+For comparison, here are the digits run through a direct
+brightness-based decoder: 
+
+[[file:./03-psychophysics/data/archive/2019-06-26-comparison-direct-digits-rescaling-polar.png]]
+
+I'm going to rerun this now again with slower learning rates: 5e-3 for
+the encoder and 5e-4 for the decoder.
+
+[2019-06-27 Thu 14:29]
+Same sort of scenario - it seems to degrade with more epochs after a
+certain point. I wonder whether it's because the decoder surpasses the
+training of the encoder. 
+
+Here's the training gif for this particular run with the slower
+learning rates:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-27_10-53_evolution_RescalingPolarGrid_12-12_64-64.gif]]
 
 
 * July 2019

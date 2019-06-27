@@ -70,11 +70,13 @@ class Electrode:
         
         blurred = gaussian_filter(base, (self.xsize * self.ysize) ** 0.5, mode='constant')
         
-        # Rescale up to 1
-        if blurred.max() <= 0:
-            return blurred
-        else:
-            return blurred / blurred.max()
+        return blurred
+        
+#         # Rescale up to 1
+#         if blurred.max() <= 0:
+#             return blurred
+#         else:
+#             return blurred / blurred.max()
 
 class DistortedElectrode(Electrode):
     """
@@ -99,7 +101,7 @@ class DistortedElectrode(Electrode):
         Electrode.__init__(self, x, y, xsize, ysize, strength, xdim, ydim)
         
     def randomise(self, value):
-        randomised = value * (random.random() * 3)
+        randomised = value * (random.random() * 2)
         return randomised
 
 # Grids, which are composed of electrodes.
@@ -314,9 +316,71 @@ class RescalingDistortedPolarGrid(DistortedPolarGrid):
         scaled = tf.divide(summed, summax ) 
         
         # Clip below 0.5, then scale between -1 and 1
-        clipped = tf.clip_by_value(summed, 0.5, 1) * 4 - 3
+        clipped = tf.clip_by_value(scaled, 0.5, 1) * 4 - 3
         
-        return clipped   
+        return clipped
+    
+class RescalingPolarGrid(PolarGrid):
+    """ A polar grid with non-summative rendering."""
+    
+    def make_grid(self):
+        
+        k = self.xdim / 2 + self.ydim / 2
+        a = e * (self.xdim + self.ydim) / 128
+        
+        xys = [
+            (0.5 + (ir / self.ndim1 * np.cos(self.iangle(itheta))) / 2,
+             0.5 + (ir / self.ndim1 * np.sin(self.iangle(itheta))) / 2,)
+            for ir in range(1, self.ndim1 + 1)
+            for itheta in range(self.ndim2)
+        ]
+        
+        grid = [
+            Electrode(x = x,
+                      y = y,
+                      xsize = np.log(k * ((x-0.5)**2 + (y-0.5)**2) + a),
+                      ysize = np.log(k * ((x-0.5)**2 + (y-0.5)**2) + a),
+                      strength = random.random(),
+                      xdim = self.xdim,
+                      ydim = self.ydim)
+            for (x, y) in xys
+        ]
+        
+        return grid    
+    def render(self, values):
+        
+        # Multiply the values with the renders and sum
+        product = values.reshape(self.vector_size, 1, 1) * self.prerendered
+        summed = sum(product)
+        summax = np.max(summed)
+
+        # Rescale
+        scaled = (summed / summax )
+        
+        # Clip below 0.5, then scale between -1 and 1
+        clipped = np.clip(scaled, 0.5, 1) * 4 - 3 
+        
+        return clipped
+    
+    def render_tensor(self, tensor):
+        
+        # Preprocessing
+        tiled = tf.tile(tensor, tf.constant([self.xdim]))
+        reshaped = tf.reshape(tiled, (self.xdim, self.vector_size, 1))
+        transposed = tf.transpose(reshaped, perm=[1, 0, 2])
+        
+        # Multiply the values with the renders and sum
+        product = transposed * self.prerendered_tensor
+        summed = tf.reduce_sum(product, axis=0)
+        summax = tf.reduce_max(summed)
+        
+        # Rescale
+        scaled = tf.divide(summed, summax ) 
+        
+        # Clip below 0.5, then scale between -1 and 1
+        clipped = tf.clip_by_value(scaled, 0.5, 1) * 4 - 3
+        
+        return clipped
         
 # STIMULUS
 
