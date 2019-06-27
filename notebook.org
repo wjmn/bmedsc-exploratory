@@ -5986,6 +5986,16 @@ And the loss curves:
 
 [[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-06-26_13-39_loss_PolarGrid_12-12_64-64.png]]
 
+The comparison with direct brightness (clearly very good for this
+particular grid since it is regular)
+
+[[file:./03-psychophysics/data/archive/2019-06-26-comparison-direct-digits-polar.png]]
+
+For this particular grid, I don't think I should be aiming to
+demonstrate that the learned version is /better/ (because it won't
+be) - I think I should just aim to demonstrate parity. The other grids
+will be more interesting to compare for an actual improvement. 
+
 
 **  [2019-06-27 Thu]
 

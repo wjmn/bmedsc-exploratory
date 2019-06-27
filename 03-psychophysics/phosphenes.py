@@ -69,14 +69,21 @@ class Electrode:
         base[ymin:ymax, xmin:xmax] = self.strength
         
         blurred = gaussian_filter(base, (self.xsize * self.ysize) ** 0.5, mode='constant')
+        blurred_max = blurred.max()
         
-        return blurred
+        if blurred_max > 0:
+            scaling = self.strength / blurred_max
+        else:
+            scaling = 1
         
-#         # Rescale up to 1
-#         if blurred.max() <= 0:
-#             return blurred
-#         else:
-#             return blurred / blurred.max()
+        # Scale by offset back to previous ma
+        blurred = blurred * scaling
+        
+        # Clip
+        if blurred.max() > 1:
+            return blurred / blurred.max()
+        else: 
+            return blurred
 
 class DistortedElectrode(Electrode):
     """
