@@ -6286,7 +6286,254 @@ Well, there's still mode collapse - the noise still produce the same
 digits. That's a real pity. I might leave this for now then and go
 back to the decoder-attached model training.
 
-*** 
+*** Distorted Grid Run
+
+| Grid | Distorted Polar | 
+| Vector size | 12 x 12 = 144 | 
+| Encoder learning rate | 5e-3 / 1e-2 /     | 
+| Decoder learning rate | 5e-4 / 1e-3 /             | 
+
+This grid only has distortions in size and shape - no brightness or
+rescaling. 
+
+Each epoch takes about 280 seconds. 
+
+[2019-07-01 Mon 11:00]
+It seems like some of the digits improve with greater training, and
+some of them worsen. 
+
+I'm wondering if perhaps a faster learning rate might actually be
+better so less epochs need to run.
+
+Though, the loss sort of hovered around the 5-8 range after a while. 
+
+Here it is after 5 epochs:
+
+[[file:./03-psychophysics/data/archive/2019-07-01-generated-images-epoch-05.png]]
+
+Comparing this to the brightness/direct whethercomparison, I guess
+it'll come down to experimentally whether people find this easier or
+not. 
+
+
+[2019-07-01 Mon 11:08]
+I'm going to up the learning rate and rerun. ( to 1e-2 for encoder,
+and 1e-3 for the decoder). 
+
+[2019-07-01 Mon 11:13]
+The loss still sort of hovers around 5-8 after the initial descent. I
+wonder if that's just an intrinsic limitation to this grid + decoder
+combination. 
+
+I'm starting to really think that the decoder needs more training
+samples. Not just MNIST digits, but digits with holes, random
+distortion, thicker digits, smaller digits, etc. I can probably do
+some of those distortions myself (e.g. random distortion), but I
+wonder if I should feed it from other datasets too (though last time I
+tried that, it didn't really seem to help very much).
+
+In terms of distortion, I suppose I do random pixel dropout to put
+distortions into the MNIST digit data. 
+
+[2019-07-01 Mon 11:37]
+Similar sort of story - the digits degrade with further training. 
+I think I'm going to try that MNIST distortion after all. 
+
+*** Distorted Grid Run with Dropout to Real Images
+
+| Grid | Distorted Polar | 
+| Vector size | 12 x 12 = 144 | 
+| Encoder learning rate | 1e-3 | 
+| Decoder learning rate | 1e-3| 
+   
+ 
+
+[2019-07-01 Mon 12:01]
+Okay, I've added some distortion - a random dropout to the MNIST
+images by firstly creating a random array of one quarter the size of
+the grid with 0s and 1s, then upscaling to the size of the grid, then
+masking the image. I chose one quarter so the distortion is actually
+fairl significant - somewhat close to the significant level of
+distortion of the actual numbers. 
+
+I'm running this with the distorted grid with learning rates 1e-3 for
+both the encoder and decoder. It seems to train much slower - I'm not
+entirely sure whether that's because of the change in learning rates
+or whether perhaps the decoder has a harder time learning when there's
+so much consistent random dropout. 
+
+Encoder loss seems to hover around 12-14 this time, rather than
+7-8. That's interesting. 
+
+[2019-07-01 Mon 13:20]
+Interestingly, the digit forms are not nearly as bright as
+before. Maybe the dropout reduces the brightness somewhat. 
+
+[2019-07-01 Mon 13:32]
+I'm not sure why, but they just get dimmer and dimmer with each
+epoch. 
+
+That being said, if they were brighter, I think at the very least that
+I can say some of these digits look better than their brightness-based
+counterparts - and now, because of their form, rather than because of
+their brightness scaling. 
+
+Still, I really wish they were brighter...I can't fathom why they're
+so dim. 
+
+I may reattempt this with a higher learning rate and run it for less
+epochs. 
+
+For this run (1e-3 for both encoder and decoder), here are the loss
+curves:
+
+[[file:./03-psychophysics/data/archive/2019-07-01-loss-curves-with-dropout-slow.png]]
+
+And the output at epoch 12:
+
+[[file:./03-psychophysics/data/archive/2019-07-01-generated-images-epoch-12-slow.png]]
+
+in comparison with epoch 19:
+
+[[file:./03-psychophysics/data/archive/2019-07-01-generated-images-epoch-19-slow.png]]
+
+It's so much dimmer. I think it's clear from the loss curve that the
+decoder isn't being challenged enough though. 
+
+I will increase the learning rate of the encoder.
+
+---
+
+[2019-07-01 Mon 13:49]
+
+| Encoder learning rate | 1e-2 | 
+| Decoder learning rate | 1e-3| 
+
+I've upped the learning rate  of the encoder to 1e-2 and kept the
+decoder at 1e-3. 
+
+[2019-07-01 Mon 13:54]
+It's interesting - this run seems to get to about 5-7 for loss, though
+it seems relatively unstable. I'm still not seeing the decoder rise
+above 1 after it's iniital descent though. 
+
+The encoder loss seems to bounce around a lot. 
+
+It's interesting - there remains a loss in intensity with epochs. 
+
+I might try decreasing the learning rate even further for the
+decoder. 
+
+[2019-07-01 Mon 14:04]
+
+| Encoder learning rate | 1e-2 | 
+| Decoder learning rate | 1e-4 | 
+
+I've decreased the decoder learning rate to 1e-4. 
+
+[2019-07-01 Mon 14:09]
+Woah..that was dramatic. It pretty much turned to black straight
+away. 
+
+But, in epoch 2 it got better. 
+
+Loss is hovering around 2 to 3 for the encoder, and around 1 for the
+decoder. 
+
+[2019-07-01 Mon 14:29]
+Ths loss is starting to rise now, hovering around 3 and 4. 
+
+[2019-07-01 Mon 14:46]
+I think the loss curves are interesting:
+
+[[file:./03-psychophysics/data/archive/2019-07-01-loss-curves-with-dropout-slow-decoder.png]]
+
+The output is not particularly good though. 
+
+I think I'll try doing half-half - so half the mnist digits will have
+dropout, and half won't. I'm also going to increase the dropout unit
+size to one eighth. 
+
+
+*** Distorted Polar Grid with Half Dropout
+
+[2019-07-01 Mon 14:53]
+
+| Encoder learning rate | 5e-3 | 
+| Decoder learning rate | 1e-3 | 
+
+I've put back the encoder and decoder learning rates to the above. 
+
+This time, I've implemented half dropout for the digits, not full
+dropout, with a fixed dropout unit size of one eighth the grid size.
+
+I haven't shuffled them (since I have to shuffle both the labels and
+the images together), but I think I might adjust it to have the
+dropout unit change randomly. 
+
+Actually, I'll do that - I'll change the dropout to be a random
+integer between 0 and 8. I'll randomise every batch - I guess it
+should be random for every step, but it's just easier to randomise per
+batch the way it's setup at the moment, at least. I'll still leave
+half untampered. 
+
+[2019-07-01 Mon 15:17]
+Training is slow, but the loss is falling. It seems to be hovering
+around 7-9 now though. 
+
+[2019-07-01 Mon 15:35]
+The output at epoch 3 and 4 aren't bad, but it keeps getting dimmer
+still. I'm not sure how exactly to counter that. 
+
+I reckon I'll rerun it and just stop it after a few epochs.
+
+[2019-07-01 Mon 15:40]
+
+| Encoder learning rate | 2e-3 | 
+| Decoder learning rate | 1e-3 | 
+
+
+I've reduced the encoder learning rate very slightly. I'm going to
+stop the training after I think about 4 or 5 epochs and just save the
+encoder there. 
+
+[2019-07-01 Mon 16:09]
+I've stopped it after 6 epochs. 
+
+Here's the loss curve:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-07-01_10-15_loss_DistortedPolarGrid_12-12_64-64.png]]]
+
+Here's the evolution GIF:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-07-01_10-15_evolution_DistortedPolarGrid_12-12_64-64.gif]]
+
+Here's the final renders:
+
+[[file:./03-psychophysics/data/archive/2019-07-01-generated-images-epoch-6-half-dropout.png]]
+
+(In comparison, this is the direct brightness encoded digits):
+
+[[file:./03-psychophysics/data/archive/2019-07-01-comparison-distorted.png]]
+
+To test experimentally:
+
+For the net decoder:
+
+#+BEGIN_SRC 
+python digits.py --grid .\data\training-intermediate-data\training-grids\2019-07-01_10-15_grid_DistortedPolarGrid_12-12_64-64.pkl --testing --encoder .\data\training-intermediate-data\training-encoders\2019-07-01_10-15_encoder_DistortedPolarGrid_12-12_64-64.h5 --processor net
+#+END_SRC
+
+And for the brightness-based decoder:
+
+#+BEGIN_SRC 
+python digits.py --grid .\data\training-intermediate-data\training-grids\2019-07-01_10-15_grid_DistortedPolarGrid_12-12_64-64.pkl --testing
+#+END_SRC
+
+I've just tried it and...it's still quite hard for the net decoder. I
+actually find the brightness based decoder easier. Maybe because I can
+fill in the missing details because the digits are so regular. Maybe
+because it's so much brighter. I'm not sure.
 
 * July 2019
  
