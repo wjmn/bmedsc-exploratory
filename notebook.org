@@ -6021,6 +6021,11 @@ Argh. I just realised for the rescaling paradigm, that I was
 normalising the renders anyway for the grid. I've removed that now.
 
 *** Rescaling Polar Grid - Same Parameters
+
+| Git commit hash | 9a497bd7d7c3a9acc4f4efba16d682c5f75aa737 |
+| Learning rate | Various | 
+| Grid | Rescaling Polar Grid | 
+| Grid Size | 12 x 12 = 144 | 
     
 This time, purely testing whether the network can withstand the
 conditional distortion. This isn't the most "interesting" part -
@@ -6063,6 +6068,225 @@ learning rates:
 
 [[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-06-27_10-53_evolution_RescalingPolarGrid_12-12_64-64.gif]]
 
+*** Distorted Polar Grid - Same Parameters
+
+| Git commit hash |     |
+| Grid | Distorted Polar | 
+| Grid Size | 8 x 8 = 64 | 
+| Learning rate encoder | 5e-3 | 
+| Learning rate decoder | 5e-4 | 
+
+Now attempting to run this on the distorted grid. I think spatial
+distortions, which are the most interesting to overcome, are also
+going to be the hardest. Maybe I should remove the brightness
+distortion and have it purely spatial distortion - that might remove
+some of the difficulty for the encoder, which is going against a
+decoder that has MNIST values that are starkly white. 
+
+[2019-06-27 Thu 15:04]
+I think I might just run this with ONLY location distortion
+actually. Size and strength, I'll test separately.
+
+I'm also going to try this out on the 8x8 grid - I think having less
+phosphenes probably a more likely case in which a generated encoding
+would be better than a direct encoding, since there might be some
+extra changes that are needed to skirt around the low resolution.
+
+[2019-06-28 Fri 09:42]
+Didn't work particularly well. Encoder loss was around 20 at the
+end. Some of the features are present, but they don't really form
+holistic digits. I wonder if the learning rate needs to be faster. 
+
+Here it is at epoch 50:
+
+[[file:./03-psychophysics/data/archive/2019-06-28-generated-images-epoch-50-distorted.png]]
+
+
+*** Aside : Seeded Generative Network
+
+I wonder if perhaps a generative network with a random seed could be
+useful to produce many candidates...
+
+Which could then be put into the digit experiment to gather *vector*
+data and their *classifications* as digits. So this would be a /more/
+phosphene agnostic method (though it still relies on being able to
+produce somewhat meaningful candidates). 
+
+Then, the vector data and their classifications could be used for
+/feature extraction/ - i.e. extracting features from the (arbitrary!)
+vectors that best correlate with digits. 
+
+I suppose I could just make this an add-on to the experiment plan so
+far - but it makes the amount of analysis afterwards quite
+significant. It would be interesting to see the results though (though
+I don't imagine they would look particularly good). 
+
+** [2019-06-28 Fri]
+
+*** Seeded Generative Network
+
+I might just try this - I think it would be an interesting angle to
+approach it from. 
+
+I'm also going to try reducing the number of phosphenes down to 64,
+which I think is the more interesting case for a limitation. I've
+changed the value of a to double its prior value to compensate for the
+decrease in phosphene density, so there will be more likelihood of
+connection between phosphenes.  
+
+Essentially, this will be an architecture like:
+
+#+BEGIN_SRC 
+32 vector seed + 10 one-hot category 
+-> [ENCODER] 
+-> 64 vector. 
+-> [RENDERER]
+-> 64 x 64 image
+-> [DECODER]
+-> 11 category softmax
+#+END_SRC
+
+To train the encoder, the classification output of the decoder will be
+compared to a one-hot of the original input. The train the decoder,
+the classification output of the decoder will be compared to a one-hot
+of the garbage element. 
+
+[2019-06-28 Fri 10:21]
+Okay, I've set it up using a 32 vector seed with a single hidden layer
+of half the final output layer. Not sure how this'll go, but we'll
+see. I've deliberately kept the learning rate very low, 5e-3 for the
+encoder and 5e-4 for the decoder. I've also upped the buffer size to
+30000 MNIST images to make use of more of the dataset.
+
+| Grid | Polar Regular Grid | 
+| Vector length | 8 x 8 = 64 |
+| Encoder learning rate | Various |
+| Decoder learning rate | Various | 
+
+Training is going slowly, but I do think it is gradually getting
+better - though, granted, I can only see one particular set of digits,
+rather than the whole set. 
+
+[2019-06-28 Fri 11:59]
+It generally seems like it is unstable - probably because there is no
+configuration that will completely minimise the loss for encoder
+training, simply because the map is imperfect (i.e. there are some
+places where you simply cannot join lines, resulting in a disjointed
+figure). I wonder if perhaps the style transfer idea on the MNIST
+digits isn't such a bad idea after all. There needs to be something
+that will account for the difference between the intrinsic ability of
+the map to represent digit forms, and the MNIST digits themselves. 
+
+But then again, if the role of this phase is only to produce
+candidates for the next phase of actual presentation to humans, then
+maybe it isn't such an issue. 
+
+I notice the encoder loss is bouncing up and down between 10 and 14. 
+
+I've just taken a quick look at the generated digits for different
+random noise and...there's no variation for a single
+digit. Huh. Perhaps the conditional nature needs to be input in a
+different way. I supppose this is mode collapse...
+
+Perhaps I should increase the encoder training further relative to the
+decoder training. I'll have a go at using 5e-2 and 5e-4 - so a factor
+of 2 of difference. 
+
+
+[2019-06-28 Fri 13:03]
+No, that was equally unsuccessful, if not worse. It just stopped
+changing completely after the 10th epoch and encoder loss again just
+hovered around the 10-15 mark. There was also no variation in
+digits...
+
+Ah, maybe I should keep the learning rates as similar as possible I'll
+try a learning rate of 1e-3 for both the encoder and decoder this
+time. 
+
+[2019-06-28 Fri 13:40]
+With a learning rate of 1e-3, it seems equally to end up reaching a
+point where the encoder loss hovers around 10ish and doesn't seem to
+go down significantly from there. It seems I will definitely need some
+strategy to try and minimise that. 
+
+There is also no variation with this configuration either...
+
+I might just try with a cartesian grid with this random seed
+approach. 
+
+[2019-06-28 Fri 13:51]
+
+| Grid                  | Cartesian Grid |
+| Vector length         | Cartesian Grid |
+| Encoder learning rate | Various        |
+| Decoder learning rate | Various        |
+
+I'll start with a learning rate of 1e-3 for both the encoder and
+decoder. 
+
+[2019-06-28 Fri 14:06]
+After 3 epochs, there is still very noticeable mode collapse going
+on. 
+
+[2019-06-28 Fri 14:45]
+Attempting to increase the decoder learning rate to 1e-2 and keeping
+the encoder learning rate at 1e-3 produced poor results - the
+encodings almost disappeared by epoch 8. 
+
+*** Directions
+
+Here's a few things that might help:
+
+1. Size - I'm not sure whether there's a good way to do this, but
+   potentially training on digits of many different sizes would be
+   more successful so the produced images weren't limited to a single
+   size.
+2. Style transfer of phosphenes -> at least having a comparison that
+   isn't completely as perfect as the MNIST dataset. 
+
+I don't know if mode collapse is really a problem for the eventual
+goal (namely to simpy choose one /best/ representation), but it
+severely limits my ability to use the experimental phase as anything
+but evaluation. I would really like to be able to have candidates that
+can be tested for the experimental phase, but clearly I need to some
+way of reducing the mode collapse...
+
+
+** [2019-07-01 Mon]
+
+*** Polar Seeded Run
+    :LOGBOOK:
+    CLOCK: [2019-07-01 Mon 09:20]--[2019-07-01 Mon 10:14] =>  0:54
+    :END:
+
+
+I'm going to try a polar seeded run, for interest's sake, with 12 x 12
+phosphenes (so it should be fairly high resolution...).
+
+This paper:
+
+https://openreview.net/pdf?id=rJliMh09F7
+
+Suggests that approaching mode collapse by incorporating it into the
+loss function may be viable. 
+
+[2019-07-01 Mon 09:39]
+Still getting noticeable mode collapse for this run. 
+
+[2019-07-01 Mon 09:59]
+I've implemented a very basic attempt at trying to increase the
+difference between encodings - essentially, by doing a matrix
+multiplication between the encoded vectors and itself, then comparing
+to elementwise square of each row, broadcasted. I just realised though
+that this may not actually work since each batch contains all 10
+digits (so the difference is going to be large anyway)...
+
+[2019-07-01 Mon 10:13]
+Well, there's still mode collapse - the noise still produce the same
+digits. That's a real pity. I might leave this for now then and go
+back to the decoder-attached model training.
+
+*** 
 
 * July 2019
  

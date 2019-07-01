@@ -97,13 +97,14 @@ class DistortedElectrode(Electrode):
                  xdim: int,
                  ydim: int):
         
-        #x = bound(self.randomise(x), 0, 1)
+        # x = bound(self.randomise(x), 0, 1)
         x = (random.random() + 1) / 2 # for hemisphere
-        #y = bound(self.randomise(y), 0, 1)
+        # y = bound(self.randomise(y), 0, 1)
         y = random.random()
         xsize = max(0, int(self.randomise(xsize)))
         ysize = max(0, int(self.randomise(ysize)))
-        strength = random.random() #** 10
+        #strength = random.random() #** 10
+        strength = 1
         
         Electrode.__init__(self, x, y, xsize, ysize, strength, xdim, ydim)
         
@@ -235,7 +236,7 @@ class PolarGrid(Grid):
     def make_grid(self):
         
         k = self.xdim / 2 + self.ydim / 2
-        a = e * (self.xdim + self.ydim) / 128
+        a = e * (self.xdim + self.ydim) / 64
         
         xys = [
             (0.5 + (ir / self.ndim1 * np.cos(self.iangle(itheta))) / 2,
@@ -265,7 +266,7 @@ class DistortedPolarGrid(PolarGrid):
     def make_grid(self):
         
         k = self.xdim / 2 + self.ydim / 2
-        a = e * (self.xdim + self.ydim) / 128
+        a = e * (self.xdim + self.ydim) / 64
         
         xys = [
             (0.5 + (ir / self.ndim1 * np.cos(self.iangle(itheta))) / 2,
@@ -333,7 +334,7 @@ class RescalingPolarGrid(PolarGrid):
     def make_grid(self):
         
         k = self.xdim / 2 + self.ydim / 2
-        a = e * (self.xdim + self.ydim) / 128
+        a = e * (self.xdim + self.ydim) / 64
         
         xys = [
             (0.5 + (ir / self.ndim1 * np.cos(self.iangle(itheta))) / 2,
