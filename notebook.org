@@ -5847,7 +5847,7 @@ Evolution:
 
 At epoch 26:
 
-[[file:/03-psychophysics/data/archive/2019-06-25-generated-images-epoch-26-adversarial-cartesian.png]]
+[[file:./03-psychophysics/data/archive/2019-06-25-generated-images-epoch-26-adversarial-cartesian.png]]
 
 And loss curves:
 
@@ -6252,8 +6252,10 @@ can be tested for the experimental phase, but clearly I need to some
 way of reducing the mode collapse...
 
 
+* July 2019
+ 
 ** [2019-07-01 Mon]
-
+   
 *** Polar Seeded Run
     :LOGBOOK:
     CLOCK: [2019-07-01 Mon 09:20]--[2019-07-01 Mon 10:14] =>  0:54
@@ -6535,8 +6537,147 @@ actually find the brightness based decoder easier. Maybe because I can
 fill in the missing details because the digits are so regular. Maybe
 because it's so much brighter. I'm not sure.
 
-* July 2019
- 
+** [2019-07-02 Tue]
+   
+*** 10x10 grid, with cosine
+
+I think I'm going to try a 10x10 grid with a cosine to help increase
+contrast. The main difficulty I'm finding with the net digits is that
+they're a bit muddled in with the background. 
+
+Here's what I'm trying:
+
+| Grid | Distorted Polar | 
+| Vector length | 10 x 10 = 100 | 
+| Encoder learning rate | 5e-3 | 
+| Decoder learning rate | 1e-3 | 
+
+And here's what I'm going to try adding as "contrast loss":
+
+#+BEGIN_SRC python
+contrast_loss = 10 * tf.reduce_mean(tf.cos(tf.scalar_mul(np.pi/2, encoded_images)))
+#+END_SRC
+
+Just a note - should think about how to show the actual grid (maybe as
+outlines) as a reference.
+
+[2019-07-02 Tue 10:23]
+The forms are looking okay, it's just it's still/ murky and dull. I
+really want it to be brighter!
+
+[2019-07-02 Tue 10:36]
+And they just keep getting dimmer. By epoch 7, they're almost
+non-existent. 
+
+Encoder loss hovers around 7 to 8. 
+
+I'm going to up the contribution of cosine to 20 times the average,
+and also constrict the dropout to between 4 and 8. I'll also decrease
+the learning rate of the encoder to 1e-3 and the decoder to 5e-4.
+
+[2019-07-02 Tue 11:08]
+Training is, as expected, much slower. It seems to end up hovering
+around 15-17.
+
+I really want the decoder to be challenged more.
+
+[2019-07-02 Tue 11:26]
+And the digits are /still/ getting dimmer. I'm really not sure how to
+combat this problem. Loss has actually decreased to hovering around
+12-14 now. 
+
+[2019-07-02 Tue 11:38]
+They still keep getting dimmer...But, at least, they look more stable
+than when I didn't have dropout incorporated. 
+
+Ah, but actually, I wonder if perhaps the reason they get dimmer and
+are /generally/ unstable is because they are one-to-one mappings - so
+the decoder can just learn that "these are fake" by remembering
+them. Maybe I should incorporate some randomout dropout/"dropin" to
+try and combat that? (on the generated digits)
+
+Okay, so I've dropout (unit divisor 8) for the decoder loss
+calculation /only/ - so the encoder is still trained based on what the
+decoder can get out of the rendered digits, but the decoder can only
+learn garbage based on a slightly-randomised version of the generated
+digits. The idea being that hopefully, the decoder won't simply learn
+the representations of the garbage digits by rote. 
+
+[2019-07-02 Tue 13:10]
+This didn't help -they sort of disappear (though admittedly, I tried a
+higher learning rate of 1e-2 for the encoder and 1e-3 for the
+decoder). 
+
+I might just leave the dropout for the real digits. 
+
+Maybe I'll put the dropout to 4 instead of 8. And I'll slow it down to
+1e-3 for both encoder and decoder. 
+
+[2019-07-02 Tue 13:27]
+It seems it doesn't train at all if the encoder learning rate is
+slower (I tried 1e-3). 
+
+I'll get rid of the dropout for the decoder. 
+
+[2019-07-02 Tue 14:23]
+The forms are actually not too bad - I'm going to try rerunning again,
+but this time randomising the dropout to between 1 and 8 for the
+decoder, and using a faster learning rate of 5e-3 - I think I just had
+to be patient, it took a while for the forms to appear. 
+
+I'm also going to re-add the cosine loss. I really don't like the fact
+that it dulls. I'm also going to try readding a mean value loss too.
+
+[2019-07-02 Tue 14:52]
+I think the results were okay, but again, it bounces around after
+reaching a "good" result. I'll lower the rate to 1e-3. 
+
+[2019-07-02 Tue 15:16]
+Hm. It seems that below a certain encoder learning rate, it just doesn't move /at all/. 
+I'm going to increase it up to 1e-2. 
+
+[2019-07-03 Wed 09:43]
+The digits dull and disappear after several epochs. After the initial
+descent, the loss just increases (slowly).
+
+
+** [2019-07-03 Wed]
+
+*** 10x10 Distorted Polar Grid, Dropout Decoder
+
+
+| Grid | Distorted Polar | 
+| Vector length | 8 x 8 = 64 | 
+| Encoder learning rate | 5e-3 | 
+| Decoder learning rate | 1e-3 |
+
+Here's a run with an 8 x 8 distorted polar grid. 
+
+Here's the locations of the phosphenes:
+
+[[file:./03-psychophysics/data/archive/2019-07-03-phosphene-locations-8-8.png]]
+
+And the comparison of brightness-based digits:
+
+[[file:./03-psychophysics/data/archive/2019-07-03-comparison-8-8.png]]
+
+Here's the result after 4 epochs of training (loss hovers around 6-8):
+
+[[file:./03-psychophysics/data/archive/2019-07-03-generated-images-epoch-03.png]]
+
+I wondered how it would look with greater brightness and contrast, so
+I manually adjusted it with the result below:
+
+
+[[file:./03-psychophysics/data/archive/2019-07-03-generated-images-epoch-03-adjusted.png]]
+
+I do think the pixels dim because the decoder learns they are
+associated with the encoder, but I still need to think about how to
+counteract that. 
+
+
+*** 
+
 * August 2019
 * September 2019
 

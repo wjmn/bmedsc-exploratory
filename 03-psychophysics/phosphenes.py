@@ -60,6 +60,14 @@ class Electrode:
         self.strength = strength
 
         self.rendered = self.render()
+        
+    def location(self):
+        xmin, xmax = safebound(self.xdim * self.x, self.xsize, 0, self.xdim)
+        ymin, ymax = safebound(self.ydim * self.y, self.ysize, 0, self.ydim)
+
+        base = np.zeros((self.ydim, self.xdim))
+        base[ymin:ymax, xmin:xmax] = self.strength        
+        return base
 
     def render(self):
         xmin, xmax = safebound(self.xdim * self.x, self.xsize, 0, self.xdim)
@@ -144,6 +152,11 @@ class Grid(ABC):
     @abstractmethod
     def make_grid(self):
         pass
+    
+    def show_locations(self):
+        locations = np.array([electrode.location() for electrode in self.grid])
+        summed = np.sum(locations, axis=0)
+        return summed
     
     def render(self, values: np.ndarray):
         
