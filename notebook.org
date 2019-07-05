@@ -6676,7 +6676,84 @@ associated with the encoder, but I still need to think about how to
 counteract that. 
 
 
-*** 
+*** Conditional GAN Architecture - Attempt 2
+
+I'm going to change the architecture of the GAN somewhat to follow the
+architecture described in this paper more closely:
+
+https://arxiv.org/pdf/1411.1784.pdf
+
+(also http://proceedings.mlr.press/v48/reed16.pdf)
+
+Namely, feeding the conditional information to the disciminator, and
+making the disciminator binary. 
+
+(I wonder if perhaps the grid itself could be fed as an input to
+either the encoder or decoder. Maybe for another time). 
+
+[2019-07-03 Wed 15:57]
+Phew! I've spent a bit of time refactoring the code and putting in the
+conditioned gan. 
+
+| Grid vector length | 8 x 8 = 64 | 
+| Grid size | 48 x 48 |
+| Encoder learning rate | 1e-3 | 
+| Decoder learning rate | 1e-4 | 
+
+I've reduced the grid render size to 48x48 and am running the first
+run.
+
+I initially tried 1e-4 for both the encoder and decoder, but the
+decoder learned so fast - it reached losses of around 0 really
+quickly. The encoder loss was hovering around 15.
+
+So I tried an encoder learning rate of 1e-3 and decoder learning rate
+of 1e-4 - it seems like the encoder loss hovers around 10 now and
+decoder loss seems to be hovering around 0.1 - 0.3ish.
+
+Actually, it strikes me that I should run this on a normal polar grid
+first. Just to see if it will work...
+
+
+[2019-07-03 Wed 16:09]
+I'm going to rerun this on a normal regular polar grid with the
+following: 
+
+| Grid vector length | 12 x 12 = 144 | 
+| Grid size | 64 x 64 |
+| Encoder learning rate | 1e-3 | 
+| Decoder learning rate | 1e-4 | 
+
+It's very puzzling - after about 5 epochs, the loss of /both/ the
+encoder and decoder go to 15.4249516 and completely lock on that value
+without moving. Before that, they appeared to be descending well. The
+produced digit forms for all the digits looks like a zero (though they
+at least all look different). Very strange. It seems like there's
+something wrong with the processing perhaps. 
+
+I wonder if I need an activation function like sigmoid for the final
+output to make it more stable. I think this one was outputing
+everything as negative in the end. 
+
+** [2019-07-05 Fri]
+   
+*** Sigmoid output for cGAN
+
+I'm going to rerun what I ran on Wednesday using a sigmoidoutput for
+the decoder. It's a pity though, one epoch takes ten minutes...
+
+| Grid vector length | 12 x 12 = 144 | 
+| Grid size | 64 x 64 |
+| Encoder learning rate | 1e-3 | 
+| Decoder learning rate | 1e-3 | 
+
+
+[2019-07-05 Fri 10:33]
+I spent a bit of time adding =@tf.function= annotations to some of the
+functions.
+
+(honestly though, that doesn't seem to have sped it up...)
+
 
 * August 2019
 * September 2019
