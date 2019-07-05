@@ -6755,6 +6755,68 @@ functions.
 (honestly though, that doesn't seem to have sped it up...)
 
 
+[2019-07-05 Fri 12:11]
+I spent a bit of time rewriting the architecture of the conditioning
+using Keras' functional API, which makes it much easier to specify the
+conditioned input to a multi-input network. 
+
+An epoch of around 10,000 digits takes around 100 seconds, so I also
+shortened down the epoch size to 10,000 for this run too. Otherwise,
+I'm keeping it the same. 
+
+| Grid type | Polar Regular Grid |
+| Grid vector length | 12 x 12 = 144 | 
+| Grid size | 64 x 64 |
+| Encoder learning rate | 1e-4 | 
+| Decoder learning rate | 1e-4 | 
+
+I'm noticing a similar pattern to some of my first attempts - the
+encoder loss is very high at first, then it comes down and the decoder
+loss rises before also coming down. 
+
+Unfortunately, there is also this dimming behaviour for a learning
+rate of 1e-3 for both the encoder and decoder. 
+
+[2019-07-05 Fri 13:08]
+It was not successful. There's mode collapse, even between digits now
+(I guess since the only differentiating factor is the conditional
+nature of the network), and it's very unstable. I'm going to try to
+rerun this without the dropout factor, which shouldn't be necessary
+for the polar regular grid at least. 
+
+[2019-07-05 Fri 13:33]
+So the rerun seems to be getting...less dim results (the second epoch
+was very dim, but it climbed back up after that). It's only up to
+epoch 4 now, so I guess I shouldn't be judging this too much yet
+(since the decoder hasn't really been challenged very much yet by the
+encoder), but there /still/ seems to be mode collapse. I'm wondering
+whether this will disappear with time because, hopefully the decoder
+should start learning digit-specific features from the conditional
+inputs once the encoder gets good at producing digit-like forms. 
+
+[2019-07-05 Fri 14:00]
+Mode collapse was very prominent, so I stopped after abou 8
+epochs. I'm going to simplify the architectures (remove the embedding
+layers) and increase the learning rate of both encoder and decoder to
+1e-3. 
+
+| Encoder learning rate | 1e-3 | 
+| Decoder learning rate | 1e-3 | 
+
+
+[2019-07-05 Fri 14:48]
+This had a very bizarre pattern of loss. Here's a graphic:
+
+[[file:./03-psychophysics/data/archive/2019-07-05-loss-cgan-polar-initial.png]]
+
+At the start, it wasn't so surprising - the encoder loss rose and then
+started to descend. Then strangely, everything seemed to just go
+haywire. At the end, the decoder loss was 0 and the encoder loss was
+hovering around 1700.
+
+The results are not very good. It's pretty much a big squiggle for
+everything, and the same squiggle at that. 
+
 * August 2019
 * September 2019
 
