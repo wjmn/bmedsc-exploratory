@@ -6817,6 +6817,101 @@ hovering around 1700.
 The results are not very good. It's pretty much a big squiggle for
 everything, and the same squiggle at that. 
 
+I'm going to try running this again. I've taken out one of the hidden
+layers for the encoder to simplify it (hopefully) and set the learning
+rates as below:
+
+| Encoder learning rate | 1e-3 | 
+| Decoder learning rate | 5e-4 | 
+
+[2019-07-05 Fri 15:12]
+Also unsuccessful. Just one mode.
+
+I'm going to try reverting the decoder architecture to a 11 softmax
+output and keep the encoder the same, just to see how that goes. 
+
+[2019-07-05 Fri 15:22]
+Just made the modification - now the decoder only gets to see the
+resulting images and has to decode it into a one-hot 11-vector. This
+is similar to the seed run I attempted prior, though hopefully this
+produces some more modes...well, we'll see. 
+
+[2019-07-05 Fri 15:31]
+It's very strange. I'm getting mode collapse /between/ digits, which I
+didn't get before. The decoder is performing alright (0.1ish loss)
+whereas the encoder is sort of hovering about the 9 - 12 area. I'm not
+sure why I can't seem to get unique digits with this method though -
+the architecture is very similar to what I had previously, yet the
+results are so much worse. It's only at epoch 2 at the moment, so
+maybe I just have to stick with it. 
+
+[2019-07-05 Fri 15:40]
+At the third and fourth epochs, there are some differences starting to
+emerge between the digits. But they still don't like very good. 
+
+I'm going to stop it at epoch 5, and just try the network with the
+one-hot encoded input only...
+
+
+[2019-07-05 Fri 16:07]
+Okay, this seems to get unique digits (at least by epoch 4). Maybe the
+learning rate was just too slow before. I'm going to retry with the
+noise again, and set a higher learning rate. I've also replaced the
+one-hot-to-dense layer of the encoder network to an embedding layer
+instead. 
+
+
+| Encoder learning rate | 5e-3 | 
+| Decoder learning rate | 1e-3 | 
+
+[2019-07-05 Fri 16:24]
+It's very interesting why this doesn't produce unique digits. Maybe
+the noise vector is overpowering the label input vector? 
+
+I'm going to reduce the learning rate (the digits went white very
+fast), but also mess with the normalisation of the seed and labels..
+
+[2019-07-05 Fri 16:26]
+
+| Encoder learning rate | 1e-3 | 
+| Decoder learning rate | 5e-4 | 
+
+I've added batch normalisation and leakyReLU to the embeddings layer. 
+
+[2019-07-05 Fri 16:35]
+Well, after the first epoch, there's definitely more variation. That's
+interesting - why is that? I only added a normalisation and leaky ReLU Layer...
+
+I'm not sure why, but the digits are rather disjointed though. Well,
+that might be because of the learning rate, I'm not entirely sure. 
+
+[2019-07-05 Fri 16:47]
+That being said, it's (maybe?) getting better. Epoch 4 has a nice
+looking 0 and 1. 
+
+[2019-07-08 Mon 09:11]
+Well, looking at the result is a bit interesting. 
+
+Here's the loss curve and training gif: 
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-07-05_16-29_evolution_PolarGrid_12-12_64-64.gif]]
+
+And the loss curve:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-07-05_16-29_loss_PolarGrid_12-12_64-64.png]]
+
+It seems to reach the best performance about halfway at around the
+20th epoch, then regresses...
+
+Unfortunately, though, it's not multimodal - it's still experiencing
+mode collapse. 
+
+Not much improvement on the old result I am afraid. 
+
+** [2019-07-08 Mon]
+
+
+
 * August 2019
 * September 2019
 
