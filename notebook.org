@@ -7005,6 +7005,70 @@ included this time as well.
 
 *** With the Garbage Class, with Dropout Digits for Stability
     
+| Encoder learning rate | 1e-3 | 
+| Decoder learning rate | 1e-3 | 
+
+[2019-07-08 Mon 11:08]
+The decoder seems to be getting a greater challenge at least - It's
+hovering around 0.5 to 1. 
+
+But, strangely, there doesn't seem to be discriminability /between/
+digits anymore. I wonder why that is? I did change the architecture
+of the encoder to include another dense layer. 
+
+I will remove it and increase the encoder learning rate to 5e-3.
+
+[2019-07-08 Mon 11:18]
+
+| Encoder learning rate | 5e-3 | 
+| Decoder learning rate | 1e-3 | 
+
+After the first epoch, the image is completely black. Hm. I'll let it
+run for a bit longer and see how it goes. That's very strange
+though...Maybe it's one of those things where it needs to get worse
+before it gets better?
+
+[2019-07-08 Mon 11:26]
+Thankfully at the second epoch, it's not all black - but the digits
+look pretty similar between each other. Again, maybe this is just
+something that I need to wait and see with over multiple epochs.
+
+[2019-07-08 Mon 11:50]
+This run was extremely unstable. I'm going to lower both learning
+rates to 1e-4...
+
+| Encoder learning rate | 1e-4 | 
+| Decoder learning rate | 1e-4 | 
+
+[2019-07-08 Mon 12:50]
+So it took a while (they didn't start looking like digits until the
+5th epoch), but they are at least now getting forms. As is expected I
+think, the forms are much dimmer with the dropout - the encoder is
+hovering at about a loss of 5-6. 
+
+I've stopped it about 13 epochs. Here's the end result:
+
+[[file:./03-psychophysics/data/archive/2019-07-08-generated-images-epoch-13-polar.png]]
+
+Interestingly, this /is/ multimodal - and it seems the latent vector
+that has been learned somehow correlates with brightness. Here's the
+output of 3 with different random seed vectors, for example:
+
+[[file:./03-psychophysics/data/archive/2019-07-08-modes-3-polar.png]]
+
+This is certainly better than I had before, where /everything/ was the
+same - and I suppose these different modes of three are because of the
+different randomised dropout variables - but it would be nicer if the
+various modes were form-related rather than brightness related. It's a
+start though, at least!
+
+Here's the evolution:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-07-08_11-52_evolution_PolarGrid_12-12_64-64.gif]]
+
+And the loss graph:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-07-08_11-52_loss_PolarGrid_12-12_64-64.png]]
 
 
 * August 2019
