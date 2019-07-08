@@ -6930,7 +6930,13 @@ normalization and relu connected to a dense, also with batch
 normalization and relu. 
 
 | Encoder learning rate | 1e-3 | 
-| Decoder learning rate | 5e-3 | 
+| Decoder learning rate | 1e-3 | 
+
+[2019-07-08 Mon 10:14]
+I stopped this run after 2 epochs - it wasn't getting any difference
+in digits. 
+
+*** Removing the Garbage Class? 
 
 Just as a side note - one of the other problems I was thinking about
 is that the generated images are going to have static phosphene
@@ -6942,8 +6948,63 @@ generated candidate transformation images that minimise discrimination
 loss between digits, which /also/ look like like digits in some
 way. In that case, it might be better to simply not have the garbage
 class at all - simply mix the MNIST images with and without dropout
-into the dataset. 
+into the dataset. Hm. 
 
+So instead, the encoder is simply trying to "assimilate" into the what
+the decoder is learning about the MNIST digits. Though, I am not sure
+if this is actually "adversarial" - it seems like the decoder and
+encoder are parterns in this setup! (since they're both trying to
+learn the same thing). But I think this minimisation problem is much
+closer to what we are trying to achieve - to get the encoder to
+produce digit forms that could be assimilated into a stream of actual
+digits, and have them be discriminated similarly (even if they are
+still distinguishable from the real digits). 
+
+But maybe this is problematic - for example, the discriminator could
+simply learn /both/ encodings in parallel. 
+
+I'm running this now: it's interesting. In this case, the /encoder/
+loss is reaching 0.002 (before the first epoch is done) whereas
+decoder loss is hovering around 0.25. I guess that makes sense, though
+it would imply that the decoder is struggling with the MNIST digits
+over the encoded forms. Maybe there needs to be greater weight given
+to the MNIST digits? 
+
+| Encoder learning rate | 1e-3 | 
+| Decoder learning rate | 1e-3 | 
+
+[2019-07-08 Mon 10:25]
+Interestingly, after the first epoch, the encodings are...they just
+haven't moved. 
+
+I'm going to retry this with the same parameters, except increasing
+the loss to be =10 * real loss + fake loss=. We'll see how that goes. 
+
+[2019-07-08 Mon 10:32]
+Similar phenomena - the encoder just looks like every phosphene is lit
+up (after the first epoch). I'll let it run for just a bit longer, but
+maybe it really does have to be adversarial...
+
+[2019-07-08 Mon 10:36]
+Oh, okay it looks like there's a bit more structure at epoch 2. I'll
+keep it running longer than...hopefully it works out.
+
+The encoder loss is really small (on the order of 1e-2 to 1e-5) -
+decoder loss is hovering mostly around 0.5-1.5, but it seems to be
+quite unstable, bouncing up and down a lot. 
+
+[2019-07-08 Mon 10:58]
+It produces digit-like forms, but it sort of stops changing after a
+certain point. Decoder loss is sort of hovering around 0.1-0.5,
+encoder loss still at 1e-5-ish. 
+
+Still got mode collapse though...
+
+I might just try the decoder-with-garbage with the dropout digits
+included this time as well.
+
+*** With the Garbage Class, with Dropout Digits for Stability
+    
 
 
 * August 2019
