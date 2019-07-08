@@ -6910,6 +6910,40 @@ Not much improvement on the old result I am afraid.
 
 ** [2019-07-08 Mon]
 
+*** Review
+
+So what's the current problem?
+
+1. Digits are collapsing into single digits per-mode
+2. Digits don't arrive at well-formed, stable configurations. 
+
+It's a little difficult to think about how to go about changing this -
+for example, simply doing batch normalization and adding a leaky ReLU
+activation layer to the labels input for the encoder increased
+performance significantly. 
+
+I just realised I didn't have this batch normalization/leaky ReLU on
+the first version of the decoder (binary output) I had earlier. 
+
+I'll retry this binary, conditional decoder using the batch
+normalization and relu connected to a dense, also with batch
+normalization and relu. 
+
+| Encoder learning rate | 1e-3 | 
+| Decoder learning rate | 5e-3 | 
+
+Just as a side note - one of the other problems I was thinking about
+is that the generated images are going to have static phosphene
+locations. Therefore, trying to optimise to minimise the
+discrimination loss between real and generated images may not actually
+be the best way to go about it, considering that the generated images
+/will/ be different from the real images. Instead, we wish to
+generated candidate transformation images that minimise discrimination
+loss between digits, which /also/ look like like digits in some
+way. In that case, it might be better to simply not have the garbage
+class at all - simply mix the MNIST images with and without dropout
+into the dataset. 
+
 
 
 * August 2019
