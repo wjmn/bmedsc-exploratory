@@ -7070,6 +7070,57 @@ And the loss graph:
 
 [[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-07-08_11-52_loss_PolarGrid_12-12_64-64.png]]
 
+[2019-07-08 Mon 13:03]
+
+I'm going to test the exact same configuration, just using a distorted
+polar grid instead of a regular polar grid. 
+
+| Encoder learning rate | 1e-4 | 
+| Decoder learning rate | 1e-4 | 
+
+I have to remind myself to be patient...and that it is unlikely I'll
+see any results for quite a few epochs. I feel like I've been stopping
+some of these runs prematurely. 
+
+[2019-07-08 Mon 13:36]
+The digits seem extremely dim on the test ones I'm looking at
+now...Encoder loss hovers around 5-8.
+
+At epoch 8, the results are not particularly encouraging...
+
+[2019-07-08 Mon 13:52]
+After 10 epochs, everything's pretty much disappeared. I'm going to a
+try a learning rate of 1e-3 for the encoder and see what happens.
+
+| Encoder learning rate | 1e-3 | 
+| Decoder learning rate | 1e-4 | 
+
+This particular grid is not quite as distorted as the previous. We'll
+see how it goes. 
+
+[2019-07-08 Mon 14:17]
+The evolution seems unstable - I'm going to lower the rate back down
+to 1e-4. I can't help but think the success is guided by the specific
+random grid configuration...
+
+| Encoder learning rate | 1e-4 | 
+| Decoder learning rate | 1e-4 | 
+
+[2019-07-08 Mon 14:50]
+At Epoch 6 - the digits are extremely dim. I wonder if part of that is
+because of the random seed vector. I guess I'll find out when I decide
+to stop it. 
+
+Epoch 7 just came in - the digit forms are starting to look a bit
+better, but still nothing to write home about. Encoder loss is still
+hovering about the 4-6 range.
+
+I think I may try to lower both the gridSize and renderSize for the
+next runs. The time for an epoch being 5 minutes at the moment is a
+bit excessive...
+
+I'm going to stop it after 8 epochs. There is no noticable multimodal
+effect and the output is quite poor...
 
 * August 2019
 * September 2019
