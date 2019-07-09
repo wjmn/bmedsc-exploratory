@@ -7200,6 +7200,38 @@ Loss:
 
 [[./03-psychophysics/data/training-intermediate-data/training-graphs/2019-07-08_16-34_loss_PolarGrid_10-10_48-48.png]]
 
+** [2019-07-09 Tue]
+
+*** Trial 
+
+I'm going to run a trial today. 
+
+Checks
+- [ ] Chin rest
+- [ ] Display settings (100% brightness and 100% contrast) 
+- [ ] Explanatory statement and consent form
+  
+To explain, I'll do:
+
+#+BEGIN_SRC 
+python digits.py --grid cartesian --testing
+#+END_SRC
+
+I'm going to run the irregular grid I had some time prior:
+
+#+BEGIN_SRC 
+python digits.py --ncues 25 --ntrials 20 --grid .\data\training-intermediate-data\training-grids\2019-07-01_10-15_grid_DistortedPolarGrid_12-12_64-64.pkl --encoder .\data\training-intermediate-data\training-encoders\2019-07-01_10-15_encoder_DistortedPolarGrid_12-12_64-64.h5 --processor net
+#+END_SRC
+
+And for the brightness-based decoder:
+
+#+BEGIN_SRC 
+python digits.py --ncues 25 --ntrials 20 --grid .\data\training-intermediate-data\training-grids\2019-07-01_10-15_grid_DistortedPolarGrid_12-12_64-64.pkl
+#+END_SRC
+
+I'm doing 20 trials of 25 digits instead of 25 trials of 20 digits - I
+think it's easier to do it during a train. 
+
 
 * August 2019
 * September 2019
