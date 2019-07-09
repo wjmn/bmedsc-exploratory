@@ -7122,6 +7122,85 @@ bit excessive...
 I'm going to stop it after 8 epochs. There is no noticable multimodal
 effect and the output is quite poor...
 
+[2019-07-08 Mon 15:00]
+
+| Grid | Polar Regular Grid |
+| Vector size | 10 x 10 = 100 | 
+| Render size | 48 x 48 |
+| Encoder learning rate | 1e-4 | 
+| Decoder learning rate | 1e-4 | 
+
+This is running significantly faster (about 1.5 minutes per
+epoch). The output is likely to be poorer though...
+
+[2019-07-08 Mon 15:11]
+It's interesting - the encoder loss is hovering around 4-5 but the
+output is really poor, at least from what I can see. The decoder loss
+hovers around 0.5 to 1... 
+
+I've stopped it at epoch 12 - the outputs are poor, unfortunately. It
+didn't really seem to be changing beyond that. It seems the multimodal
+effect was sort of evident, but again only in brightness - I wonder if
+this is because of the fact that the output vector is linked in a
+rather complicated way to the output image via the renderer. 
+
+I'm just going to try this again, but remove the dense hidden layer in
+the encoder - so there will only be one dense layer involved i.e. the
+output layer. I think this will completely remove any multimodal
+effect beyond brightness because there won't be any capability for the
+network to abstract from the noise, but we'll see. 
+
+It seems to be evolving quite slowly - observationally, it seems that
+having more layers to the encoder increases how fast it trains. So
+having few layers causes the encoder to train very slowly.  I'm going
+to increase both the encoder and decoder learning rates to 1e-3. 
+
+[2019-07-08 Mon 15:32]
+
+| Encoder learning rate | 1e-3 | 
+| Decoder learning rate | 1e-3 | 
+
+At epoch 8 - results are poor, unfortunately.
+
+[2019-07-08 Mon 15:56]
+
+I'm going to try reducing the base size slightly to accommodate for
+the grid (by changing the =a= paramater for the size for grid
+generation). I think the grid at the moment is very blurry.
+
+I'm going to try something difference - readding back the two hidden
+layers and concatenating with the labels at each step.
+
+| Vector size | 10 x 10 = 100 | 
+| Render size | 48 x 48 |
+| Encoder learning rate | 1e-4 | 
+| Decoder learning rate | 1e-4 | 
+
+[2019-07-08 Mon 16:32]
+It took a while, but, for some digits, the output looks quite clean at
+epoch 21 (notably 2, 3, and 8). The other digits have recognisable
+forms but are fairly dim. I'll leave it running for longer and see how
+it fares. Decoder loss hovers around 1 and encoder loss hovers
+around 3. 
+
+I've stopped it around 22 epochs. Unfortunately, I don't see any
+multimodal effects. Perhaps that's an effect of propogating the
+conditional label in each layer. I'm going to remove that propogation
+(but keep the two hidden layers) and see how it goes). 
+
+[2019-07-09 Tue 10:20]
+The results aren't terribly good, but you can make out some of the
+digit forms. They seem very unstable. 
+
+Evolution:
+
+[[./03-psychophysics/data/training-intermediate-data/training-gifs/2019-07-08_16-34_evolution_PolarGrid_10-10_48-48.gif]]
+
+Loss:
+
+[[./03-psychophysics/data/training-intermediate-data/training-graphs/2019-07-08_16-34_loss_PolarGrid_10-10_48-48.png]]
+
+
 * August 2019
 * September 2019
 
