@@ -7202,14 +7202,15 @@ Loss:
 
 ** [2019-07-09 Tue]
 
-*** Trial 
+*** Trial Run 
 
 I'm going to run a trial today. 
 
 Checks
-- [ ] Chin rest
-- [ ] Display settings (100% brightness and 100% contrast) 
-- [ ] Explanatory statement and consent form
+- [X] Chin rest
+- [X] Display settings (100% brightness and 100% contrast) 
+- [X] Explanatory statement and consent form
+- [X] Test example using the cartesian grid (for few full runs)
   
 To explain, I'll do:
 
