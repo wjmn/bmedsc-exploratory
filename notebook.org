@@ -7233,6 +7233,40 @@ python digits.py --ncues 25 --ntrials 20 --grid .\data\training-intermediate-dat
 I'm doing 20 trials of 25 digits instead of 25 trials of 20 digits - I
 think it's easier to do it during a train. 
 
+*** Analysing the Trial Run
+
+I've just quickly done an individual analysis for the test run:
+
+Here are the plots:
+
+[[file:./03-psychophysics/data/archive/2019-07-09-mg-test-run-mean-accuracy.png]]
+
+[[file:./03-psychophysics/data/archive/2019-07-09-mg-test-run-mean-time.png]]
+
+[[file:./03-psychophysics/data/archive/2019-07-09-mg-test-confusion.png]]
+
+[[file:./03-psychophysics/data/archive/2019-07-09-mg-test-run-rolling.png]]
+
+Results aren't very encouraging, though I can understand why the net
+decoder might be so difficult. For reference, here are the images again:
+
+The net decoder:
+
+[[file:./03-psychophysics/data/archive/2019-07-01-generated-images-epoch-6-half-dropout.png]]
+
+The direct brightness comparison:
+
+[[file:./03-psychophysics/data/archive/2019-07-01-comparison-distorted.png]]
+
+Notably:
+
+1. There is a significant lack of contrast in the net decoder, which
+   at small sizes is not quite so visible, but when blown up on a
+   large screen, becomes quite off-putting. 
+2. The comparison/brightness-based digits are denser and have sharper
+   forms/edges. 
+
+
 
 * August 2019
 * September 2019
