@@ -7266,6 +7266,66 @@ Notably:
 2. The comparison/brightness-based digits are denser and have sharper
    forms/edges. 
 
+** [2019-07-10 Wed]
+
+*** Extra Run - 8x8 grid
+
+In the background, I am running an 8x8 grid (48x48 render size) with
+the seeded encoder and and the categorical decoder with learning rates
+of 1e-4 for both encoder and decoder and two hidden layers in the
+encoder. 
+
+*** Summary/Weekly Review
+
+This week, I have:
+
+1. Detached the network from the digit decoder for faster training 
+2. Changed the encoder architecture to allow a noise seed (currently
+   32 random float vector)
+3. Tested a conditioned binary-output decoder
+4. Added several normalisation and activation layers to the encoder
+   architecture
+5. Tested one of last week's grids + encoder in a psychophysics
+   session 
+
+Some observations:
+
+1. The categorical output decoder seems to fare better than the binary
+   output decoder. I suppose there is also a difference in what each
+   is trying to optimise /for/ - for example, the binary output
+   decoder is trying to optimise for indistinguishability between the
+   renders and the MNIST digits, but perhaps this goal isn't necessary
+   to optimise for. There is no real need for the digits to be
+   indistinguishable (and for some grids, this is impossible), so
+   perhaps the categorical output decoder more closely reflects the
+   actual desired goal. But following this logic, it would seem that
+   there shouldn't be an extra garbage class at all - but this stops
+   the digits from "improving" after a certain point. Difficult to
+   achieve a balance - how to define what the decoder would see as
+   "acceptable"/threshold? 
+2. At the moment, I have only tested grids in psychophysics which people
+   are able to get to >90% accuracy with - I need to test grids for
+   which this is not the case, so that there is actually a
+   justification for a different decoder. There is an obvious
+   solution - namely, the rescaling grid - as well as simply reducing
+   the resolution of the renders (so far, they have all been
+   144-phosphene grids). Need to be careful with dropping the render
+   resolution as this also changes the ability of the network to train
+   since the MNIST digits are fairly thin. I have implemented a few
+   mechanisms to try and counteract that, including dropout + blur to
+   emulate a phosphene-like appearance, but again there needs to be a
+   balance, otherwise the encoder will purposely optimise for a worse
+   appearance. 
+3. It's possible the MNIST dataset is not suitable for small grid
+   sizes, considering how thin the digits are. I think I should
+   experiment with further datasets, including a regular digit dataset
+   (of similar calibre to that which I am testing for the brightness
+   decoder).
+4. Contrast and brightness is an issue with the net decoder. I was
+   able to get multimodal brightness from the noise vector in one
+   experiment, which I think was an interesting feature to have
+   learned, but perhaps there needs to be some more specific tuning
+   for the loss function. 
 
 
 * August 2019
