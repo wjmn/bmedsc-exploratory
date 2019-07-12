@@ -7326,7 +7326,95 @@ Some observations:
    experiment, which I think was an interesting feature to have
    learned, but perhaps there needs to be some more specific tuning
    for the loss function. 
+   
 
+*** Reading
+
+I'm going to spend a bit of time reading today and consolidating my
+knowledge to think about how to approach this problem. 
+
+- GANs, early paper: https://arxiv.org/pdf/1406.2661.pdf
+  
+*** Binary Rendering
+
+I wonder what will hapen if I enforce a rounding step before the
+renders, so phosphenes can /only/ be on or off.
+
+I'm going to try it on an 8x8 polar regular grid at 1e-4 for both
+encoder and decoder.
+
+[2019-07-10 Wed 16:34]
+The 8x8 polar regular grid didn't perform well after 4 epochs (though
+I didn't think it would get any better - changes were highly
+incremental). I'm going to try the 12x12 grid with a 1e-3 learning
+rate for both encoder and decoder at a render size of 64x64.
+
+[2019-07-11 Thu 09:59]
+Unsuccessful - it changed very little during the entire period. 
+
+** [2019-07-11 Thu]
+
+*** Polar Rerun 
+
+I'm running the polar grid at the moment (10x10, 48x48 renders, 1e-3 ) for
+the meeting today Zongyuan. It seems that having two hidden layers is
+detrimental to the network performance (i.e. it appears that mode
+collapse is likely to occur between digits, though on a run with 1e-3
+as the learning rate for both encoder and decoder, the 0 and 2 at
+least were different and recognisable). 
+
+
+*** Note to self
+
+Paper to read regarding effect of distortion on object recognition: 
+https://onlinelibrary.wiley.com/doi/abs/10.1111/aor.12174
+
+** [2019-07-12 Fri]
+
+*** Meeting Notes and Discussion Points from ZYG Meet
+
+From discussion:
+
+1. Domain classification loss + real/fake binary loss as two separate
+   streams (referring to StarGAN https://arxiv.org/pdf/1711.09020.pdf)
+   -> I have previously done a domain classification loss + real/fake
+   loss as a single output (i.e. 10 classes + collected "garbage"
+   renders), but this technically has less output classes than a 10
+   class * binary output (i.e. 11 vs 20). Potentially could split off
+   the "garbage" into different levels of garbage (which might not
+   actually be garbage because the decoder is always just too good),
+   though I'm not sure about this quite yet. 
+
+2. Addressing mode collapse - potentially an issue with strong
+   training gradients, particularly at the start of training (so all
+   modes get led to a single mode early on, and once gradients reduce,
+   they travel in the same direction). Recommended WassersteinGAN
+   (https://arxiv.org/pdf/1701.07875.pdf) as a reference on the effect
+   of different probability distribution difference measures on the
+   training step, particularly in regard to gradients (and with
+   particular reference to Earth Mover's Distance). Training for what
+   I've tried so far happens pretty fast, so also mentioned possible
+   to need to tune hyperparameters. 
+
+3. Post-processing/hole-filling to compensate for renders being
+   imperfect. Ideally the post-processing/hole-filling step would be
+   comparable to inferences that people can make about edges in an
+   imperfect, holey image. It could be a GAN (e.g. CycleGAN
+   https://arxiv.org/pdf/1703.10593.pdf), but I imagine something less
+   sophisticated could do the job too. An easy training set is to
+   train against the MNIST digits with the holes + gaussian blur I've
+   put in vs the ground truth MNIST (i.e. going from "holes" to real
+   images), which could be applied on post-processing to the simulated
+   renders before giving it to the decoder. 
+
+4. Early stopping - probably not too big of a deal, just need to
+   monitor the GAN. There are some metrics which could probably do
+   this more quantitatively (e.g. when loss stops descending according
+   to some parameter).
+
+I spent some considerable time reading into the StarGAN paper and
+WassersteinGAN paper. It's very interesting to see how they've
+approached these problems.
 
 * August 2019
 * September 2019
