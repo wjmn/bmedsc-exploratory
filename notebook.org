@@ -6253,7 +6253,7 @@ way of reducing the mode collapse...
 
 
 * July 2019
- 
+  
 ** [2019-07-01 Mon]
    
 *** Polar Seeded Run
@@ -7415,6 +7415,80 @@ From discussion:
 I spent some considerable time reading into the StarGAN paper and
 WassersteinGAN paper. It's very interesting to see how they've
 approached these problems.
+
+** [2019-07-15 Mon]
+
+*** Hole-Filling Network
+
+I've tried to implement a hole-filling network based loosely on the
+CycleGAN architecture (https://arxiv.org/pdf/1703.10593.pdf), although
+without the cycle part as I don't yet think that's relevant for this
+particular problem (I think you could use the grid to do the
+translation bidirectionally, but I have to think about that more. If I
+did do that, I think it would be a bit too similar to masking...)
+
+Training is /very/ slow, at least compared to all the networks I've
+been training before. Probably because of all the layers I've put in
+the encoder (and the decoder too). I'm not sure all the layers are
+strictly necessary, but worth I try I think. 
+
+I would estimate it's taking about two to three times as long as prior
+training, which would make it about...20-30 minutes per epoch? :( 
+
+On the plus side (maybe?), from my shallow observations of the
+training losses, it does seem much more "push and pull" in that the
+encoder and decoder losses rise and fall more nicely (though that's
+obviously because now the encoder has full access to the image
+pixels). 
+
+[2019-07-15 Mon 11:50]
+First epoch is done...the forms look simultaneously gritty and vague,
+but they have discrete blob like shapes. 
+
+Although...I have actually just realised I did not incorporate any
+class requirements on this generative adversarial network i.e. that
+they should map to the same digit. Hm. 
+
+[2019-07-15 Mon 13:04]
+After 4 epochs...not too shabby for a completely naive first
+run. There are definitely digit forms appearing, and they don't always
+correspond to the digit that was the original (e.g. the 0 becomes a 6
+for a certain dropout) - which I think is actually /good/ because that
+simply means the dropout digit was a poor representation of the actual
+digit (at least, I am led to believe so). 
+
+Training does take 20 minutes per epoch though...which is a shame.
+
+[2019-07-15 Mon 13:14]
+...or, maybe scratch that thought. Epoch 5 looks cleaner, but the
+digits look much weirder. I would hazard to say that the
+transformation is doing a bit /too/ much (really, I just want it to
+connect the blobs into clean lines, not transform the whole thing). 
+
+Decoder loss hovers around 1.4ish and encoder loss hovers around
+0.6ish. I guess it's not terribly surprising given that the decoder is
+the sum of two binary cross entropies of the dataset (the real and the
+fake) whereas the encoder is only one.
+
+
+[2019-07-15 Mon 13:59]
+Epoch 7...it seems to be getting /worse/. That's very unfortunate. 
+
+[2019-07-15 Mon 14:22]
+I've stopped it at Epoch 8 because I think it's not changing much
+anymore - it appears quite stagnant. 
+
+Here's the loss curve, much more "adversarial" push and pull looking
+than previous loss curves. 
+
+[[file:./03-psychophysics/data/training-hole-filling/training-graphs/2019-07-15_11-16_loss_48_48.png]]
+
+And here's the training gif. 
+
+[[file:./03-psychophysics/data/training-hole-filling/training-gifs/2019-07-15_11-16_evolution_48_48.gif]]
+
+I think the appearance looks best at about epoch 4-5, after which it
+seems to get worse. 
 
 * August 2019
 * September 2019

@@ -32,6 +32,7 @@ nosave*
 virtualenv/
 
 03-psychophysics/data/training-intermediate-data/training-images/
+03-psychophysics/data/training-hole-filling/training-images/
 03-psychophysics/data/digit-models/
 
 #*
