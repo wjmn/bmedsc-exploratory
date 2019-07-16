@@ -7490,6 +7490,283 @@ And here's the training gif.
 I think the appearance looks best at about epoch 4-5, after which it
 seems to get worse. 
 
+I'm going to try and simplify the networks a bit which should 1)
+hopefully make the training quicker, and 2) might prevent the weird
+changes. I'm also going to reduce the epoch size by 3 times (to 10,000
+samples) so I can see the progression faster.  
+
+Just for reference, these are the models I just tried:
+
+#+BEGIN_SRC python
+def make_encoder():
+
+    # Input noise
+    in_image = Input(shape=(renderSize1, renderSize2))
+    
+    # Layers
+    l_image  = Reshape((renderSize1, renderSize2, 1))(in_image)
+    
+    l_image  = Conv2D(64, (7,7), strides=(1,1), padding='same')(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2D(128, (3,3), strides=(2,2), padding='same')(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)    
+
+    l_image  = Conv2D(256, (3,3), strides=(2,2), padding='same')(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2D(256, (3,3), strides=(1,1), padding='same')(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2D(256, (3,3), strides=(1,1), padding='same')(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2DTranspose(128, (3,3), strides=(2,2), padding='same')(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2DTranspose(64, (3,3), strides=(2,2), padding='same')(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2DTranspose(1, (3,3), strides=(1,1), padding='same', activation="tanh")(l_image)
+    l_image  = Reshape((renderSize1, renderSize2))(l_image)
+    
+    model    = Model([in_image], l_image)
+    
+    return model
+#+END_SRC
+
+#+BEGIN_SRC python
+def make_decoder():
+    
+    # Image input
+    in_image = Input(shape=(renderSize1, renderSize2))
+    l_image  = Reshape((renderSize1, renderSize2, 1))(in_image)
+    
+    # Convolution
+    l_image  = Conv2D(64, (4,4), padding='same', strides=(2,2))(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2D(128, (4,4), padding='same', strides=(2,2))(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2D(256, (4,4), padding='same', strides=(2,2))(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Flatten()(l_image)
+    l_image  = Dense(1, activation=tf.nn.sigmoid)(l_image)
+    
+    # Model 
+    model         = Model([in_image], l_image)
+    
+    return model    
+#+END_SRC
+
+Both the encoder and decoder had learning rates of 1e-4. 
+
+[2019-07-15 Mon 14:30]
+
+Here are the models I'm going to try next. I've removed two of the
+encoder layers and one of the decoder layers.
+
+#+BEGIN_SRC python
+def make_encoder():
+
+    # Input noise
+    in_image = Input(shape=(renderSize1, renderSize2))
+    
+    # Layers
+    l_image  = Reshape((renderSize1, renderSize2, 1))(in_image)
+    
+    l_image  = Conv2D(64, (7,7), strides=(1,1), padding='same')(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2D(128, (3,3), strides=(2,2), padding='same')(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)    
+
+    l_image  = Conv2D(256, (3,3), strides=(2,2), padding='same')(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2DTranspose(128, (3,3), strides=(2,2), padding='same')(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2DTranspose(64, (3,3), strides=(2,2), padding='same')(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2DTranspose(1, (3,3), strides=(1,1), padding='same', activation="tanh")(l_image)
+    l_image  = Reshape((renderSize1, renderSize2))(l_image)
+    
+    model    = Model([in_image], l_image)
+    
+    return model
+#+END_SRC
+
+#+BEGIN_SRC python
+def make_decoder():
+    
+    # Image input
+    in_image = Input(shape=(renderSize1, renderSize2))
+    l_image  = Reshape((renderSize1, renderSize2, 1))(in_image)
+    
+    # Convolution
+    l_image  = Conv2D(64, (4,4), padding='same', strides=(2,2))(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2D(128, (4,4), padding='same', strides=(2,2))(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Flatten()(l_image)
+    l_image  = Dense(1, activation=tf.nn.sigmoid)(l_image)
+    
+    # Model 
+    model         = Model([in_image], l_image)
+    
+    return model    
+#+END_SRC
+
+I have reduced the number of samples to 10,000 per epoch. I'll keep
+the learning rates at 1e-4. 
+
+[2019-07-15 Mon 14:59]
+
+Training time is shorter - about 5-6 minutes per epoch. Don't know
+about the results though.
+
+[2019-07-15 Mon 15:00]
+
+Epoch 5 - it's worse in comparison to the epoch 5 of last run, but
+then it hasn't run through a comparable amount of training images
+yet...Still, not sure if I should just stop this. The decoder and
+encoder are still going up and down, so maybe I'll keep it going. 
+
+[2019-07-15 Mon 15:26]
+
+It's bounding around a lot - each alternate epoch it is "bright" then
+"dark." I'm going to add back one of the convolutional layers to the
+encoder, then increase the amount of data per epoch to 20,000...Also
+changed the plotting, so it's in a strip of values rather than the 2x5
+grid (meaningless for this). 
+
+I think the next step to try after this is possibly the StarGAN
+approach or WGAN approach. 
+
+
+I'm not sure why the decoder seems to have a significantly poorer
+discrimination accuracy than before - it's getting about a 1.2ish to
+1.3ish consistently, which seems strange ( I would have thought the
+decoder would be much better at distinguishing real images from fake
+images...). 
+
+I wonder if potentially the activation function or learning rate could
+be better optimised, but I think I should just let GAN run for a while
+before jumping to any conclusions about what needs to be done.
+
+[2019-07-15 Mon 16:44]
+I'm going to run this overnight with all the data...I got rid of one
+of the downsampling convolution layers and replaced it with a stride1 layer.
+
+** [2019-07-17 Wed]
+
+*** Hole-Filling Progress
+
+With all the data, and the following architecture:
+
+#+BEGIN_SRC python
+def make_encoder():
+
+    # Input noise
+    in_image = Input(shape=(renderSize1, renderSize2))
+    
+    # Layers
+    l_image  = Reshape((renderSize1, renderSize2, 1))(in_image)
+    
+    l_image  = Conv2D(64, (7,7), strides=(1,1), padding='same')(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2D(128, (3,3), strides=(2,2), padding='same')(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)    
+
+    l_image  = Conv2D(256, (3,3), strides=(1,1), padding='same')(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2D(256, (3,3), strides=(1,1), padding='same')(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2DTranspose(64, (3,3), strides=(2,2), padding='same')(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2DTranspose(1, (3,3), strides=(1,1), padding='same', activation="tanh")(l_image)
+    l_image  = Reshape((renderSize1, renderSize2))(l_image)
+    
+    model    = Model([in_image], l_image)
+    
+    return model
+#+END_SRC
+
+#+BEGIN_SRC python
+def make_decoder():
+    
+    # Image input
+    in_image = Input(shape=(renderSize1, renderSize2))
+    l_image  = Reshape((renderSize1, renderSize2, 1))(in_image)
+    
+    # Convolution
+    l_image  = Conv2D(64, (4,4), padding='same', strides=(2,2))(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Conv2D(128, (4,4), padding='same', strides=(2,2))(l_image)
+    l_image  = BatchNormalization()(l_image)
+    l_image  = LeakyReLU()(l_image)
+    
+    l_image  = Flatten()(l_image)
+    l_image  = Dense(1, activation=tf.nn.sigmoid)(l_image)
+    
+    # Model 
+    model         = Model([in_image], l_image)
+    
+    return model    
+#+END_SRC
+
+It takes abou 50 minutes per epoch to run. 
+
+Here's the original MNIST digits:
+
+[[file:./03-psychophysics/data/archive/2019-07-17-mnist-original-digits.png]]
+
+And with dropout:
+
+[[file:./03-psychophysics/data/archive/2019-07-17-mnist-digits-with-dropout.png]]
+
+And at epoch 14:
+
+[[file:./03-psychophysics/data/archive/2019-07-16-mnist-epoch-14.png]]
+
+And at epoch 47:
+
+[[file:./03-psychophysics/data/archive/2019-07-17-mnist-epoch-47.png]]
+
 * August 2019
 * September 2019
 
