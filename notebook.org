@@ -7788,6 +7788,256 @@ And here's the training gif:
 
 *** Running with Hole-Filling and Double Decoder
 
+I'm going to try running this on Massive.
+
+I've cloned the repo into =fs11_scratch/jamin/bmedsc-exploratory=. I'm
+using light compute at the moment, though it's only going to give me
+four hours. 
+
+First I need to load the modules. Looks like I need to run this:
+
+#+BEGIN_SRC 
+module load anaconda/5.1.0-Python3.6-gcc5
+#+END_SRC
+
+I created a conda virtual environment.
+
+#+BEGIN_SRC 
+conda create --name bmedsc-exploratory
+#+END_SRC
+
+I installed =pip=
+
+#+BEGIN_SRC 
+conda install pip
+#+END_SRC
+
+=pip install requirements.txt= didn't work. So I might just try to do
+a minimal installation...
+
+I confirmed that pip was indeed using the =conda=-installed pip with
+=which pip=. 
+
+First, I ran:
+
+#+BEGIN_SRC 
+pip install tensorflow-gpu==2.0.0a0
+#+END_SRC
+
+I then ran:
+
+#+BEGIN_SRC 
+pip install opencv-python Pillow numpy pandas scipy matplotlib
+#+END_SRC
+
+Then
+
+#+BEGIN_SRC 
+pip install jupyter_contrib_nbextensions
+#+END_SRC
+
+#+BEGIN_SRC 
+jupyter contrib nbextension install --user
+#+END_SRC
+
+Then, because tensorflow wasn't found, 
+
+#+BEGIN_SRC 
+pip install tensorflow==2.0.0b1
+#+END_SRC
+
+It occured to me that I am maybe not using tensorflow-gpu...
+
+But it's still not working. It simply fails with =module tensorflow
+not found=  from the Jupyter notebook, and doing it from the shell
+shows a missing 
+
+#+BEGIN_SRC 
+ImportError: /lib64/libm.so.6: version `GLIBC_2.23' not found (required by /home/wjm07/.conda/envs/bmedsc-exploratory/lib/python3.7/site-packages/tensorflow/python/_pywrap_tensorflow_internal.so)
+#+END_SRC
+
+I'll try running this instead:
+
+#+BEGIN_SRC 
+pip install tensorflow-gpu==2.0.0-beta1
+#+END_SRC
+
+I also just decided to run 
+
+#+BEGIN_SRC 
+conda install jupyter
+#+END_SRC
+
+Just in case Jupyter wasn't actually running the activated environment...
+
+
+..It took a while. And unfortunately, I'm still getting the GLIBC_2.23
+not found error. 
+
+I'll just run it on the local machine here...
+
+So I've set it up. It's quite slow...I'm using 1e-4 for the learning
+rate for each.
+
+Here are the architectures for each:
+
+#+BEGIN_SRC python
+def make_encoder():
+
+    # Input noise
+    in_noise        = Input(shape=(SEED_SIZE,))
+    
+    # Layers for noise
+    l_noise         = Dense(gridVectorLength // 4)(in_noise)
+    l_noise         = BatchNormalization()(l_noise)
+    l_noise         = LeakyReLU()(l_noise)
+    
+    # Input labels
+    in_labels       = Input(shape=(1,))
+    
+    # Layers for labels
+    l_labels        = Embedding(10, gridVectorLength // 4)(in_labels)
+    l_labels        = Flatten()(l_labels)
+    l_labels        = BatchNormalization()(l_labels)
+    l_labels        = LeakyReLU()(l_labels)
+    
+    # Concatenate
+    concat          = Concatenate()([l_noise, l_labels])
+    concat          = Flatten()(concat)
+    concat          = Dense(gridVectorLength // 2)(concat)
+    concat          = LeakyReLU()(concat)
+    concat          = Dense(gridVectorLength, activation=tf.nn.sigmoid)(concat)
+    
+    # Model
+    model           = Model([in_noise, in_labels], concat)
+    
+    return model
+#+END_SRC
+
+#+BEGIN_SRC python
+def make_decoder():
+    
+    # Image input
+    in_images     = Input(shape=(renderSize1, renderSize2))
+    l_images      = Reshape((renderSize1, renderSize2, 1))(in_images)
+    
+    # Convolution
+    concat        = Conv2D(64, (8,8), padding='same', strides=(2,2))(l_images)
+    concat        = LeakyReLU()(concat)
+    concat        = Dropout(0.25)(concat)
+    
+    label_out     = Conv2D(128, (4,4), padding='same', strides=(2,2))(concat)
+    label_out     = LeakyReLU()(label_out)
+    label_out     = Dropout(0.25)(label_out)
+    label_out     = Flatten()(label_out)
+    label_out     = Dense(10, activation=tf.nn.softmax)(label_out)
+    
+    binary_out    = Conv2D(128, (4,4), padding='same', strides=(2,2))(concat)
+    binary_out    = LeakyReLU()(binary_out)
+    binary_out    = Dropout(0.25)(binary_out)
+    binary_out    = Flatten()(binary_out)
+    binary_out    = Dense(1, activation=tf.nn.sigmoid)(binary_out)
+    
+    # Model 
+    model         = Model(inputs=[in_images], outputs=[binary_out, label_out])
+    
+    return model    
+#+END_SRC
+
+The filler network is in between:
+
+#+BEGIN_SRC python
+@tf.function
+def train_step(real_images, real_labels):
+    
+    with tf.GradientTape() as enc_tape, tf.GradientTape() as dec_tape:
+        
+        # Generate the encoder inputs with a random seed
+        seeds, one_hot_labels = make_inputs(real_labels)
+        # one_hot_labels = make_inputs(real_labels)
+        
+        # Produce encodings from the encoder inputs
+        # encodings = encoder((one_hot_labels,), training=True)
+        encodings = encoder((seeds, real_labels), training=True)
+
+        # Render the encodings
+        encoded_renders = tf.map_fn(grid.render_tensor, encodings)
+        
+        # Fill holes in encoded renders
+        filled_renders = filler(encoded_renders)
+        
+        # Decode the rendered images
+        # decoded_fake = decoder((encoded_renders, one_hot_labels))
+        decoded_fake_binary, decoded_fake_one_hot = decoder((filled_renders,))
+        
+        # Decode the real images
+        # decoded_real = decoder((real_dropout, one_hot_labels))
+        decoded_real_binary, decoded_real_one_hot = decoder((real_images,))
+
+        # Calculate the losses for the encoder and decoder
+        enc_loss = encoder_loss(real_labels, decoded_fake_one_hot, decoded_fake_binary)
+        dec_loss = decoder_loss(real_labels, decoded_real_one_hot, decoded_real_binary, decoded_fake_binary)
+
+    # Output the losses to the log files
+    tf.print(enc_loss, output_stream=enc_logfile)
+    tf.print(dec_loss, output_stream=dec_logfile)
+    
+    # Calculate and apply the gradients to the encoder and decoder
+    gradients_of_encoder = enc_tape.gradient(enc_loss, encoder.trainable_variables)
+    gradients_of_decoder = dec_tape.gradient(dec_loss, decoder.trainable_variables)
+
+    encoder_optimizer.apply_gradients(zip(gradients_of_encoder, encoder.trainable_variables))
+    decoder_optimizer.apply_gradients(zip(gradients_of_decoder, decoder.trainable_variables))
+#+END_SRC
+
+Maybe I'm just impatient, but the encoder's been hovering around 18
+for a while. I'm going to up the learning rate I think. 
+
+I've upped the learning rate of the encoder to 5e-4 and keeping the
+decoder learning rate to 1e-4. I'm going to take out the hidden layer
+for the encoder too.
+
+[2019-07-17 Wed 14:37]
+The encoder also seems to hover around 16-17...
+
+I wonder if I should change less for this run - e.g. maybe keeping the
+loss the same?
+
+Though the loss does seem to gradually be decreasing, albeit at a low
+rate. 
+
+[2019-07-17 Wed 14:55]
+Loss has dropped down a little bit to 15-16. That's good!
+
+** [2019-07-18 Thu]
+
+*** Results...
+
+Results were not good. 
+
+The generated digits:
+
+[[file:./03-psychophysics/data/archive/2019-06-18-generated-digits-epoch-50-filled-first-attempt.png]]
+
+The filled digits:
+
+[[file:./03-psychophysics/data/archive/2019-06-18-generated-digits-with-fill-first-attempt.png]]
+
+And the loss curves:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-07-17_14-20_loss_DistortedPolarGrid_12-12_48-48.png]]
+
+The encoder loss just /wouldn't go down/ past 15. That's very
+frustrating, I'm not entirely sure why. Perhaps I shouldn't have tried
+to change so much in one go - i.e. I probably should have left the
+actual loss the same. 
+
+Maybe I should prioritise the "this is fake" decoding more?
+
+Interestingly, the decoder /can/ decode the digits from the filled
+render, and it knows all of them are fake. But they really should all
+be garbage. Maybe in this particular paradigm, I should not do the two
+branches separately - i.e. it shouldn't give a label to garbage!
 
 * August 2019
 * September 2019
