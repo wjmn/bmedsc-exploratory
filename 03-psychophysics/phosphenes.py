@@ -249,7 +249,7 @@ class PolarGrid(Grid):
     def make_grid(self):
         
         k = self.xdim / 2 + self.ydim / 2
-        a = e * (self.xdim + self.ydim) / 128
+        a = e * (self.xdim + self.ydim) / 64
         
         xys = [
             (0.5 + (ir / self.ndim1 * np.cos(self.iangle(itheta))) / 2,
@@ -279,7 +279,7 @@ class DistortedPolarGrid(PolarGrid):
     def make_grid(self):
         
         k = self.xdim / 2 + self.ydim / 2
-        a = e * (self.xdim + self.ydim) / 128
+        a = e * (self.xdim + self.ydim) / 64
         
         xys = [
             (0.5 + (ir / self.ndim1 * np.cos(self.iangle(itheta))) / 2,
@@ -347,7 +347,7 @@ class RescalingPolarGrid(PolarGrid):
     def make_grid(self):
         
         k = self.xdim / 2 + self.ydim / 2
-        a = e * (self.xdim + self.ydim) / 128
+        a = e * (self.xdim + self.ydim) / 64
         
         xys = [
             (0.5 + (ir / self.ndim1 * np.cos(self.iangle(itheta))) / 2,

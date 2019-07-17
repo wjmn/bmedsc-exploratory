@@ -7786,6 +7786,8 @@ And here's the training gif:
 
 [[file:./03-psychophysics/data/training-hole-filling/training-gifs/2019-07-15_16-47_evolution_48_48.gif]]
 
+*** Running with Hole-Filling and Double Decoder
+
 
 * August 2019
 * September 2019
