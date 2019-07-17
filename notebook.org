@@ -7767,6 +7767,26 @@ And at epoch 47:
 
 [[file:./03-psychophysics/data/archive/2019-07-17-mnist-epoch-47.png]]
 
+Just going to keep this running at epoch 50. 
+
+*** Once the Hole-Filling Completes...
+
+I will next try to run the hole-filling encoder as part of the
+training, and maybe also try the binary-fake and categorical decoders
+as separate decoders. 
+
+*** Hole-Filling Completed
+
+Here's the loss curve. I think this suggests that there encoder needs
+to be stopped earlier, but at least it's obvious now...
+
+[[file:./03-psychophysics/data/training-hole-filling/training-graphs/2019-07-15_16-47_loss_48_48.png]]
+
+And here's the training gif:
+
+[[file:./03-psychophysics/data/training-hole-filling/training-gifs/2019-07-15_16-47_evolution_48_48.gif]]
+
+
 * August 2019
 * September 2019
 
