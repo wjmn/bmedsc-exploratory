@@ -8039,6 +8039,108 @@ render, and it knows all of them are fake. But they really should all
 be garbage. Maybe in this particular paradigm, I should not do the two
 branches separately - i.e. it shouldn't give a label to garbage!
 
+*** New Run -> Back to the 11-class decoder
+
+I'm going to rerun this with the 11-class decoder. Learning rate of
+1e-4 for both encoder and decoder.
+
+[2019-07-18 Thu 12:01]
+Loss went up to 10 for the encoder, now is hovering around 8 after 4-5
+epochs. Decoder loss is below 1 (hovering around 0.2). 
+
+[2019-07-18 Thu 13:06]
+At 7 epochs...it's still hovering around 8. It's changing exceedingly
+slowly. I'm going to stop this run. Results are poor.
+
+*** Changes to =phosphenes.py=
+
+While the new run is running, I made a number of simplifications to
+=phosphenes.py= namely, making sure that the electrode sizes are tied
+to the location and changing "distorted" to "random" (which is what it
+is - a random map of phosphenes). 
+
+*** Running Hole-Filling Again
+
+I'm going to run the hole-filling again - this time, testing on
+"actual" grid renders (albeit for the polar grid). I can't justify
+training on the random/distorted grid because then it would literatlly
+just unmask the image (which begs the question, why not just generate
+MNIST digits and then mask them for testing? because the decoder can
+learn a level of inference beyond what a human can learn. Maybe). 
+
+I'll only go for 20 epochs this time. 
+
+(In hindsight, perhaps it would be better to do multiple random
+grids - for example, using just the polar grid might not cover the
+(constant) holes in where the grid does not reach.
+
+So I've done that - each /batch/ makes a new grid. I've also reduced the
+number of encoder kernels (from 64 to 48, from 128 to 96 and from 256
+to 128 at each layer) which will hopefully make both training and
+forward passes faster. 
+
+[2019-07-19 Fri 09:54]
+
+After 20 epochs, it happened to end on a poor image. It's /just/ at
+the crossroads where decoder loss has now gone below encoder loss. I'm
+going to train for 20 more epochs and keep a close eye on it and maybe
+stop it earlier. 
+
+*** Using Massive
+
+It's clear I'm not going to be able to use Massive without changing to
+the tensorflow 1.14 API. I'm going to do a bit of reorganisation.
+
+** [2019-07-19 Fri]
+
+*** CUDA Version Issues
+
+I just tried to run something with tensorflow on Massive. I got this
+error:
+
+#+BEGIN_SRC 
+cudaGetDevice() failed. Status: CUDA driver version is insufficient for CUDA runtime version
+#+END_SRC
+
+This is very frustrating. Granted, I'm not using the Massive "module"
+version of tensorflow. Maybe I should try that...
+
+I might have to use an even earlier version of tensorflow - it looks
+like they have support for 1.12.0...
+
+Couldn't install 1.12.0.
+
+Here's what I'm going to do - instead of using conda, I'm just going
+to use the tensorflow module. 
+
+#+BEGIN_SRC 
+module load  tensorflow/1.12.0-python3.6-gcc5
+#+END_SRC
+
+Then, I've installed a few packages via pip.
+
+#+BEGIN_SRC 
+pip install --user opencv-python pillow scikit-image ipykernel
+#+END_SRC
+
+I can't seem to get Jupyter notebook working, but fine, that's
+alright. Working from the console seems fine.
+
+*** Hole-Filling (Second Time)
+
+I stopped it after 5 additional epochs (so it's had 25 epochs). 
+
+Evolution:
+
+[[file:./03-psychophysics/data/training-hole-filling/training-gifs/2019-07-18_13-57_evolution_48_48.gif]]
+
+Loss curve:
+
+[[file:./03-psychophysics/data/training-hole-filling/training-graphs/2019-07-18_13-57_loss_48_48.png]]
+
+I wonder if the learning rate (1e-4 for both encoder and decoder) was
+still too high for this?.
+
 * August 2019
 * September 2019
 
