@@ -43,6 +43,7 @@ class AbstractGrid:
     """
 
     def render_square(
+            self,
             x : float,
             y : float,
             x_render : int,
@@ -57,14 +58,14 @@ class AbstractGrid:
 
         xmin, xmax = safebound(
             value = x * x_render,
-            width = xsize,
+            width = x_size,
             lower = 0,
             upper = x_render
         )
 
         ymin, ymax = safebound(
             value = y * y_render,
-            width = ysize,
+            width = y_size,
             lower = 0,
             upper = y_render
         )
@@ -76,6 +77,7 @@ class AbstractGrid:
         return base       
 
     def render_phosphene(
+            self,
             x : float,
             y : float,
             x_render: int,
@@ -96,15 +98,15 @@ class AbstractGrid:
         )
        
         blurred = gaussian_filter(
-            input = base,
-            sigma = (self.xsize * self.ysize) ** 0.5,
+            input = square,
+            sigma = (x_size * y_size) ** 0.5,
             mode = 'constant'
         )
 
         blurred_max = blurred.max()
         
         if blurred_max > 0:
-            scaling = self.strength / blurred_max
+            scaling = strength / blurred_max
         else:
             scaling = 1
         
@@ -115,17 +117,17 @@ class AbstractGrid:
         else: 
             return blurred
 
-    def render_volume(self) -> np.ndarray:
+    def render_volume(self, x_render : int, y_render : int) -> np.ndarray:
         
         volume = np.array([
-                render_phosphene(
-                    x = x / x_render,
-                    y = y / y_render,
+                self.render_phosphene(
+                    x = x,
+                    y = y,
                     x_render = x_render,
                     y_render = y_render,
-                    x_size = (x_render // x_phosphenes) // 2,
-                    y_size = (y_render // y_phosphenes) // 2,
-                    strength = 1,
+                    x_size = x_size,
+                    y_size = y_size,
+                    strength = strength,
                 )
                 for (
                     (x, y),
@@ -142,7 +144,7 @@ class AbstractGrid:
  
     
 
-class Cartesian(AbstractGrid):
+class CartesianGrid(AbstractGrid):
     """ 
     Create a Cartesian grid of phosphenes of REGULAR size.
     """
@@ -155,7 +157,7 @@ class Cartesian(AbstractGrid):
             y_render : int,
             half : bool = False,
             random : bool = False
-    ) -> Cartesian:
+    ):
 
         """
         Args:
@@ -169,13 +171,13 @@ class Cartesian(AbstractGrid):
 
         if random:
             self.locations = np.random.rand(
-                x_phosphenes,
-                y_phosphenes
+                x_phosphenes * y_phosphenes,
+                2,
             )
         else:
             self.locations = np.array([
-                (x / x_render,
-                 y / y_render)
+                (x / (x_phosphenes - 1),
+                 y / (y_phosphenes - 1))
                 for x in range(x_phosphenes)
                 for y in range(y_phosphenes)
             ])
@@ -196,10 +198,13 @@ class Cartesian(AbstractGrid):
             for y in range(y_phosphenes)
         ])
 
-        self.volume = render_volume()
+        self.volume = self.render_volume(
+            x_render,
+            y_render,
+        )
             
 
-class Polar(AbstractGrid):
+class PolarGrid(AbstractGrid):
     """
     Create a Polar grid of phosphenes, with size determined by location.
     """
@@ -212,7 +217,7 @@ class Polar(AbstractGrid):
             y_render : int,
             half : bool = False,
             random : bool = False,
-    ) -> Polar:
+    ):
         
         """
         Args
@@ -227,19 +232,18 @@ class Polar(AbstractGrid):
         if random:
             # Purely random, same as the random locations for cartesian phosphenes.
             self.locations = np.random.rand(
-                n_theta,
-                n_radius
+                n_theta * n_radius,
+                2
             )
             if half:
                 self.locations[:, 0] = self.locations[:, 0] + 1 / 2
         else:
-            if half:
-                 self.locations = np.array([
-                    (0.5 + (i_radius / y_render * np.cos(self.i_angle(i_theta, n_theta, half))) / 2,
-                     0.5 + (i_radius / y_render * np.sin(self.i_angle(i_theta, n_theta, half))) / 2,)
-                    for i_radius in range(1, self.n_radius + 1)
-                    for i_theta in range(self.n_theta )
-                ])
+            self.locations = np.array([
+                (0.5 + (i_radius / n_radius * np.cos(self.i_angle(i_theta, n_theta, half))) / 2,
+                 0.5 + (i_radius / n_radius * np.sin(self.i_angle(i_theta, n_theta, half))) / 2,)
+                for i_radius in range(1, n_radius + 1)
+                for i_theta in range(n_theta)
+            ])
 
         k = x_render / 2 + y_render / 2
         a = e * (x_render + y_render) / 128
@@ -252,21 +256,25 @@ class Polar(AbstractGrid):
 
         self.strengths = np.array([
             1
-            for x in range(x_phosphenes)
-            for y in range(y_phosphenes)
+            for _ in range(n_theta)
+            for _ in range(n_radius)
         ])
 
-        self.volume = self.render_volume()
+        self.volume = self.render_volume(
+            x_render,
+            y_render,
+        )
 
-    def i_angle(i_theta, n_theta, half=False):
+    def i_angle(self, i_theta, n_theta, half=False):
         """
         Calculates the angle for angle of index i in range n
         """
+        
+        if half:
+            angle = (np.pi / (n_theta - 1) * i_theta) - (np.pi / 2)
 
-        angle = (np.pi / (n_theta - 1) * i_theta) - (np.pi / 2)
-
-        if not half:
-            angle = 2 * angle
+        else:
+            angle = 2 * np.pi / n_theta * i_theta
 
         return angle
         
