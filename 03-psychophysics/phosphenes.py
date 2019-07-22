@@ -333,7 +333,7 @@ class Stimulus:
         self.image = self.getImage()
         
         self.grid = grid
-        self.sampleWidth = 2
+        self.sampleWidth = 4
         
         self.vector = self.process()
             

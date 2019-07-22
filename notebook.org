@@ -8246,7 +8246,43 @@ doing this.
 *** Running on Regular Polar Grid
 
 I'm going to run the exact same experiment (though with one hidden
-layer 
+layer) for the regular polar grid while I do my reading. 
+
+Yan's suggested to increase the luminence of the final renders to
+check. I think I will do that. 
+
+[2019-07-22 Mon 14:37]
+
+I stopped it at epoch 15. 
+
+Here are some comparisons:
+
+Renders at epoch 15:
+
+[[file:./03-psychophysics/data/archive/2019-07-22-polar-regular-renders-epoch-15.png]]
+
+
+With hole-filling:
+
+[[file:./03-psychophysics/data/archive/2019-07-22-polar-regular-renders-epoch-15-filled.png]]
+
+With binarised-values for clarity, with a threshold of 0.12 (chosen
+manually):
+
+[[file:./03-psychophysics/data/archive/2019-07-22-polar-regular-renders-epoch-15-binarised-values.png]]
+
+(It looks like I really need to incentivise the network to produce
+binarised values at the end...)
+
+The binarisation exposes that there are multiple modes produced (at
+least for this run), but these do appear only to determine which
+phosphenes in the form are lit (not the actual form itself):
+
+[[file:./03-psychophysics/data/archive/2019-07-22-polar-regular-renders-epoch-15-modes-4.png]]
+
+And the loss curve (maybe i should have let it train more..)
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-07-22_11-42_loss_PolarGrid_8-8_48-48.png]]
 
 * August 2019
 * September 2019
