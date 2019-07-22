@@ -8120,11 +8120,21 @@ module load  tensorflow/1.12.0-python3.6-gcc5
 Then, I've installed a few packages via pip.
 
 #+BEGIN_SRC 
-pip install --user opencv-python pillow scikit-image ipykernel
+pip install --user opencv-python pillow scikit-image ipykernel jupyter jupyterlab
 #+END_SRC
 
 I can't seem to get Jupyter notebook working, but fine, that's
 alright. Working from the console seems fine.
+
+[2019-07-19 Fri 13:15]
+
+Actually, I can get Jupyter to work with tensorflow fine - just need
+to make sure to use the one I installed with =pip= since it's not on
+my path i.e. 
+
+#+BEGIN_SRC 
+~/.lib/bin/jupyter 
+#+END_SRC
 
 *** Hole-Filling (Second Time)
 
@@ -8140,6 +8150,103 @@ Loss curve:
 
 I wonder if the learning rate (1e-4 for both encoder and decoder) was
 still too high for this?.
+
+*** Run with New Hole-Filler
+
+I'm going to try a run with the new hole-filler which is specifically
+for 8x8 phosphenes on a 48x48 grid. 
+
+I'm doing a new CGAN run with this new hole filler. 
+
+#+BEGIN_SRC python
+def make_encoder():
+
+    # Input noise
+    in_noise        = Input(shape=(SEED_SIZE,))
+    
+    # Layers for noise
+    l_noise         = Dense(gridVectorLength // 4)(in_noise)
+    l_noise         = BatchNormalization()(l_noise)
+    l_noise         = LeakyReLU()(l_noise)
+    
+    # Input labels
+    in_labels       = Input(shape=(1,))
+    
+    # Layers for labels
+    l_labels        = Embedding(10, gridVectorLength // 4)(in_labels)
+    l_labels        = Flatten()(l_labels)
+    l_labels        = BatchNormalization()(l_labels)
+    l_labels        = LeakyReLU()(l_labels)
+    
+    # Concatenate
+    concat          = Concatenate()([l_noise, l_labels])
+    concat          = Flatten()(concat)
+    concat          = Dense(gridVectorLength, activation=tf.nn.sigmoid)(concat)
+    
+    # Model
+    model           = Model([in_noise, in_labels], concat)
+    
+    return model
+#+END_SRC
+
+#+BEGIN_SRC python
+def make_decoder():
+    
+    # Image input
+    in_images     = Input(shape=(renderSize1, renderSize2))
+    l_images      = Reshape((renderSize1, renderSize2, 1))(in_images)
+    
+    # Convolution
+    concat        = Conv2D(64, (8,8), padding='same', strides=(2,2))(l_images)
+    concat        = LeakyReLU()(concat)
+    concat        = Dropout(0.25)(concat)
+    
+    label_out     = Conv2D(128, (4,4), padding='same', strides=(2,2))(concat)
+    label_out     = LeakyReLU()(label_out)
+    label_out     = Dropout(0.25)(label_out)
+    label_out     = Flatten()(label_out)
+    label_out     = Dense(11, activation=tf.nn.softmax)(label_out)
+    
+    # Model 
+    model         = Model(inputs=[in_images], outputs=label_out)
+    
+    return model    
+#+END_SRC
+
+[2019-07-22 Mon 09:27]
+
+Results weren't very good, but they were improving. It sort of seems
+like running for a few more epochs might be beneficial. 
+
+[2019-07-22 Mon 11:16]
+
+Stopping at 59 epochs. Results aren't good, they're not bright
+enough. The forms...it's hard to tell when they're not bright enough. 
+
+Training gif:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-07-19_12-46_evolution_RandomPolarGrid_8-8_48-48.gif]]
+
+Loss graph:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-07-19_12-46_loss_RandomPolarGrid_8-8_48-48.png]]
+
+Here's the hole-filled final renders of each digit:
+
+[[file:./03-psychophysics/data/archive/2019-07-22-hole-filled-59-epochs.png]]
+
+There weren't any additional modes. 
+
+I'm going to do some more reading I think. I may explicitly need to
+incentivise contrast, but my past experiments were not very good at
+doing this. 
+
+** [2019-07-22 Mon]
+
+*** Running on Regular Polar Grid
+
+I'm going to run the exact same experiment (though with one hidden
+layer 
 
 * August 2019
 * September 2019
