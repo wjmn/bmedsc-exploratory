@@ -8381,11 +8381,87 @@ which does nothing!) that could be removed.
 
 I just wish these would be brighter...
 
+**[2019-07-23 Tue]
+    
+*** Run without noise seed and brightness incentive
+
 I will try removing the noise vector seed entirely, and putting an
 incentive for the phosphene values to be either 0 or 1. I'll also use
-a different random polar grid. 
+a different random polar grid. I'll also increase the learning rate to
+1e-3 for the encoder and decoder.
 
-*** [2019-07-23 Tue]
+#+BEGIN_SRC python
+def make_encoder():
+
+   # Input labels
+    in_labels       = Input(shape=(1,))
+    
+    # Layers for labels
+    l_labels        = Embedding(10, gridVectorLength // 4)(in_labels)
+    l_labels        = Flatten()(l_labels)
+    l_labels        = BatchNormalization()(l_labels)
+    l_labels        = LeakyReLU()(l_labels)
+    concat          = Dense(gridVectorLength, activation=tf.nn.sigmoid)(l_labels)
+    
+    # Model
+    model           = Model([in_labels], concat)
+    
+    return model
+#+END_SRC
+
+I've redefined the loss of the encoder to
+
+#+BEGIN_SRC python
+def encoder_loss(real_labels, decoded_one_hot, renders):
+    
+    real_one_hot = tf.one_hot(real_labels, depth=11)
+    label_loss = categorical_cross_entropy(real_one_hot, decoded_one_hot)
+    
+    brightness_loss = tf.reduce_sum(tf.math.cos(tf.constant(np.pi / 2) * renders))
+    
+    return label_loss + (brightness_loss / (renderSize1 * renderSize2 * 100))
+#+END_SRC
+
+
+[2019-07-23 Tue 11:59]
+
+1e-3 bounces around a lot. I'm going to try 1e-4 instead.
+
+[2019-07-23 Tue 13:08]
+
+1e-4 is /extremely/ slow (epoch 5 and no difference really)...I'll try
+1e-4 for the decoder and 1e-3 for the encoder.
+
+** [2019-07-25 Thu]
+
+*** Non-multimodal run (one-to-one label)
+
+Here are the results of the 1-1 run over 50 epochs: 
+
+[[file:./03-psychophysics/data/archive/2019-07-25-epoch-50-random-non-multimodal.png]]
+
+Hole filled:
+
+[[file:./03-psychophysics/data/archive/2019-07-25-epoch-50-random-non-multimodal-hole-filled.png]]
+
+Brightened at manual threshold of 0.124:
+
+[[file:./03-psychophysics/data/archive/2019-07-25-epoch-50-random-non-multimodal-brightened.png]]
+
+For comparison, here are the directly processed digits:
+
+[[file:./03-psychophysics/data/archive/2019-07-25-random-non-multimodal-comparison.png]]
+
+Loss curves:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-07-23_10-22_loss_RandomPolarGrid_8-8_48-48.png]]
+
+It seems the digit forms are more stable than before at the very
+least. It definitely seems like the output is somewhat "cleaner", but
+I wonder why it's not trying to brighten the pixels. I didn't make the
+contribution of the cosine function particularly large, though I don't
+know if making it larger would necessarily help. 
+
 
 * August 2019
 * September 2019
