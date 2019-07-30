@@ -8463,6 +8463,22 @@ contribution of the cosine function particularly large, though I don't
 know if making it larger would necessarily help. 
 
 
+*** MASSIVE
+
+Useful commands:
+
+- =scancel=
+- =show_job=
+- =smux new-session=, and =smux a= to attach or Ctrl-b d to detach
+- =squeue= with =grep=
+- =module load tensorflow/2.0.0-beta1=
+
+** [2019-07-30 Tue]
+
+*** Modifications for Massive
+
+I made a few modifications to the script for massive and saved it in 04-gan.
+
 * August 2019
 * September 2019
 
