@@ -292,12 +292,12 @@ def render(grid : AbstractGrid, values : np.ndarray) -> np.ndarray:
 def render_tensor(grid : AbstractGrid, values : tf.Tensor) -> np.ndarray:
 
     # Preprocessing
-    tiled = tf.tile(values, tf.constant([grid.volume.shape[1]]))
+    tiled = tf.tile(values, [grid.volume.shape[1]])
     reshaped = tf.reshape(tiled, (grid.volume.shape[1], len(grid.locations), 1))
     transposed = tf.transpose(reshaped, perm=[1, 0, 2])
 
     # Multiply the values with the renders and sum
-    product = transposed * tf.constant(grid.volume)
+    product = transposed * grid.volume
     summed = tf.reduce_sum(product, axis=0)
 
     # Clip, then scale by -1 and 1

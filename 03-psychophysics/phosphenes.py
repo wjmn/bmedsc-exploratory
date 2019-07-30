@@ -36,8 +36,6 @@ class Electrode:
     def __init__(self,
                  x: float,
                  y: float,
-                 xsize: float,
-                 ysize: float,
                  strength: float,
                  xdim: int,
                  ydim: int):
@@ -45,19 +43,21 @@ class Electrode:
         Args:
             x: float         - position in range [0, 1]. 
             y: float         - position in range [0, 1]
-            xsize: int       - x size of the electrode (in units of output image)
-            ysize: int       - y size of the electrode (in units of output image)
             strength: float  - relative brightness of the electrode in range [0, 1]
             xdim: int        - x dim of the output image
             ydim: int        - y dim of the output image 
         """
         self.x = x
         self.y = y
+        self.strength = strength
         self.xdim = xdim
         self.ydim = ydim
-        self.xsize = xsize
-        self.ysize = ysize
-        self.strength = strength
+        
+        k = self.xdim / 2 + self.ydim / 2
+        a = e * (self.xdim + self.ydim) / 128
+        
+        self.xsize = np.log(k * ((x-0.5)**2 + (y-0.5)**2) + a)
+        self.ysize = np.log(k * ((x-0.5)**2 + (y-0.5)**2) + a)
 
         self.rendered = self.render()
         
@@ -93,32 +93,19 @@ class Electrode:
         else: 
             return blurred
 
-class DistortedElectrode(Electrode):
+class RandomElectrode(Electrode):
     """
     This class introduced random distortions to the rendered phosphene.
     """
     def __init__(self,
-                 x: float,
-                 y: float,
-                 xsize: float,
-                 ysize: float,
                  xdim: int,
                  ydim: int):
         
-        # x = bound(self.randomise(x), 0, 1)
         x = (random.random() + 1) / 2 # for hemisphere
-        # y = bound(self.randomise(y), 0, 1)
         y = random.random()
-        xsize = max(0, int(self.randomise(xsize)))
-        ysize = max(0, int(self.randomise(ysize)))
-        #strength = random.random() #** 10
         strength = 1
         
-        Electrode.__init__(self, x, y, xsize, ysize, strength, xdim, ydim)
-        
-    def randomise(self, value):
-        randomised = value * (random.random() * 2)
-        return randomised
+        Electrode.__init__(self, x, y, strength, xdim, ydim)
 
 # Grids, which are composed of electrodes.
 
@@ -188,7 +175,7 @@ class Grid(ABC):
 
 class CartesianGrid(Grid):
     """
-    A regular grid of electrodes with even spacing and even size. 
+    A regular grid of electrodes with even spacin.
     """
     def __init__(self,
                  nxelectrode: int,
@@ -209,8 +196,6 @@ class CartesianGrid(Grid):
         grid = [
             Electrode(x = x / self.ndim1,
                       y = y / self.ndim2,
-                      xsize = np.sqrt(self.xdim // self.ndim1),
-                      ysize = np.sqrt(self.ydim // self.ndim2),
                       strength = 1,
                       xdim = self.xdim,
                       ydim = self.ydim)
@@ -248,9 +233,6 @@ class PolarGrid(Grid):
         
     def make_grid(self):
         
-        k = self.xdim / 2 + self.ydim / 2
-        a = e * (self.xdim + self.ydim) / 128
-        
         xys = [
             (0.5 + (ir / self.ndim1 * np.cos(self.iangle(itheta))) / 2,
              0.5 + (ir / self.ndim1 * np.sin(self.iangle(itheta))) / 2,)
@@ -261,8 +243,6 @@ class PolarGrid(Grid):
         grid = [
             Electrode(x = x,
                       y = y,
-                      xsize = np.log(k * ((x-0.5)**2 + (y-0.5)**2) + a),
-                      ysize = np.log(k * ((x-0.5)**2 + (y-0.5)**2) + a),
                       strength = 1,
                       xdim = self.xdim,
                       ydim = self.ydim)
@@ -271,103 +251,28 @@ class PolarGrid(Grid):
         
         return grid
     
-class DistortedPolarGrid(PolarGrid):
+class RandomPolarGrid(PolarGrid):
     """
-    A polar grid with distorted electrodes.
+    A polar grid with random electrodes.
     """
         
     def make_grid(self):
-        
-        k = self.xdim / 2 + self.ydim / 2
-        a = e * (self.xdim + self.ydim) / 128
-        
-        xys = [
-            (0.5 + (ir / self.ndim1 * np.cos(self.iangle(itheta))) / 2,
-             0.5 + (ir / self.ndim1 * np.sin(self.iangle(itheta))) / 2,)
-            for ir in range(1, self.ndim1 + 1)
-            for itheta in range(self.ndim2)
-        ]
-        
+
         grid = [
-            DistortedElectrode(x = x,
-                               y = y,
-                               xsize = np.log(k * ((x-0.5)**2 + (y-0.5)**2) + a),
-                               ysize = np.log(k * ((x-0.5)**2 + (y-0.5)**2) + a),
-                               xdim = self.xdim,
-                               ydim = self.ydim)
-            for (x, y) in xys
+            RandomElectrode(xdim = self.xdim,
+                            ydim = self.ydim)
+            for _ in range(self.ndim1)
+            for _ in range(self.ndim2)
         ]
         
         return grid
     
-class RescalingDistortedPolarGrid(DistortedPolarGrid):
+class RescalingRandomPolarGrid(RandomPolarGrid):
     """
-    A polar grid with distorted electrodes and non-summative rendering
+    A polar grid with random electrodes and non-summative rendering
     (rendering rescales the brightness to max). 
     """
     
-    def render(self, values):
-        
-        # Multiply the values with the renders and sum
-        product = values.reshape(self.vector_size, 1, 1) * self.prerendered
-        summed = sum(product)
-        summax = np.max(summed)
-
-        # Rescale
-        scaled = (summed / summax )
-        
-        # Clip below 0.5, then scale between -1 and 1
-        clipped = np.clip(scaled, 0.5, 1) * 4 - 3 
-        
-        return clipped
-    
-    def render_tensor(self, tensor):
-        
-        # Preprocessing
-        tiled = tf.tile(tensor, tf.constant([self.xdim]))
-        reshaped = tf.reshape(tiled, (self.xdim, self.vector_size, 1))
-        transposed = tf.transpose(reshaped, perm=[1, 0, 2])
-        
-        # Multiply the values with the renders and sum
-        product = transposed * self.prerendered_tensor
-        summed = tf.reduce_sum(product, axis=0)
-        summax = tf.reduce_max(summed)
-        
-        # Rescale
-        scaled = tf.divide(summed, summax ) 
-        
-        # Clip below 0.5, then scale between -1 and 1
-        clipped = tf.clip_by_value(scaled, 0.5, 1) * 4 - 3
-        
-        return clipped
-    
-class RescalingPolarGrid(PolarGrid):
-    """ A polar grid with non-summative rendering."""
-    
-    def make_grid(self):
-        
-        k = self.xdim / 2 + self.ydim / 2
-        a = e * (self.xdim + self.ydim) / 128
-        
-        xys = [
-            (0.5 + (ir / self.ndim1 * np.cos(self.iangle(itheta))) / 2,
-             0.5 + (ir / self.ndim1 * np.sin(self.iangle(itheta))) / 2,)
-            for ir in range(1, self.ndim1 + 1)
-            for itheta in range(self.ndim2)
-        ]
-        
-        grid = [
-            Electrode(x = x,
-                      y = y,
-                      xsize = np.log(k * ((x-0.5)**2 + (y-0.5)**2) + a),
-                      ysize = np.log(k * ((x-0.5)**2 + (y-0.5)**2) + a),
-                      strength = random.random(),
-                      xdim = self.xdim,
-                      ydim = self.ydim)
-            for (x, y) in xys
-        ]
-        
-        return grid    
     def render(self, values):
         
         # Multiply the values with the renders and sum
@@ -416,7 +321,8 @@ class Stimulus:
             self.original = image
             
         # Normalise between -1 and 1 for an RGB255 image
-        self.original = (self.original / 127.5) - 1
+        if np.max(self.original) > 1: 
+            self.original = (self.original / 127.5) - 1
         
         self.padder = np.zeros((3 * self.shape[0], 3 * self.shape[1], self.shape[2])) - 1
         self.padder[self.shape[0]:2*self.shape[0], self.shape[1]:2*self.shape[1], :] = self.original
@@ -427,7 +333,7 @@ class Stimulus:
         self.image = self.getImage()
         
         self.grid = grid
-        self.sampleWidth = 6
+        self.sampleWidth = 4
         
         self.vector = self.process()
             

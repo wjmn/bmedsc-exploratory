@@ -8039,6 +8039,446 @@ render, and it knows all of them are fake. But they really should all
 be garbage. Maybe in this particular paradigm, I should not do the two
 branches separately - i.e. it shouldn't give a label to garbage!
 
+*** New Run -> Back to the 11-class decoder
+
+I'm going to rerun this with the 11-class decoder. Learning rate of
+1e-4 for both encoder and decoder.
+
+[2019-07-18 Thu 12:01]
+Loss went up to 10 for the encoder, now is hovering around 8 after 4-5
+epochs. Decoder loss is below 1 (hovering around 0.2). 
+
+[2019-07-18 Thu 13:06]
+At 7 epochs...it's still hovering around 8. It's changing exceedingly
+slowly. I'm going to stop this run. Results are poor.
+
+*** Changes to =phosphenes.py=
+
+While the new run is running, I made a number of simplifications to
+=phosphenes.py= namely, making sure that the electrode sizes are tied
+to the location and changing "distorted" to "random" (which is what it
+is - a random map of phosphenes). 
+
+*** Running Hole-Filling Again
+
+I'm going to run the hole-filling again - this time, testing on
+"actual" grid renders (albeit for the polar grid). I can't justify
+training on the random/distorted grid because then it would literatlly
+just unmask the image (which begs the question, why not just generate
+MNIST digits and then mask them for testing? because the decoder can
+learn a level of inference beyond what a human can learn. Maybe). 
+
+I'll only go for 20 epochs this time. 
+
+(In hindsight, perhaps it would be better to do multiple random
+grids - for example, using just the polar grid might not cover the
+(constant) holes in where the grid does not reach.
+
+So I've done that - each /batch/ makes a new grid. I've also reduced the
+number of encoder kernels (from 64 to 48, from 128 to 96 and from 256
+to 128 at each layer) which will hopefully make both training and
+forward passes faster. 
+
+[2019-07-19 Fri 09:54]
+
+After 20 epochs, it happened to end on a poor image. It's /just/ at
+the crossroads where decoder loss has now gone below encoder loss. I'm
+going to train for 20 more epochs and keep a close eye on it and maybe
+stop it earlier. 
+
+*** Using Massive
+
+It's clear I'm not going to be able to use Massive without changing to
+the tensorflow 1.14 API. I'm going to do a bit of reorganisation.
+
+** [2019-07-19 Fri]
+
+*** CUDA Version Issues
+
+I just tried to run something with tensorflow on Massive. I got this
+error:
+
+#+BEGIN_SRC 
+cudaGetDevice() failed. Status: CUDA driver version is insufficient for CUDA runtime version
+#+END_SRC
+
+This is very frustrating. Granted, I'm not using the Massive "module"
+version of tensorflow. Maybe I should try that...
+
+I might have to use an even earlier version of tensorflow - it looks
+like they have support for 1.12.0...
+
+Couldn't install 1.12.0.
+
+Here's what I'm going to do - instead of using conda, I'm just going
+to use the tensorflow module. 
+
+#+BEGIN_SRC 
+module load  tensorflow/1.12.0-python3.6-gcc5
+#+END_SRC
+
+Then, I've installed a few packages via pip.
+
+#+BEGIN_SRC 
+pip install --user opencv-python pillow scikit-image ipykernel jupyter jupyterlab
+#+END_SRC
+
+I can't seem to get Jupyter notebook working, but fine, that's
+alright. Working from the console seems fine.
+
+[2019-07-19 Fri 13:15]
+
+Actually, I can get Jupyter to work with tensorflow fine - just need
+to make sure to use the one I installed with =pip= since it's not on
+my path i.e. 
+
+#+BEGIN_SRC 
+~/.lib/bin/jupyter 
+#+END_SRC
+
+*** Hole-Filling (Second Time)
+
+I stopped it after 5 additional epochs (so it's had 25 epochs). 
+
+Evolution:
+
+[[file:./03-psychophysics/data/training-hole-filling/training-gifs/2019-07-18_13-57_evolution_48_48.gif]]
+
+Loss curve:
+
+[[file:./03-psychophysics/data/training-hole-filling/training-graphs/2019-07-18_13-57_loss_48_48.png]]
+
+I wonder if the learning rate (1e-4 for both encoder and decoder) was
+still too high for this?.
+
+*** Run with New Hole-Filler
+
+I'm going to try a run with the new hole-filler which is specifically
+for 8x8 phosphenes on a 48x48 grid. 
+
+I'm doing a new CGAN run with this new hole filler. 
+
+#+BEGIN_SRC python
+def make_encoder():
+
+    # Input noise
+    in_noise        = Input(shape=(SEED_SIZE,))
+    
+    # Layers for noise
+    l_noise         = Dense(gridVectorLength // 4)(in_noise)
+    l_noise         = BatchNormalization()(l_noise)
+    l_noise         = LeakyReLU()(l_noise)
+    
+    # Input labels
+    in_labels       = Input(shape=(1,))
+    
+    # Layers for labels
+    l_labels        = Embedding(10, gridVectorLength // 4)(in_labels)
+    l_labels        = Flatten()(l_labels)
+    l_labels        = BatchNormalization()(l_labels)
+    l_labels        = LeakyReLU()(l_labels)
+    
+    # Concatenate
+    concat          = Concatenate()([l_noise, l_labels])
+    concat          = Flatten()(concat)
+    concat          = Dense(gridVectorLength, activation=tf.nn.sigmoid)(concat)
+    
+    # Model
+    model           = Model([in_noise, in_labels], concat)
+    
+    return model
+#+END_SRC
+
+#+BEGIN_SRC python
+def make_decoder():
+    
+    # Image input
+    in_images     = Input(shape=(renderSize1, renderSize2))
+    l_images      = Reshape((renderSize1, renderSize2, 1))(in_images)
+    
+    # Convolution
+    concat        = Conv2D(64, (8,8), padding='same', strides=(2,2))(l_images)
+    concat        = LeakyReLU()(concat)
+    concat        = Dropout(0.25)(concat)
+    
+    label_out     = Conv2D(128, (4,4), padding='same', strides=(2,2))(concat)
+    label_out     = LeakyReLU()(label_out)
+    label_out     = Dropout(0.25)(label_out)
+    label_out     = Flatten()(label_out)
+    label_out     = Dense(11, activation=tf.nn.softmax)(label_out)
+    
+    # Model 
+    model         = Model(inputs=[in_images], outputs=label_out)
+    
+    return model    
+#+END_SRC
+
+[2019-07-22 Mon 09:27]
+
+Results weren't very good, but they were improving. It sort of seems
+like running for a few more epochs might be beneficial. 
+
+[2019-07-22 Mon 11:16]
+
+Stopping at 59 epochs. Results aren't good, they're not bright
+enough. The forms...it's hard to tell when they're not bright enough. 
+
+Training gif:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-07-19_12-46_evolution_RandomPolarGrid_8-8_48-48.gif]]
+
+Loss graph:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-07-19_12-46_loss_RandomPolarGrid_8-8_48-48.png]]
+
+Here's the hole-filled final renders of each digit:
+
+[[file:./03-psychophysics/data/archive/2019-07-22-hole-filled-59-epochs.png]]
+
+There weren't any additional modes. 
+
+I'm going to do some more reading I think. I may explicitly need to
+incentivise contrast, but my past experiments were not very good at
+doing this. 
+
+** [2019-07-22 Mon]
+
+*** Running on Regular Polar Grid
+
+I'm going to run the exact same experiment (though with one hidden
+layer) for the regular polar grid while I do my reading. 
+
+Yan's suggested to increase the luminence of the final renders to
+check. I think I will do that. 
+
+[2019-07-22 Mon 14:37]
+
+I stopped it at epoch 15. 
+
+Here are some comparisons:
+
+Renders at epoch 15:
+
+[[file:./03-psychophysics/data/archive/2019-07-22-polar-regular-renders-epoch-15.png]]
+
+
+With hole-filling:
+
+[[file:./03-psychophysics/data/archive/2019-07-22-polar-regular-renders-epoch-15-filled.png]]
+
+With binarised-values for clarity, with a threshold of 0.12 (chosen
+manually):
+
+[[file:./03-psychophysics/data/archive/2019-07-22-polar-regular-renders-epoch-15-binarised-values.png]]
+
+(It looks like I really need to incentivise the network to produce
+binarised values at the end...)
+
+The binarisation exposes that there are multiple modes produced (at
+least for this run), but these do appear only to determine which
+phosphenes in the form are lit (not the actual form itself):
+
+[[file:./03-psychophysics/data/archive/2019-07-22-polar-regular-renders-epoch-15-modes-4.png]]
+
+And the loss curve (maybe i should have let it train more..)
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-07-22_11-42_loss_PolarGrid_8-8_48-48.png]]
+
+*** Running on Irregular Polar Grid
+
+I'm going to run on the irregular polar grid again, and try looking at
+the binary output as well.
+
+I've simplified the encoder a bit:
+
+#+BEGIN_SRC 
+def make_encoder():
+
+    # Input noise
+    in_noise        = Input(shape=(SEED_SIZE,))
+    
+    # Layers for noise
+    l_noise         = BatchNormalization()(in_noise)
+    l_noise         = LeakyReLU()(l_noise)
+    
+    # Input labels
+    in_labels       = Input(shape=(1,))
+    
+    # Layers for labels
+    l_labels        = Embedding(10, gridVectorLength // 4)(in_labels)
+    l_labels        = Flatten()(l_labels)
+    l_labels        = BatchNormalization()(l_labels)
+    l_labels        = LeakyReLU()(l_labels)
+    
+    # Concatenate
+    concat          = Concatenate()([l_noise, l_labels])
+    concat          = Dense(gridVectorLength, activation=tf.nn.sigmoid)(concat)
+    
+    # Model
+    model           = Model([in_noise, in_labels], concat)
+    
+    return model
+#+END_SRC
+
+[2019-07-23 Tue 09:42]
+
+Finished running 50 epochs. Results are, well similar. 
+
+Phosphene locations:
+
+[[file:./03-psychophysics/data/archive/2019-07-23-random-polar-grid-locations.png]]
+
+Comparison:
+
+[[file:./03-psychophysics/data/archive/2019-07-23-random-polar-grid-comparison.png]]
+
+Comparison with filling:
+
+[[file:./03-psychophysics/data/archive/2019-07-23-random-polar-grid-comparison-filled.png]]
+
+
+Training gif:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-gifs/2019-07-22_14-57_evolution_RandomPolarGrid_8-8_48-48.gif]]
+
+Training loss graph:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-07-22_14-57_loss_RandomPolarGrid_8-8_48-48.png]]
+
+Net encoder after 50 epochs of training:
+
+[[file:./03-psychophysics/data/archive/2019-07-23-random-polar-grid-epoch-50.png]]
+
+
+Net encoder with hole-filling:
+
+[[file:./03-psychophysics/data/archive/2019-07-23-random-polar-grid-hole-filled.png]]
+
+
+Net encoder, brightened with threshold of 0.122 selected manually:
+
+[[file:./03-psychophysics/data/archive/2019-07-23-random-polar-grid-epoch-50-brightened.png]]
+
+Evidence of multimodal 8, apparent on threshold binarisation:
+
+[[file:./03-psychophysics/data/archive/2019-07-23-random-polar-grid-multimodal-8.png]]
+
+And, out of interest, here is the (non-brightened) output with a seed
+vector full of zeros:
+
+[[file:./03-psychophysics/data/archive/2019-07-23-random-polar-grid-zero-seed.png]]
+
+And a seed vector full of ones:
+
+[[file:./03-psychophysics/data/archive/2019-07-23-random-polar-grid-one-seed.png]]
+
+It seems the seed vector encodes for contrast perhaps. 
+
+All in all - it's clear the network learns /something/, and the
+brightening step sort of reveals the features it's getting out. But
+there are a lot of distracting elements (e.g. that light at the top
+which does nothing!) that could be removed. 
+
+I just wish these would be brighter...
+
+**[2019-07-23 Tue]
+    
+*** Run without noise seed and brightness incentive
+
+I will try removing the noise vector seed entirely, and putting an
+incentive for the phosphene values to be either 0 or 1. I'll also use
+a different random polar grid. I'll also increase the learning rate to
+1e-3 for the encoder and decoder.
+
+#+BEGIN_SRC python
+def make_encoder():
+
+   # Input labels
+    in_labels       = Input(shape=(1,))
+    
+    # Layers for labels
+    l_labels        = Embedding(10, gridVectorLength // 4)(in_labels)
+    l_labels        = Flatten()(l_labels)
+    l_labels        = BatchNormalization()(l_labels)
+    l_labels        = LeakyReLU()(l_labels)
+    concat          = Dense(gridVectorLength, activation=tf.nn.sigmoid)(l_labels)
+    
+    # Model
+    model           = Model([in_labels], concat)
+    
+    return model
+#+END_SRC
+
+I've redefined the loss of the encoder to
+
+#+BEGIN_SRC python
+def encoder_loss(real_labels, decoded_one_hot, renders):
+    
+    real_one_hot = tf.one_hot(real_labels, depth=11)
+    label_loss = categorical_cross_entropy(real_one_hot, decoded_one_hot)
+    
+    brightness_loss = tf.reduce_sum(tf.math.cos(tf.constant(np.pi / 2) * renders))
+    
+    return label_loss + (brightness_loss / (renderSize1 * renderSize2 * 100))
+#+END_SRC
+
+
+[2019-07-23 Tue 11:59]
+
+1e-3 bounces around a lot. I'm going to try 1e-4 instead.
+
+[2019-07-23 Tue 13:08]
+
+1e-4 is /extremely/ slow (epoch 5 and no difference really)...I'll try
+1e-4 for the decoder and 1e-3 for the encoder.
+
+** [2019-07-25 Thu]
+
+*** Non-multimodal run (one-to-one label)
+
+Here are the results of the 1-1 run over 50 epochs: 
+
+[[file:./03-psychophysics/data/archive/2019-07-25-epoch-50-random-non-multimodal.png]]
+
+Hole filled:
+
+[[file:./03-psychophysics/data/archive/2019-07-25-epoch-50-random-non-multimodal-hole-filled.png]]
+
+Brightened at manual threshold of 0.124:
+
+[[file:./03-psychophysics/data/archive/2019-07-25-epoch-50-random-non-multimodal-brightened.png]]
+
+For comparison, here are the directly processed digits:
+
+[[file:./03-psychophysics/data/archive/2019-07-25-random-non-multimodal-comparison.png]]
+
+Loss curves:
+
+[[file:./03-psychophysics/data/training-intermediate-data/training-graphs/2019-07-23_10-22_loss_RandomPolarGrid_8-8_48-48.png]]
+
+It seems the digit forms are more stable than before at the very
+least. It definitely seems like the output is somewhat "cleaner", but
+I wonder why it's not trying to brighten the pixels. I didn't make the
+contribution of the cosine function particularly large, though I don't
+know if making it larger would necessarily help. 
+
+
+*** MASSIVE
+
+Useful commands:
+
+- =scancel=
+- =show_job=
+- =smux new-session=, and =smux a= to attach or Ctrl-b d to detach
+- =squeue= with =grep=
+- =module load tensorflow/2.0.0-beta1=
+
+** [2019-07-30 Tue]
+
+*** Modifications for Massive
+
+I made a few modifications to the script for massive and saved it in 04-gan.
+
 * August 2019
 * September 2019
 
