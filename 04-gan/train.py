@@ -10,9 +10,7 @@ import pickle
 from datetime import datetime
 from tensorflow.keras import layers, Sequential, Model
 from tensorflow.keras.layers import * 
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from scipy.ndimage import gaussian_filter
-from IPython import display
 from grid import PolarGrid, CartesianGrid, render, render_tensor
 
 ################################################################################
@@ -313,7 +311,7 @@ def generate_and_save_images(encoder, epoch):
 
     plt.suptitle(f"Epoch {epoch}", y=1.3)
 
-    plt.savefig(image_filepath.replace('.png', 'epoch-{0:02d}.png'.format(epoch)))
+    plt.savefig(image_filepath.replace('.png', '_epoch-{0:02d}.png'.format(epoch)))
     plt.tight_layout()
     plt.close()
     
@@ -358,6 +356,7 @@ def train(epochs):
     
     for epoch in range(epochs):
         start = time.time()
+        print(f'Starting epoch {epoch+1} at {time.asctime()}')
 
         for i in range(NUM_BATCHES):
             imin = i * BATCH_SIZE
@@ -368,7 +367,6 @@ def train(epochs):
             
             train_step(real_images_slice, real_labels_slice)
 
-        display.clear_output(wait=True)
         generate_and_save_images(encoder, epoch + 1)
 
         print(f'Time for epoch {epoch+1} is {time.time()-start} sec.')

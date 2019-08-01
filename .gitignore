@@ -35,7 +35,7 @@ virtualenv/
 03-psychophysics/data/training-hole-filling/training-images/
 03-psychophysics/data/digit-models/
 
-04-gan/training-intermediate-data/training-images/
+04-gan/data/training-intermediate-data/training-images/
 
 #*
 .#*

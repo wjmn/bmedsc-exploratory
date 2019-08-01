@@ -3,7 +3,6 @@
 import numpy as np
 import random
 import tensorflow as tf
-import keras
 from math import e
 from scipy.ndimage import gaussian_filter
 from skimage import color
