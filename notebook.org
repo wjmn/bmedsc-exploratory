@@ -6251,7 +6251,6 @@ but evaluation. I would really like to be able to have candidates that
 can be tested for the experimental phase, but clearly I need to some
 way of reducing the mode collapse...
 
-
 * July 2019
   
 ** [2019-07-01 Mon]
@@ -6639,7 +6638,6 @@ I'm going to increase it up to 1e-2.
 [2019-07-03 Wed 09:43]
 The digits dull and disappear after several epochs. After the initial
 descent, the loss just increases (slowly).
-
 
 ** [2019-07-03 Wed]
 
@@ -8507,8 +8505,32 @@ that's faster. I'm also going to run it with 1 GPU, and see how that goes...
 Seems to be running quite a bit faster (at least 3 times). That's good
 at least. 
 
-
 * August 2019
+** [2019-08-01 Thu]
+
+*** Minor Fixes + MASSIVE run
+:LOGBOOK:
+CLOCK: [2019-08-01 Thu 11:16]--[2019-08-01 Thu 12:44] =>  1:28
+:END:
+
+I'm going to run a few more runs on MASSIVE I think. They seem to work alright,
+I just needed to fix up an image directory.
+
+I submitted Job =10702348= - same as before, ( I think I'll have to think about
+what I actually want to loop through before I submit a huge number of jobs for
+something ). In the meantime, I'll get to work on the grid evaluation and the
+binarisation.
+
+While I'm waiting for it, I've written the code to do iterate through the
+thresholding and also to do the rendering and preprocessing for a given grid.
+
+*** Second Run Finished + Testing Threshold Iterator
+:LOGBOOK:
+CLOCK: [2019-08-01 Thu 14:17]
+:END:
+
+Second run has finished - now testing the threshold iterator.
+
 * September 2019
 
    #+begin_quote
