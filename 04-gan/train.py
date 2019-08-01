@@ -385,6 +385,7 @@ train(EPOCHS)
 
 # Generate GIF
 generated_images = glob.glob(image_filepath.replace(".png", "*.png"))
+generated_images.sort()
 images = [PIL.Image.open(image) for image in generated_images]
 
 # save the first image 10 times
