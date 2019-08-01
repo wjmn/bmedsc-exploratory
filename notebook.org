@@ -8479,6 +8479,35 @@ Useful commands:
 
 I made a few modifications to the script for massive and saved it in 04-gan.
 
+I'm going to try and make a proper venv.
+
+Loaded tensorflow. Curled pip from https://pip.pypa.io/en/stable/installing/ and installed for user. 
+
+Pip installed to =~/.local/lib/python3.6/site-packages/pip/=, but can't use the bin in =~/.local/bin/pip=
+directly.
+
+But =python -m pip install PACKAGE --user= works!
+
+- python-opencv 4.1.0 throws an import error for libSM.so.6, but python -m pip install opencv-python==3.3.0.9 --user works
+
+Ran
+#+BEGIN_SRC 
+python -m pip install --user pillow scikit-image numpy scipy pandas matplotlib
+#+END_SRC
+
+It seems to be running find on Massive now. It doesn't seem all that
+much faster (though granted, I didn't provision it with particularly
+many resources or a GPU, but at least I can run several at the same
+time and do other prototyping on this computer. 
+
+It turns out that 1:00:00 means one hour, so my job got
+cancelled. I'll rerun with 48:00:00 and provision 2 CPUS and see if
+that's faster. I'm also going to run it with 1 GPU, and see how that goes...
+
+Seems to be running quite a bit faster (at least 3 times). That's good
+at least. 
+
+
 * August 2019
 * September 2019
 
