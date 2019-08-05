@@ -8526,7 +8526,7 @@ thresholding and also to do the rendering and preprocessing for a given grid.
 
 *** Second Run Finished + Testing Threshold Iterator
 :LOGBOOK:
-CLOCK: [2019-08-01 Thu 14:17]
+CLOCK: [2019-08-01 Thu 14:17]--[2019-08-01 Thu 15:15] =>  0:58
 :END:
 
 Second run has finished - now testing the threshold iterator.
