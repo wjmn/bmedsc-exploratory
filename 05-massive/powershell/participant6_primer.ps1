@@ -1,0 +1,1 @@
+python primer.py --config-id C-2019-08-28-09-09-05-344856 --checkpoint-num 15 --ntrials 10 --ncues 10

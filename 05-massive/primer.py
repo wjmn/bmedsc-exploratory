@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-This script runs a digit recognition psychophysics session.
+This script runs a digit recognition psychophysics priming session ( no feedback , multiple grids ).
 """
 
 # # Setup
@@ -21,7 +21,7 @@ from box import Box
 from psychopy.sound.backend_pygame import SoundPygame
 from skimage import color
 from imageio import imread
-from random import randint
+from random import randint, random
 from PIL import Image
 
 
@@ -53,12 +53,6 @@ argspec = {
         'nargs': '?',
         'default': 25,
         'help': 'Number of cues per trial. Should be a multiple of 10 (for now) for digit stream.'
-    },
-    'condition': {
-        'type': int,
-        'nargs': '?',
-        'default': 0,
-        'help': 'Condition 0 for control, condition 1 for test of experiment.'
     },
     'checkpoint-num': {
         'type': int,
@@ -102,7 +96,6 @@ args = parser.parse_args()
 config.TESTING = args.testing
 config.NTRIALS = args.ntrials
 config.NCUES = args.ncues
-config.CONDITION = args.condition
 config.CONFIG_ID = args.config_id
 config.CHECKPOINT_NUM = args.checkpoint_num
 config.BINARISED = args.binarised
@@ -134,31 +127,30 @@ config.IMAGES = [cv2.cvtColor(cv2.resize(imread(config.IMAGE_TEMPLATE.format(dig
                             for digit in range(10)]
 
 
-# Initialise the checkpoint
-if config.CONDITION == 0:
-    config.PROCESSOR = Stimulus
+# Initialise the two processors
+config.PROCESSOR_CONTROL = Stimulus
+
+LEARNING_RATE_ENCODER = TRAINING_CONFIG.learning_rate_encoder
+LEARNING_RATE_DECODER = TRAINING_CONFIG.learning_rate_decoder
+ENCODER_OPTIMISER = tf.keras.optimizers.Adam(learning_rate=LEARNING_RATE_ENCODER)
+DECODER_OPTIMISER = tf.keras.optimizers.Adam(learning_rate=LEARNING_RATE_DECODER)
+
+CHECKPOINT = tf.train.Checkpoint(
+    encoder=TRAINING_CONFIG.encoder,
+    decoder=TRAINING_CONFIG.decoder,
+    encoder_optimiser=ENCODER_OPTIMISER,
+    decoder_optimiser=DECODER_OPTIMISER,
+)
+
+config.CHECKPOINT_TEMPLATE = f'./output/{TRAINING_CONFIG.config_id}/checkpoints/checkpoint_-{config.CHECKPOINT_NUM}'
+CHECKPOINT.restore(config.CHECKPOINT_TEMPLATE)
+
+encoder = CHECKPOINT.encoder
+
+if config.BINARISED:
+    config.PROCESSOR_TEST = lambda digit, image, grid: StimulusNetBinary(digit, image, grid, encoder, TRAINING_CONFIG.filler)
 else:
-    LEARNING_RATE_ENCODER = TRAINING_CONFIG.learning_rate_encoder
-    LEARNING_RATE_DECODER = TRAINING_CONFIG.learning_rate_decoder
-    ENCODER_OPTIMISER = tf.keras.optimizers.Adam(learning_rate=LEARNING_RATE_ENCODER)
-    DECODER_OPTIMISER = tf.keras.optimizers.Adam(learning_rate=LEARNING_RATE_DECODER)
-
-    CHECKPOINT = tf.train.Checkpoint(
-        encoder=TRAINING_CONFIG.encoder,
-        decoder=TRAINING_CONFIG.decoder,
-        encoder_optimiser=ENCODER_OPTIMISER,
-        decoder_optimiser=DECODER_OPTIMISER,
-    )
-
-    config.CHECKPOINT_TEMPLATE = f'./output/{TRAINING_CONFIG.config_id}/checkpoints/checkpoint_-{config.CHECKPOINT_NUM}'
-    CHECKPOINT.restore(config.CHECKPOINT_TEMPLATE)
-
-    encoder = CHECKPOINT.encoder
-
-    if config.BINARISED:
-        config.PROCESSOR = lambda digit, image, grid: StimulusNetBinary(digit, image, grid, encoder, TRAINING_CONFIG.filler)
-    else:
-        config.PROCESSOR = lambda digit, image, grid: StimulusNet(digit, image, grid, encoder)
+    config.PROCESSOR_TEST = lambda digit, image, grid: StimulusNet(digit, image, grid, encoder)
 
 
 # Templates for data paths.
@@ -183,8 +175,8 @@ config.NOTE_DURATION  = 0.1
 config.NOTE_VOLUME    = 0.5
 
 # Session data.
-config.SESSION_VARS = ['trial', 'cue', 'digit', 'keypress', 'cuetime', 'trialtime', 'sessiontime']
-config.MOUSE_VARS   = ['trial', 'cue', 'digit', 'xmouse', 'ymouse', 'cuetime', 'trialtime', 'sessiontime']
+config.SESSION_VARS = ['trial', 'cue', 'digit', 'processor', 'keypress', 'cuetime', 'trialtime', 'sessiontime']
+config.MOUSE_VARS   = ['trial', 'cue', 'digit', 'processor', 'xmouse', 'ymouse', 'cuetime', 'trialtime', 'sessiontime']
 
 # Output templates based on session data.
 config.SESSION_HEADER       = ','.join(config.SESSION_VARS) + '\n'
@@ -213,7 +205,7 @@ else:
     config.KEY_LIST = ["num_" + str(x) for x in range(10)]
 
 # When saving the config, excluding some variables due to size.
-config.EXCLUDED = ['STIMULI', 'GRID', 'IMAGES', 'BLANK_IMAGE', 'PROCESSOR']
+config.EXCLUDED = ['STIMULI', 'GRID', 'IMAGES', 'BLANK_IMAGE', 'PROCESSOR_TEST', 'PROCESSOR_CONTROL']
 
 
 # Here, we make our main experiment, only if called from the command line.
@@ -269,7 +261,7 @@ if __name__ == "__main__":
 
         # We first write the header of the csv file.
         outfile.write(config.SESSION_HEADER)
-        #mousefile.write(config.MOUSE_HEADER)
+        # mousefile.write(config.MOUSE_HEADER)
 
         # Start the trial loop.
         for trial in range(config.NTRIALS):
@@ -310,7 +302,14 @@ if __name__ == "__main__":
 
                 # Initialise the stimulus
                 image    = config.IMAGES[digit]
-                stimulus = config.PROCESSOR(digit, image, TRAINING_CONFIG.grid)
+
+                # Randomly choose a processor
+                if random() < 0.5:
+                    processor = 'control'
+                    stimulus = config.PROCESSOR_CONTROL(digit, image, TRAINING_CONFIG.grid)
+                else:
+                    processor = 'test'
+                    stimulus = config.PROCESSOR_TEST(digit, image, TRAINING_CONFIG.grid)
 
                 # If this is a testing run, also draw the original image.
                 if config.TESTING:
@@ -364,7 +363,7 @@ if __name__ == "__main__":
                                 trialtime=clockTrial.getTime(),
                                 sessiontime=clockSession.getTime(),
                             )
-                            mousefile.write(mouseRow)
+                            # mousefile.write(mouseRow)
 
                             mouseRecord.reset()
 
@@ -394,6 +393,7 @@ if __name__ == "__main__":
                     trial=trial,
                     cue=cue,
                     digit=digit,
+                    processor=processor,
                     keypress=keypress,
                     cuetime=clockCue.getTime(),
                     trialtime=clockTrial.getTime(),
@@ -404,10 +404,10 @@ if __name__ == "__main__":
                 outfile.write(row)
 
                 # Play the feedback sound.
-                correctSound.play() if correct else incorrectSound.play()
+                # correctSound.play() if correct else incorrectSound.play()
 
                 # Play the digit sound.
-                digitSounds[digit].play()
+                # digitSounds[digit].play()
 
         # At the end of all the trials, show an end screen and wait for key press
         # to exit.

@@ -51,7 +51,6 @@ class Config:
         """
         with open(os.path.join(base_dir, 'output', config_id, config_id + '.json')) as infile:
             data_dict = json.load(infile)
-        print(data_dict)
         return cls(**data_dict)
 
     def _load_grid(self) -> modules.grid.AbstractGrid:

@@ -297,14 +297,14 @@ class PolarGrid(AbstractGrid):
                 self.locations[:, 0] = self.locations[:, 0] + 1 / 2
         else:
             self.locations = np.array([
-                (0.5 + ((i_radius / (n_radius + 1)) * np.cos(self.i_angle(i_theta, n_theta, half))) / 2,
-                 0.5 + ((i_radius / (n_radius + 1)) * np.sin(self.i_angle(i_theta, n_theta, half))) / 2,)
+                (0.5 + (i_radius / n_radius * np.cos(self.i_angle(i_theta, n_theta, half))) / 2,
+                 0.5 + (i_radius / n_radius * np.sin(self.i_angle(i_theta, n_theta, half))) / 2,)
                 for i_radius in range(1, n_radius + 1)
                 for i_theta in range(n_theta)
             ])
 
         k = x_render / 2 + y_render / 2
-        a = e * (x_render + y_render) / 64
+        a = e * (x_render + y_render) / 128
 
         self.sizes = np.array([
             (np.log(k * ((x - 0.5) ** 2 + (y - 0.5) ** 2) + a),
@@ -323,6 +323,7 @@ class PolarGrid(AbstractGrid):
             y_render,
         )
 
+    @staticmethod
     def i_angle(self, i_theta: float, n_theta: float, half: bool = False) -> float:
         """ Calculates the angle for angle of index i in range n.
         """

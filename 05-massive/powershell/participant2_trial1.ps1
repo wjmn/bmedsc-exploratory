@@ -1,0 +1,1 @@
+python experiment.py --config-id C-2019-08-14-01-44-43-711328 --checkpoint-num 3 --ntrials 20 --ncues 25 --condition 1 --binarised

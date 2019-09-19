@@ -1,0 +1,1 @@
+python experiment.py --config-id C-2019-08-08-22-19-12-250057 --checkpoint-num 49 --ntrials 2 --ncues 10 --condition 0
