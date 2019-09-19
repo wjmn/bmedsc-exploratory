@@ -1,0 +1,12 @@
+#!/bin/bash
+#SBATCH --job-name=TEST_CGAN_COMBOS
+#SBATCH --account=fs11
+#SBATCH --time=48:00:00
+#SBATCH --ntasks=1
+#SBATCH --mem-per-cpu=4096
+#SBATCH --cpus-per-task=2
+#SBATCH --partition=m3g
+#SBATCH --gres=gpu:1
+
+module load tensorflow/2.0.0-beta1
+python ./train.py -g  G-2019-08-08-15-20-42-970210 -e E-2019-08-08-17-39-23-132458 -d D-2019-08-08-17-39-45-723776 -f F-2019-07-18-13-57-00-000000 --learning-rate-encoder 0.0005 --learning-rate-decoder 0.0001

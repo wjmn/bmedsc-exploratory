@@ -1,0 +1,153 @@
+2019-08-09 10:03:03.268497: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcuda.so.1
+2019-08-09 10:03:03.307865: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:1006] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-08-09 10:03:03.308971: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1640] Found device 0 with properties: 
+name: Tesla V100-PCIE-32GB major: 7 minor: 0 memoryClockRate(GHz): 1.38
+pciBusID: 0000:00:08.0
+2019-08-09 10:03:03.313342: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcudart.so.10.0
+2019-08-09 10:03:03.362334: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcublas.so.10.0
+2019-08-09 10:03:03.382559: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcufft.so.10.0
+2019-08-09 10:03:03.397052: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcurand.so.10.0
+2019-08-09 10:03:03.450358: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcusolver.so.10.0
+2019-08-09 10:03:03.476098: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcusparse.so.10.0
+2019-08-09 10:03:03.544182: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcudnn.so.7
+2019-08-09 10:03:03.544445: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:1006] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-08-09 10:03:03.545579: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:1006] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-08-09 10:03:03.546576: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1763] Adding visible gpu devices: 0
+2019-08-09 10:03:03.548009: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 AVX512F FMA
+2019-08-09 10:03:03.682589: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:1006] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-08-09 10:03:03.684538: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x2331010 executing computations on platform CUDA. Devices:
+2019-08-09 10:03:03.684596: I tensorflow/compiler/xla/service/service.cc:175]   StreamExecutor device (0): Tesla V100-PCIE-32GB, Compute Capability 7.0
+2019-08-09 10:03:03.704675: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2693655000 Hz
+2019-08-09 10:03:03.705049: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x233e890 executing computations on platform Host. Devices:
+2019-08-09 10:03:03.705099: I tensorflow/compiler/xla/service/service.cc:175]   StreamExecutor device (0): <undefined>, <undefined>
+2019-08-09 10:03:03.705774: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:1006] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-08-09 10:03:03.706793: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1640] Found device 0 with properties: 
+name: Tesla V100-PCIE-32GB major: 7 minor: 0 memoryClockRate(GHz): 1.38
+pciBusID: 0000:00:08.0
+2019-08-09 10:03:03.706847: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcudart.so.10.0
+2019-08-09 10:03:03.706865: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcublas.so.10.0
+2019-08-09 10:03:03.706880: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcufft.so.10.0
+2019-08-09 10:03:03.706917: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcurand.so.10.0
+2019-08-09 10:03:03.706933: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcusolver.so.10.0
+2019-08-09 10:03:03.706948: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcusparse.so.10.0
+2019-08-09 10:03:03.706963: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcudnn.so.7
+2019-08-09 10:03:03.707026: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:1006] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-08-09 10:03:03.708043: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:1006] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-08-09 10:03:03.709018: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1763] Adding visible gpu devices: 0
+2019-08-09 10:03:03.710708: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcudart.so.10.0
+2019-08-09 10:03:03.712221: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1181] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-08-09 10:03:03.712253: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1187]      0 
+2019-08-09 10:03:03.712270: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1200] 0:   N 
+2019-08-09 10:03:03.715035: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:1006] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-08-09 10:03:03.717084: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:1006] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-08-09 10:03:03.718122: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1326] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 30555 MB memory) -> physical GPU (device: 0, name: Tesla V100-PCIE-32GB, pci bus id: 0000:00:08.0, compute capability: 7.0)
+WARNING: Logging before flag parsing goes to stderr.
+W0809 10:03:06.926527 140411591096128 hdf5_format.py:171] No training configuration found in save file: the model was *not* compiled. Compile it manually.
+W0809 10:29:00.620459 140411591096128 deprecation.py:323] From /usr/local/lib/python3.6/dist-packages/tensorflow/python/ops/math_grad.py:1250: add_dispatch_support.<locals>.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+2019-08-09 10:29:02.830656: E tensorflow/core/grappler/optimizers/meta_optimizer.cc:502] constant folding failed: Invalid argument: Unsupported type: 21
+2019-08-09 10:29:03.030285: E tensorflow/core/grappler/optimizers/meta_optimizer.cc:502] constant folding failed: Invalid argument: Unsupported type: 21
+2019-08-09 10:29:03.233169: W tensorflow/compiler/jit/mark_for_compilation_pass.cc:1483] (One-time warning): Not using XLA:CPU for cluster because envvar TF_XLA_FLAGS=--tf_xla_cpu_global_jit was not set.  If you want XLA:CPU, either set that envvar, or use experimental_jit_scope to enable XLA:CPU.  To confirm that XLA is active, pass --vmodule=xla_compilation_cache=1 (as a proper command-line flag, not via TF_XLA_FLAGS) or set the envvar XLA_FLAGS=--xla_hlo_profile.
+2019-08-09 10:29:03.344850: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcublas.so.10.0
+2019-08-09 10:29:04.072393: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcudnn.so.7
+Starting epoch 0 at Fri Aug  9 10:28:59 2019
+Time for epoch 0 is 747.2865266799927 seconds.
+Starting epoch 1 at Fri Aug  9 10:41:27 2019
+Time for epoch 1 is 745.868320941925 seconds.
+Starting epoch 2 at Fri Aug  9 10:53:52 2019
+Time for epoch 2 is 750.0115642547607 seconds.
+Starting epoch 3 at Fri Aug  9 11:06:23 2019
+Time for epoch 3 is 742.5639688968658 seconds.
+Starting epoch 4 at Fri Aug  9 11:18:45 2019
+Time for epoch 4 is 741.0076353549957 seconds.
+Starting epoch 5 at Fri Aug  9 11:31:06 2019
+Time for epoch 5 is 743.2278971672058 seconds.
+Starting epoch 6 at Fri Aug  9 11:43:29 2019
+Time for epoch 6 is 743.9527804851532 seconds.
+Starting epoch 7 at Fri Aug  9 11:55:53 2019
+Time for epoch 7 is 746.0909769535065 seconds.
+Starting epoch 8 at Fri Aug  9 12:08:19 2019
+Time for epoch 8 is 751.9687569141388 seconds.
+Starting epoch 9 at Fri Aug  9 12:20:51 2019
+Time for epoch 9 is 750.5978500843048 seconds.
+Starting epoch 10 at Fri Aug  9 12:33:22 2019
+Time for epoch 10 is 747.9569609165192 seconds.
+Starting epoch 11 at Fri Aug  9 12:45:50 2019
+Time for epoch 11 is 748.3992373943329 seconds.
+Starting epoch 12 at Fri Aug  9 12:58:18 2019
+Time for epoch 12 is 756.2683253288269 seconds.
+Starting epoch 13 at Fri Aug  9 13:10:55 2019
+Time for epoch 13 is 751.713401556015 seconds.
+Starting epoch 14 at Fri Aug  9 13:23:26 2019
+Time for epoch 14 is 749.5660846233368 seconds.
+Starting epoch 15 at Fri Aug  9 13:35:56 2019
+Time for epoch 15 is 749.8508734703064 seconds.
+Starting epoch 16 at Fri Aug  9 13:48:26 2019
+Time for epoch 16 is 749.4009466171265 seconds.
+Starting epoch 17 at Fri Aug  9 14:00:55 2019
+Time for epoch 17 is 755.0163104534149 seconds.
+Starting epoch 18 at Fri Aug  9 14:13:30 2019
+Time for epoch 18 is 753.5914695262909 seconds.
+Starting epoch 19 at Fri Aug  9 14:26:04 2019
+Time for epoch 19 is 747.5311207771301 seconds.
+Starting epoch 20 at Fri Aug  9 14:38:31 2019
+Time for epoch 20 is 745.1991913318634 seconds.
+Starting epoch 21 at Fri Aug  9 14:50:56 2019
+Time for epoch 21 is 746.0185017585754 seconds.
+Starting epoch 22 at Fri Aug  9 15:03:22 2019
+Time for epoch 22 is 749.730565071106 seconds.
+Starting epoch 23 at Fri Aug  9 15:15:52 2019
+Time for epoch 23 is 756.2345006465912 seconds.
+Starting epoch 24 at Fri Aug  9 15:28:28 2019
+Time for epoch 24 is 755.7104120254517 seconds.
+Starting epoch 25 at Fri Aug  9 15:41:04 2019
+Time for epoch 25 is 748.719203710556 seconds.
+Starting epoch 26 at Fri Aug  9 15:53:33 2019
+Time for epoch 26 is 749.5880124568939 seconds.
+Starting epoch 27 at Fri Aug  9 16:06:02 2019
+Time for epoch 27 is 749.4872903823853 seconds.
+Starting epoch 28 at Fri Aug  9 16:18:32 2019
+Time for epoch 28 is 754.665328502655 seconds.
+Starting epoch 29 at Fri Aug  9 16:31:07 2019
+Time for epoch 29 is 752.2781324386597 seconds.
+Starting epoch 30 at Fri Aug  9 16:43:39 2019
+Time for epoch 30 is 746.5287446975708 seconds.
+Starting epoch 31 at Fri Aug  9 16:56:05 2019
+Time for epoch 31 is 747.7616281509399 seconds.
+Starting epoch 32 at Fri Aug  9 17:08:33 2019
+Time for epoch 32 is 737.7905712127686 seconds.
+Starting epoch 33 at Fri Aug  9 17:20:51 2019
+Time for epoch 33 is 742.9271864891052 seconds.
+Starting epoch 34 at Fri Aug  9 17:33:14 2019
+Time for epoch 34 is 738.70077085495 seconds.
+Starting epoch 35 at Fri Aug  9 17:45:33 2019
+Time for epoch 35 is 741.9299323558807 seconds.
+Starting epoch 36 at Fri Aug  9 17:57:54 2019
+Time for epoch 36 is 726.5244266986847 seconds.
+Starting epoch 37 at Fri Aug  9 18:10:01 2019
+Time for epoch 37 is 725.4842629432678 seconds.
+Starting epoch 38 at Fri Aug  9 18:22:06 2019
+Time for epoch 38 is 727.7708797454834 seconds.
+Starting epoch 39 at Fri Aug  9 18:34:14 2019
+Time for epoch 39 is 726.4697239398956 seconds.
+Starting epoch 40 at Fri Aug  9 18:46:21 2019
+Time for epoch 40 is 727.4250454902649 seconds.
+Starting epoch 41 at Fri Aug  9 18:58:28 2019
+Time for epoch 41 is 726.7040226459503 seconds.
+Starting epoch 42 at Fri Aug  9 19:10:35 2019
+Time for epoch 42 is 726.1216390132904 seconds.
+Starting epoch 43 at Fri Aug  9 19:22:41 2019
+Time for epoch 43 is 727.981264591217 seconds.
+Starting epoch 44 at Fri Aug  9 19:34:49 2019
+Time for epoch 44 is 729.2707479000092 seconds.
+Starting epoch 45 at Fri Aug  9 19:46:58 2019
+Time for epoch 45 is 728.2394108772278 seconds.
+Starting epoch 46 at Fri Aug  9 19:59:06 2019
+Time for epoch 46 is 725.5218963623047 seconds.
+Starting epoch 47 at Fri Aug  9 20:11:12 2019
+Time for epoch 47 is 726.4457199573517 seconds.
+Starting epoch 48 at Fri Aug  9 20:23:18 2019
+Time for epoch 48 is 727.9990320205688 seconds.
+Starting epoch 49 at Fri Aug  9 20:35:26 2019
+Time for epoch 49 is 727.7153732776642 seconds.

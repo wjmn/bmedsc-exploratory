@@ -6252,7 +6252,7 @@ can be tested for the experimental phase, but clearly I need to some
 way of reducing the mode collapse...
 
 * July 2019
-  
+
 ** [2019-07-01 Mon]
    
 *** Polar Seeded Run
@@ -6537,7 +6537,7 @@ fill in the missing details because the digits are so regular. Maybe
 because it's so much brighter. I'm not sure.
 
 ** [2019-07-02 Tue]
-   
+
 *** 10x10 grid, with cosine
 
 I think I'm going to try a 10x10 grid with a cosine to help increase
@@ -8156,7 +8156,49 @@ for 8x8 phosphenes on a 48x48 grid.
 
 I'm doing a new CGAN run with this new hole filler. 
 
-#+BEGIN_SRC python
+#+B> Contributed by **moderator**
+>
+> Contact via the AORTA info page.
+>
+> Last updated 2019/08/20.
+
+## UNSW Embryology
+
+The [UNSW Embryology
+website](https://embryology.med.unsw.edu.au/embryology/index.php/Main_Page) is
+fantastic resource with comprehensive embryology information. It can be quite
+information-heavy, but is a great point of reference.
+
+## Fertilisation
+
+**Fertilisation** is when sperm and egg unite to form a **zygote** **- i.e. when the
+two *haploid* gametes (23 chromosomes each) combine to form a *diploid* cell
+which is the start of a new human being. At this point, the egg and sperm are
+still free in the uterine tube.
+
+### Zona Pellucida
+
+The [zona
+pellucida](https://embryology.med.unsw.edu.au/embryology/index.php/Zona_pellucida)
+is a glycoprotein-rich coating around human egg. The sperm cell needs to
+breach this coating in order to fuse with the egg.
+
+### Acrosome Reaction
+
+When a sperm cell approaches the egg, sperm surface proteins interact with the
+zona pellucida and initiate the **acrosome reaction**. The *acrosome* is a
+coating on the head of the sperm. It contains enzymes which are released in the
+acrosome reaction to break down the zona pellucida so it can penetrate and fuse
+with the egg.
+
+## Zygote
+
+The zygote is the cell at the start of huamn life which contains a *full set of
+chromosomes* (it's the combination of the egg and sperm, so it has 46
+chromosomes).
+
+
+EGIN_SRC python
 def make_encoder():
 
     # Input noise
@@ -8503,7 +8545,8 @@ cancelled. I'll rerun with 48:00:00 and provision 2 CPUS and see if
 that's faster. I'm also going to run it with 1 GPU, and see how that goes...
 
 Seems to be running quite a bit faster (at least 3 times). That's good
-at least. 
+at least.
+
 
 * August 2019
 ** [2019-08-01 Thu]
@@ -8530,6 +8573,70 @@ CLOCK: [2019-08-01 Thu 14:17]--[2019-08-01 Thu 15:15] =>  0:58
 :END:
 
 Second run has finished - now testing the threshold iterator.
+
+** [2019-08-19 Mon]
+
+I wrote a script to do combinations of 11 grids x 3 encoder x 2 decoders x 2
+filler options (fill or no fill) x 3 learning rates = 396 different
+combinations. I submitted all of them to Massive. 396 jobs, 4 at a time (since
+they use GPU). I don't know why the job name is jus TEST_CGAN rather than the
+whole thing though. That seems a bit strange to me. But at least they're running now....
+
+I've also just realised that the direct encoder is missing a flatten...so all
+the runs with that encoder will fail. I guess that's okay, they fail pretty
+early on - but that should amount to approximately one third of the submissions
+(132), so I'll only have 264 to work off instead. I'll have to keep that in mind
+when processing the data.
+
+I think I'll start getting my thesis written and go through the methods section.
+I think that will also help clarify my thinking and possibly give me a few more
+ideas to test.
+
+** Notes from Post-Experiment Debrief on Psychophysics
+
+- May not be a natural perceptual task - feels 100% like a memory task indeed.
+- Learning effect is definitely significant - by the time the second trial comes
+  round, participant knew to "play the game", so to speak.
+- During the experiment, you have the opportunity to really study the images
+  (because they're static), which may not generalise to real-life when these
+  images move with your eyes.
+
+
+** [2019-08-28 Wed]
+
+Generated 10 new 8x8 grids on Massive. Submitted 20 jobs (filler and non-filer
+for each grid, basic encoder and basic decoder, 1e-3 learning rate for encoder
+and 5e-4 for decoder). Had to do run_jobs with python3 with the python3 module
+loaded, not tensorflow module for some reason, but seems to be okay other than
+that.
+
+For psychophysics experiment tomorrow:
+
+
+1. Split each into batches of 400 and interleave -> so 400 for direct, 400 for
+   trained, 400 for direct, 400 for trained (or vice versa). So each participant
+   gets four trials.
+2. Start each with 100 non-feedback trials (50 trials of each grid) WITH NO
+   FEEDBACK. Maybe copy your script and make some slight modification.
+3. Try to add progress text.
+
+I got the above ready in time, though I had to jump over an obscene number of
+hoops. For one thing, there was apparently a change from Python 3.6 to 3.7 with
+how StopIteration is handled in generators, so I had to downgrade my Python
+installation. For another, I had to reinstall most of the packages, and lo and
+behold that many of the packages sort of broke compatibility as they increased
+their version, so I had to specifically uninstall and reinstall the following
+versions:
+
+- PyQt5==5.9
+- pyglet==1.3.0
+
+Also, for Pycharm, needed to remap the network drive to a windows drive with the
+=subst= command. I also removed logging for mouse movements, since I'm not using
+that at all for the experiment.
+
+This experiment takes quite a bit longer - I think I should block out 1 and a
+half hours for it instead.
 
 * September 2019
 
