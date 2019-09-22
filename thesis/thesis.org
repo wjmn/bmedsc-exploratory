@@ -2,6 +2,13 @@
 #+AUTHOR: Jamin Wu
 #+DATE:
 
+Loss of vision can significantly impact a person's independence.
+To restore vision, devices known as visual prostheses may be implanted to bypass damaged structures in the visual pathway.
+Cortical visual prostheses (CVPs) are visual prostheses implanted on the surface of the brain, effectively bypassing all peripheral structures usually necessary for vision.
+Interest in CVPs emerged after observational studies in the 1960s showed that local stimulation of visual cortex produced point-like sensations of light in the visual fields of blind subjects.
+Evidence from these studies have suggested that the visual sensations produced by
+
+
 * Summary/Abstract
 
 1. Cortical visual prostheses are devices implanted on the surface of the brain
@@ -71,7 +78,27 @@ Guiding questions:
    3. What arrangements of grids are most conducive to this process? How can the
       capability of a grid be assessed or compared for this task?
 
+
+
 * Methods
+
+For clarity, the computational and experimental methods are described separately.
+
+** Computational Methods
+
+To train an image encoder that would transform a raw pixel image into a vector of electrode amplitudes, we designed a training architecture  composed of a conditional generative adversarial network (cGAN).
+This architecture is outlined in Figure {}.
+
+The training architecture proceeds as follows:
+1. An image, represented as a 2D matrix of grayscale pixel values, is the initial input to the network and begins a training step.
+2. The image is fed to an encoder network, which outputs a vector of electrode amplitudes.
+3. The vector of phosphene amplitudes is fed to a fixed simulated renderer, which renders the electrode amplitudes into a  new 2D matrix of grayscale pixel values.
+   This renderer simulates the visual sensations produced when electrode amplitudes are sent to a device for an implantee.
+4. The 2D image render is passed to a fixed pre-trained hole-filling network, which produces a new 2D image render.
+5. The hole-filled 2D image render is passed to a decoder network.
+   The decoder network attempts to classify the 2D image render as one of ten possible digits, or as "garbage" representing no digit.
+6.
+
 
 ** Overview
 
@@ -82,11 +109,12 @@ All code was written using the Python programming language.
 
 ** Phosphene Modelling
 
-To simulate prosthetic vision, phosphenes must be modelled so they can be
-displayed on a computer screen. The most prevalent phosphene models for
-prosthetic vision experiments arrange phosphenes in regular linear or polar
-grids with uniform characteristics. These models are simple, fast and usually
-computationally efficient.
+The basic flow of prosthetic vision
+
+To simulate prosthetic vision, phosphenes must be modelled so they can be displayed on a computer screen.
+The most prevalent phosphene models for prosthetic vision experiments arrange phosphenes in regular linear or polar grids with uniform characteristics.
+The
+These models are simple, fast and usually computationally efficient.
 
 However, as discussed in section {}, these phosphene representations are
 extremely unlikely to reflect the reality of cortical visual prostheses. All

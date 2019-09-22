@@ -1,0 +1,139 @@
+#+TITLE: Thesis Draft
+
+* Background
+** (Literature Review)
+<To be inserted>
+
+** Rationale
+
+From current literature around cortical visual prostheses, we notice a prominent gap between the available empirical evidence about what prosthetic vision actually 'looks like', and the quality of vision we hope to be able to deliver to implantees to make a cortical visual prosthetic useful.
+We observe that there have been considerable efforts into improving image processing algorithms for prosthetic vision to address the known limitations of vision provided by stimulating the brain.
+
+However, we have seen that the majority of these explorations have chosen to target specific, previously-known, perceived limitations of prosthetic vision (the most common being low resolution) and validated these methods in simulated settings (given the difficulty of in vivo brain stimulation).
+The result is that most image processing algorithms are not well-validated nor automatically adaptable to the vast range, limitless combinable and possibly yet unknown visual limitations of cortical visual prostheses still emerging.
+What's more, there is a common assumption in much of the literature that the image processing algorithm should be a static feature of the device.
+We have seen no previous literature looking at how image processing algorithms might be computationally varied /between/ individuals beyond simply tuning basic parameters, such as brightness or contrast thresholds.
+This seems at odds with the knowledge that there has been tremendous variation in the percepts participants perceive upon stimulation of the brain, venturing so far as to perceiving textured or hallucinatory phenomena in some cases.
+There remains much we have yet to discover about the properties of cortically-stimulated vision which no doubt will affect how we might proecss images in the future.
+
+** Research Questions
+
+We are therefore confronted with a broad question: *how can we develop methods of deriving image processing algorithms which is not tied to our underlying conception of what the vision will actually look like?*
+We note that:
+ 1) We do not seek to develop an image processing algorithm /per se/: instead we are looking for a general way in which computers might derive a specific 'algorithm' if we feed it known visual properties of a prosthetic for a certain individual.
+ 2) We do not seek to remove the necessity of simulation to develop such a derivation method; and, in fact, we further emphasise the need to encode visual properties of a prosthetic in simulated space to explore the possibility of individually-tailored processing algorithms.
+    We have criticised the use of simulation for the development of past algorithms because the algorithms developed have been statically tied to the simulation; instead, we wish to repurpose simulation as a dynamic computational input to derive a suitable algorithm, rather than as a static feature of a device.
+ 3) We further motivate this question by stating that a 'vision-agnostic' derivation method would be more adaptable to yet-unknown properties of cortical vision.
+    THis is particularly important given how little is still known about visual properties such as multi-phosphene combinations, colour and the ability to recognise complex forms.
+
+For this project, we have narrowed this question to a specific sub-question: *can a neural network training architecture provide a means of training an image processing algorithm to represent digits for a dynamic grid of phosphenes?*
+The question has been constrained such that:
+ 1) We draw from modern machine learning research as our means of 'deriving image processing algorithms' from an arbitrary input.
+ 2) We define our arbitrary input to be phosphene locations only, which is a simple but well-established variant between individuals for which image processing algorithms have not yet specifically been tailored for.
+ 3) We limit the output of our image processing algorithms to digit representation only, so that we can conveniently experimentally validate our approach within the time and resource limits of this project.
+
+Given that this question is a question of possibility, we also pose a related, experimentally-testable subquestion: *does a prototypical neural network-derived processed image provide better digit recognisability for an arbitrary grid, compared to a mask-based control?*
+We emphasise that the primary intent for this project was to explore and develop training architectures and models as a generalisable means of deriving image processing methods.
+This project is therefore more focused on the "building" aspect of the training framework than the "testing" aspect.
+We do not expect that experimental validation during simulated prosthetic vision, at this stage, would be reflective of the possible advantages or disadvantages posed to real implantees.
+However, we aim to, as part of this project, demonstrate how experimental validation may be conducted in a simple psychophysics setting and to analyse the preliminary results of this validation using the early prototype training architecture developed by this project.
+
+** Aims
+
+The *primary aim* for this project is to develop a neural network architecture capable of being trained to derive image-processed renders for a specified digit, for a dynamic, arbitrary arrangement of phosphenes.
+
+This aim constitutes the major contribution of the project towards the research questions.
+By nature, this particular aim comprises development and iteration to build a workable software implementation and is therefore not amenable to traditional hypothesis testing.
+Instead, we present findings during the numerous iterations of development to justify our architectural decisions for this early attempt at addressing the research questions.
+
+The *secondary aim* for this project is to design, conduct and analyse a simple psychophysics experiment to determine whether participants can learn to discriminate digits better using prototypical neural network-trained renders compared to renders derived from a simple mask-based image processing.
+
+For this secondary aim, we namely wished to test the hypothesis:
+*Participants achieve better overall digit recognition accuracy using prototype-trained digit renders for an arbitrary grid, compared to simple mask-based image processing.*
+
+* Methods
+
+The methods for this project consists of two portions:
+1) The methods involved in developing the *software implementation* of a neural network training architecture and simulation model for simulated prosthetic vision (to address the primary aim), and
+2) The methods involved in programming, designing and conducting a psychophysics experiment to test participants' accuracy of digit recognition using the prototype developed in 1) (to address the secondary aim).
+
+** Software Implementation
+
+We provide an overview of the final training architecture developed during this project in Figure <INSERT>.
+
+There are two major components to the software implementation:
+1) A *phosphene grid model*, which provides an interface to simulate the vision provided by a cortical visual prostheses as 2D grayscale renders, with individually-specifiable (and individually-variable) properties (including number of phosphenes, phosphene positions and phosphene sizes)
+   This allows the creation and simulation of any number of arbitrary grids with different properties.
+2) A *conditional generative adversarial neural network training architecture*, which attempts to derive an image processing model that best optimises the discriminability and recognisability of digits passed through an arbitrary phosphene grid produced by 1). The network architecture itself consists of several subcomponents:
+   1. An *encoder network*, which converts a digit into a vector of simulated electrode brightnesses, which is used as input to the phosphene grid model in 1).
+   2. A *decoder network*, which takes the outputs from the phosphene grid model in 1) as well as true examples of handwritten digits, and attempts to discriminate between digit identities and "garbage" digits.
+   3. A *modifier network*, which optionally modifies the output of the phosphene grid model in 1) to explicitly perform simple inferences (such as joining dots) on renders before passing them to the decoder.
+
+The custom code required for this implementation was written in Python by the author (JW), with dependencies on external Python libraries specified below and in the Appendix.
+The implementation in full is available from the following code repository on GitHub: <INSERT GITHUB REPO> and shared under <LICENSE>.
+Below, we describe the detailed implementation of each component in turn.
+
+*** Phosphene Grid Model
+
+In order to train the computer to derive image processing algorithms for a real implantee's visual experience, properties of that implantee's visual experience must be encoded in some way for the computer to use.
+We use image simulation as a means to achieve this (though other methods of encoding may be used), where we simulate the expected appearance of an implantee's visual experience as a 2D grayscale image.
+We stress that, unlike previous image processing studies described in the Background section of this thesis, the specific properties of the image simulation is not integral to the training architecture itself and is easily substitutable.
+For example, if a new property of visual experience is discovered (such as the experience of textures for certain individual phosphenes), the image simulator can simply be modified while the training architecture need not change, and the derived image processing model will take this change into account when run afresh.
+
+The phosphene grid model for this project consists of a 3D matrix containing a number of 2D grayscale image slices equivalent to the number of simulated electrodes.
+Each 2D grayscale image slice corresponds to the percept produced by stimulating a single electrode (on a transparent background, which appears black).
+The grid receives, as input, a vector of numbers corresponding to a brightness that should be applied to each simulated electrode.
+The grid renders this input by weighting each electrode's percept slice according to the input vector, then summing the slices along the long axis to produce a single 2D greyscale render.
+The 2D greyscale render pixel values are normalised and then returned as output.
+A basic schematic for this model is shown in Figure <>.
+
+The data representation format for this model is flexible enough to allow a wide variety of phosphene grid representations.
+As the data for a phosphene grid is itself stored simply as a 3D matrix of per-electrode percepts, the visual properties of a percept can be freely encoded on a per-electrode basis.
+For convenience, the percepts for each electrode modelled in this experiment simply appear as a single white square on a black background with a Gaussian blur applied, but this restriction is not imposed by the data storage format and indeed any percept shape or multiplicity could be used.
+
+To quickly generate arbitrary grids, we defined a number of grid generation functions which produced grids with either Cartesian or Polar arrangements.
+1) Cartesian grids produced phosphenes with even sizes and even spacing in a regular 2D lattice. This style of grid serves as a control, approximating a regular pixel image at high resolutions.
+2) Polar grids produced phosphenes with sizes varying by distance from the center (using a log-polar relationship; more eccentric phosphenes appear larger), arranged in a polar coordinate system. This style of grid better models the believed appearance and arrangement of phosphenes in the visual fields.
+Each grid generation function also had the option of producing phosphenes at entirely random locations (i.e. not arranged in their respective grid systems), and/or entirely in the right half of the image (to reflect a unilateral implant, as would be expected for most early implantees).
+Examples of these renders are illusrated in Figure <> below.
+Using these generation functions, any number of random grids wcould be generated with different properties.
+
+The largest number of electrodes that have been tested in vivo for a cortical visual prostheses recipinent is currently 64, though there are implants in development with up to 473.
+For grids generated for training during this experiment for training, we tested two resolutions: 144 electrodes (an optimistic estimate) and 64 electrodes (a more realistic estimate).
+For grids generated for use in psychophysical testing, we limited the number of electrodes to 64 as our preliminary tests determined that the task was too easy at higher resolutions.
+
+*** Training Architecture
+
+We implemented a training architecture based on conditional generative adversarial networks (cGANs).
+The overall purpose of this training architecture is to train an image encoder for a specified grid which takes a digit from 0-9 as input, and produces a vector of electrode strengths that can be fed to the specified grid to produce a digit render.
+GANs are commonly used in the machine learning community as a means of training computers to generate novel images based on images sampled from the desired distribution.
+cGANs further refine the images produced by GANs by specifying a conditional class over the distribution from which images should be generated; for example, by specifying that only images of digit 9s should be generated from a distribution indicating images of all digits.
+From a practical perspective, cGANs are particularly useful; digits in the environment could be recognised with modern optical character recognition technology and simply remapped to a conditional image render.
+
+The general flow of the training architecture is shown in Figure <>.
+Briefly, a naive random encoder and decoder network are first initialised, then simultaneously and iteratively trained with opposing goals; the encoder aiming to 'fool' the decoder by producing encodings that are rendered as 'realistic' digits, and the decoder aiming to discriminate between digits and to identify 'garbage' produced by the encoder.
+After a predefined number of training steps have been completed, the encoder network at the end should produce conving digits to a decoder which is well-trained to recognise fake digits.
+In order to train the decoder to detect 'fake' digits, it must also be given real digits; we therefore sourced real digits from the publically available MNIST database of handwritten digits (normalised, scaled and translated to the rough domain of the renders produced by the grids from 1)).
+
+Each training step proceeds in the following manner:
+1) An arbitrary grid is generated for use in training.
+2) An MNIST digit sample is selected.
+3) The digit identity is fed to the image encoder.
+4) The image encoder produces an electrode vector encoding.
+5) The electrode vector encoding is fed to the generated grid.
+6) The output render is fed to the image decoder.
+7) The image decoder produces a prediction of probabilities the digit's identity.
+8) The output probabilities are compared to the truth identity, and the loss is sused to backpropogate through to the encoder and decoder (which are further trained).
+This process was repeated over a maximum of 40 epochs, for 60000 MNIST digit in batches of 250 digits per training step.....
+
+(Jobs run on MASSIVE)
+
+** Psychophysics Experiment
+
+To perform preliminary experimental validation of the methods described above, we designed a simple psychophysics experiment to tests participants' ability to discriminate between digits under renders produced by the neural network training scheme, and to render produced using simple mask-based image processing.
+The custom code required for this experiment was written using Python and the PsychoPy package by the author (JW).
+
+*** Demographics
+
+11 participants were recruited from students and staff at Monash University, in accordance with the MUHREC application for this project.
+Participants were briefed on the purpose and conduct of the experiment and signed a consent form for the experiment.
