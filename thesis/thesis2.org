@@ -1,5 +1,12 @@
 #+TITLE: Thesis Draft
 
+* Overview
+
+Electrodes implanted on the brain to restore vision can only make you see spots of light, which varies between people.
+This makes it hard to come up with ways to represent images that are useful for implantees.
+We developed a framework using generative adversarial networks to discover ways to represent digits for different phosphene maps.
+These digit representations don't always look like digits, but people find them easier to distinguish than regular digits.
+
 * Background
 ** (Literature Review)
 <To be inserted>
@@ -127,6 +134,8 @@ Each training step proceeds in the following manner:
 This process was repeated over a maximum of 40 epochs, for 60000 MNIST digit in batches of 250 digits per training step.....
 
 (Jobs run on MASSIVE)
+Jobs were run on the MASSIVE M3 computer system.
+
 
 ** Psychophysics Experiment
 
@@ -137,3 +146,37 @@ The custom code required for this experiment was written using Python and the Ps
 
 11 participants were recruited from students and staff at Monash University, in accordance with the MUHREC application for this project.
 Participants were briefed on the purpose and conduct of the experiment and signed a consent form for the experiment.
+
+*** Experiment
+
+**** Setting
+
+The experiment consisted of a single approximately one-hour session for each participant.
+At the start of the experiment, the participant was asked to sit on a chair in front of a computer screen.
+The participant was then asked to rest their chin in a chin rest approximately an arms length away from the computer screen.
+The horizontal distance between the chin rest and the computer screen was the same for each participant; participants were allowed to adjust the vertical height of the chinrest within a range of several centimetres to suit their sitting height.
+The participant was then given a pair of headphones to wear, and the volume was adjusted for the participant's comfort.
+The experimental trial blocks, beginning with an example block, were then commenced.
+
+**** Trials and Trial Blocks
+
+(NEED TO MENTION CONDITION)
+
+A /trial block/ for this experiment consisted of an uninterrupted set of classification trials, interspersed with grey screens which participants were instructed they could use to take a short pause.
+A /trial/ for this experiment consisted of an uninterrupted set of phosphene-represented digit /cues/ which the participant was asked to identify.
+A /cue/ for this experiment consisted of a single black screen with a phosphene pattern located in center.
+Each experimental trial block consisted of 12 trials; each trial consisted of 20 phosphene representations of digits which a participant was asked to classify.
+At the start of a trial, the participant would be shown a grey progress screen, instructing them to press any key to continue.
+At a keypress, the participant would be shown the first cue, and the program would await a digit keypress from the participant.
+When the participant pressed a digit, they would immediately hear audio feedback simultaneously playing a tone indicating if they were correct (high) or incorrect (low), and a voice telling them what the true digit was.
+The next cue would then immediately be shown, and the program would await the next digit keypress.
+This would repeat 20 times.
+At the conclusion of a trial, another grey progress screen would be shown, and the trial process would again repeat.
+At the conclusion of a trial block, the participant would be given a short break before the next trial block was begun.
+
+**** Statistical Analysis
+
+Results from participants were pooled.
+We performed a logistic regression to look at how accuracy of classification was correlated with
+
+* Results
