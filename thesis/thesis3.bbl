@@ -1,3 +1,9 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{1}
+
+\bibitem{Lecun1998}
+Lecun Y, Bottou L, Bengio Y, Haffner P.
+\newblock Gradient-based learning applied to document recognition.
+\newblock Proceedings of the {IEEE}. 1998;86(11):2278--2324.
+\newblock Available from: \url{https://doi.org/10.1109/5.726791}.
 
 \end{thebibliography}

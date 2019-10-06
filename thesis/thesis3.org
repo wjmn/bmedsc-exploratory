@@ -1,9 +1,11 @@
-#+TITLE: \textbf{Using Generative Adversarial Networks to Derive Phosphene Patterns in Simulated Prosthetic Vision (IN PROGRESS)}
-#+AUTHOR: {{{NEWLINE}}}\textbf{Student:} Jamin Wu {{{NEWLINE}}} \textbf{Student ID:} 27025861 {{{NEWLINE}}} {{{NEWLINE}}} \textbf{Supervisor:} Dr Yan Tat Wong {{{NEWLINE}}} \textbf{Co-Supervisor:} Dr Nicholas Price {{{NEWLINE}}} {{{NEWLINE}}} Department of Physiology {{{NEWLINE}}} Department of Electrical & Computer Systems Engineering {{{NEWLINE}}} \textbf{School of Biomedical Sciences, Monash University} {{{NEWLINE}}} {{{NEWLINE}}} Word Count: <> words
-#+OPTIONS: date:nil toc:nil
+#+TITLE: \textbf{Using Generative Adversarial Networks to Derive Phosphene Patterns in Simulated Prosthetic Vision}
+#+AUTHOR: \textbf{Student:} Jamin Wu {{{NEWLINE}}} \textbf{Student ID:} 27025861 {{{NEWLINE}}} {{{NEWLINE}}} \textbf{Supervisor:} Dr Yan Tat Wong {{{NEWLINE}}} \textbf{Co-Supervisor:} Dr Nicholas Price {{{NEWLINE}}} {{{NEWLINE}}} Department of Physiology {{{NEWLINE}}} Department of Electrical & Computer Systems Engineering {{{NEWLINE}}} \textbf{School of Biomedical Sciences, Monash University} {{{NEWLINE}}} {{{NEWLINE}}} Minor thesis submitted in partial fulfillment of the requirements for the {{{NEWLINE}}} degree Bachelor of Medical Science (Honours) at Monash University. {{{NEWLINE}}} {{{NEWLINE}}} Word Count: <> words
+#+OPTIONS: date:nil toc:nil num:2
+#+LATEX_CLASS: book
 #+LATEX_HEADER: \usepackage{helvet}
 #+LATEX_HEADER: \usepackage{gensymb}
 #+LATEX_HEADER: \usepackage{xcolor}
+#+LATEX_HEADER: \usepackage{appendix}
 #+LATEX_HEADER: \usepackage{tikz}
 #+LATEX_HEADER: \usepackage{microtype}
 #+LATEX_HEADER: \renewcommand{\familydefault}{\sfdefault}
@@ -29,46 +31,21 @@
 
 #+LATEX: \clearpage
 
-#+LATEX: \setcounter{tocdepth}{2}
+#+LATEX: \setcounter{tocdepth}{3}
 #+LATEX:\tableofcontents
-#+LATEX: \clearpage
+
+#+LATEX: \chapter*{List of Abbreviations}
+
+- CGAN :: conditional generative adversarial network
+- CVP :: cortical visual prosthesis
+- GAN :: generative adversarial network
+- ReLU :: rectified linear unit
+
 #+LATEX:\listoftables
-#+LATEX: \clearpage
 #+LATEX:\listoffigures
-#+LATEX: \clearpage
 
-#+LATEX: \section*{List of Abbreviations}
-
-- GAN :: Generative adversarial network
-- CVP :: Intracortical Visual Prosthesis
-
-#+LATEX: \clearpage
-
-
-#+begin_comment
-
-Essential 4-point template:
-
-1. What's the problem?
-2. Why is that a problem?
-3. What's the solution?
-4. What will the solution fix?
-
-Likewise, follow a simple structure:
-
-1. What is it?
-2. How/why is it?
-3. What does this mean? (i.e. therefore...?)
-
-#+end_comment
-
-
-* Background - CAN SKIP
-
-#+begin_quote
-#+LATEX: \color{red}
-(Will be a modified version of the literature review submitted earlier in the year, but mostly the same. Here's a quick summary)
-#+end_quote
+* Background
+** Introduction
 
 Blindness is a significant disability and can be caused by damage at any point along the visual pathway from the eye to the brain.
 A *cortical visual prosthesis* (CVP) is a vision-restoring device inserted directly into the brain, replacing all parts of the visual pathway except the brain itself.
@@ -94,55 +71,31 @@ They have been used with varying degrees of success in a number of scene generat
 Because GANs are used to make generated images look more realistic, it is possible they could be used in a prosthetic vision setting to make phosphene patterns look more like what they are supposed to represent.
 Importantly, GANs are a /training/ technique which can be applied to different types of phosphene simulations to produce specifically-tailored results.
 This means GANs may be able to address the difficulties in finding generalised image processing strategies suitable for different people's experiences of prosthetic vision.
+
 To our knowledge, there are no prior studies which attempt to apply GANs to the problems faced by prosthetic vision.
+The following chapters review the literature surrounding CVPs, the visual percepts they produce, and previous approaches to addressing these limitations.
 
-#+begin_quote
+** Project Motive
 
-#+LATEX: \color{red}
+*** Research Questions
 
-Should I discuss the choice of a digit recognition task in the background, or in the aims/methods? I'm leaning towards Background, so will probably add it in here.
-#+end_quote
-
-#+begin_quote
-
-#+LATEX: \color{red}
-
-I will probably also spend some time in the background discussing the actual architecture of a GAN (wasn't in my old literature review).
-
-#+end_quote
-
-#+LATEX: \clearpage
-
-* Aims
-
-** Research Questions
-
-As there are no prior studies applying GANs to prosthetic vision, we aimed to address the following research questions:
+As there are no prior studies applying GANs to simulated prosthetic vision, this project aimed to address the following research questions::
 
 1) Can GANs be used to train a neural network to produce phosphene patterns representing digits, given different simulated properties of prosthetic vision and, if so, how could this be implemented?
 2) Do people find it easier to recognise digits from phosphene patterns derived from training via GANs, compared to a basic comparison (directly masking digits with a phosphene grid)?
 
-** Aims and Hypothesis
+*** Aims and Hypothesis
 
-To address the two research questions, we aimed to:
+To address the two research questions, this project aimed to:
 
 1) Develop a preliminary software implementation of a GAN training architecture for generating phosphene patterns, which could be applied to different phosphene simulations with minimal modification.
 2) Experimentally test whether people find it easier to recognise digits from phosphene patterns derived from our prototype training implementation, compared to a basic mask-based comparison.
 
-For Aim 2, we also formulated the following hypothesis:
+Aim 2 relies on the implementation produced in Aim 1 and can be hypothesis-tested against the folowing hypothesis:
 
 1) Sighted participants, under simulated conditions, have a higher overall digit recognition accuracy when viewing phosphene patterns derived from our prototype GAN training architecture, compared to when viewing phosphene patterns produced by basic image processing using masking.
 
-#+begin_quote
-
-#+LATEX: \color{red}
-
-Should this maybe be split into two hypotheses - *initial* digit recognition accuracy, and *overall* (or "final") digit recognition accuracy?
-The psychophysics experiment itself was tailored more to the latter question (which is why I've kept it as one above), though it probably seems from the Background that I was more trying to lead to the former question...
-
-#+end_quote
-
-** Rationale
+*** Rationale
 
 While GANs have been applied to image-based tasks in other domains, it is not yet clear how they should be applied to prosthetic vision.
 An important difference between GANs in other domains versus prosthetic vision is that typically GANs directly manipulate every pixel in images they generate.
@@ -158,16 +111,261 @@ This is the primary contribution of this project.
 GANs are designed to minimise the computer's ability to discriminate between generated images and real image samples.
 However, computers both find it easy to discriminate features which humans find difficult (e.g. different shades of grey) and find it difficult to discriminate features which humans find easy (e.g. abstract scenes).
 As a result, while the generated output may be optimised for a computer, its results may not translate to a human.
-We therefore formulated Aim 2 as a preliminary validation measure to test whether the computer's output was human-benefitting.
+Aim 2 is therefore formulated as a preliminary validation measure to test whether the computer's output was human-benefitting.
 
-We would like to emphasise that Aim 2 is /not/ intended to provide conclusive or compelling evidence on the usefulness of GANs in general for simulated prosthetic vision.
+Aim 2 is /not/ intended to provide conclusive or compelling evidence on the usefulness of GANs in general for simulated prosthetic vision.
 It is purely intended as a short-term checkpoint on the performance output of the implementation in Aim 1.
-We do not expect this project to produce a necessarily useful software implementation in Aim 1 given its novelty.
+It is not expected that this project will produce a necessarily useful software implementation in Aim 1 given its novelty.
 The preliminary validation results may instead be used to guide how to better refine the software implementation for future use.
 
-
 * Methods
+** Methodology Overview
 
+This project involved two stages:
+
+1) Development of a software implementation of a GAN training architecture to derive phosphene patterns of digits, for different types of phosphene simulation properties.
+2) Implementation and conduct of a psychophysics experiment to test GAN-trained phosphene patterns (using the implementation developed in the first stage) against basic mask-based controls for a digit recognition task.
+
+** Development of GAN Training Architecture
+*** Development Context
+
+The code required for this project was written by the author using the Python programming language and accompanying software packages.
+Where appropriate, some snippets of code have been included below; the remainder of the codebase is too large for inclusion in this manuscript and is therefore hosted and available for perusal at the following GitHub repository (TODO).
+All code was developed on a Windows 10 personal computer.
+Code was executed both on the development computer (Windows 10) and remotely on the M3 MASSIVE high-performance-computing platform.
+
+- [ ] TODO: Host code on GitHub repository (+/- include several files in appendices)
+
+*** Overview
+
+A high-level overview of the implemented GAN training architecture is provided in Figure [[fig:method_flowchart]].
+
+#+begin_src ditaa :file images/methods_training_architecture.png :exports none
+
+
++------------+
+| Real Image +-------------------------------------------------+
++------+-----+                                                 |
+       |                                                       |
+       v                                                       |
++----------------+                                             |
+| Image Category |                                             |
++-------+--------+                                             |
+        |                                                      |
+        v                                                      v
++-----------+     +----------+       +----------+    +-----------------+
+| Generator +---->| Renderer +------>| Modifier +--->|  Discriminator  +------+
++-----------+     +----------+       +----------+    +-----------------+      |
+        ^                                                      ^              |
+        |                                                      |              |
+        +------------------------------------------------------+--------------+
+
+
+#+end_src
+
+#+RESULTS:
+[[file:images/methods_training_architecture.png]]
+
+#+NAME: fig:method_flowchart
+#+CAPTION: Overview of GAN training architecture implementation.
+[[file:images/methods_training_architecture.png]]
+
+This architecture closely follows classical GAN architectures (explicitly, a conditional GAN architecture), with the addition of the /Renderer/ and /Modifier/ steps.
+The flow of data through the training proceeds as:
+1) A /Renderer/ is first chosen for this training run.
+   The /Renderer/ corresponds to a parametric phosphene simulator, which can be altered for different training runs.
+2) A real image sample of a digit is taken from a pool of real digits.
+3) The image category (in this case, the identity of the digit e.g. a "3") of the image sample is taken from its label.
+4) The image category is fed into the /Generator/, which produces a set of instructions - an image *encoding* - for the /Renderer/.
+5) The /Renderer/ takes the encoding and simulates it as phosphenes, producing a simulated prosthetic vision image.
+6) The /Modifier/ takes the simulated prosthetic vision image and modifies it to more closely align it with the domain of the real images.
+   This is discussed further in the sections below.
+7) The /Discriminator/ takes both real images, and modified simulated prosthetic images and produces predictions of the digit identity and whether it was real or fake.
+   The difference of its predictions from the true identities of each image is used to adjust the /Generator/ and /Discriminator/ to better perform their tasks.
+
+As with classical GAN architectures, the /Generator/ and /Discriminator/ participate in a zero-sum game where each network has opposing goals; the /Generator/ aiming to fool the /Discriminator/ into thinking its /Rendered/ encodings are real, and the /Discriminator/ aiming to identity the /Generator/'s fakes amongst the real samples.
+
+This process is repeated many times to slowly optimise the /Generator/ to produce useful encodings that can be fed to the renderer to produce digit-like phosphene patterns.
+Each step of this process is discussed in further detail in the sections below.
+
+*** Real Images
+
+The /Generator/ begins training as a naive neural network with no conception of what digits are or what they look like.
+In order for the /Discriminator/ to train the /Generator/ to produce digit-like encodings, the /Discriminator/ must be provided samples of what real digits actually look like.
+
+This project used handwritten digit samples from the public MNIST digit dataset. cite:Lecun1998
+The MNIST digit dataset consists of 60,000 grayscale images stored as 2D pixel arrays with dimensions 27x27 pixels.
+
+The MNIST digits are advantageous because:
+1) It is a publicly-available, comprehensive, labelled, clean, and well-validated dataset (indeed, often the /de facto/ dataset for benchmarking machine-learning tasks).
+2) Handwritten digits ensure there is sufficient variation within the dataset so that the /Generator/ and /Discriminator/ are incentivised to learn general features of digits (as opposed to rote-memorising whole digits, as might occur with using digits in a standard font).
+
+Samples of the raw MNIST digit dataset are provided in Figure [[fig:mnist_sample]].
+
+#+NAME: fig:mnist_sample
+#+CAPTION: 16 randomly-selected digits from the MNIST handwritten digit dataset.
+[[file:./images/mnist_samples.png]]
+
+In order for the /Discriminator/ to produce useful optimisations, there must be no obvious systematic difference between renders produced by the /Renderer/ and the real images.
+If such systematic differences were present, the /Discriminator/ would have no difficulty discriminating real and generated images and the /Generator/'s output would therefore shift aimlessly as it tries to converge to an impossible goal.
+
+A series of adjustments were therefore performed on the real images to mitigate systematic differences with images achievable by the /Renderer/.
+In order to more faithfully simulate a single unilateral cortical prosthetic vision device, we restricted renders to a single half of the visual fields (the right visual field).
+We therefore conducted the same adjustment to the MNIST digits by scaling each images' width by half and aligning the result with the right array edge.
+Each image's pixel value was also rescaled between -1 and 1 (from 0 to 255) to improve stability of the neural network output and the entire image upscaled to a resolution of 48x48 pixels to equal the pixel resolution of simulated renders.
+These adjustments to the real image dataset are illustrated in Figure (TODO).
+
+- [ ] TODO: Figure showing adjustments
+
+*** Image Category
+
+The MNIST digit dataset includes a digit label for each handwritten data image in the range 0-9 inclusive.
+These image categories are simply encoded as an integer corresponding to their digit label.
+As integers (i.e. a numerical datatype), these image categories are suitable for direct input into the /Generator/.
+
+*** /Generator/
+
+The /Generator/ is a neural network which:
+
+- Takes a single digit in the range 0-9, and
+- Returns instructions to each simulated electrode, as a vector of floating-point numerical values equal in length to the number of electrodes in the simulated prosthesis.
+
+There is a notable difference in the /Generator/ network described above compared to traditional /Generators/ in GANs: the lack of a random seed input.
+This was an intentional choice.
+The use of a random input seed into /Generator/ networks in GAN architectures allows it to output multi-modal images - i.e. images which are similarly realistic, but possess slight image variations.
+This is often desirable, where we want GANs to produce many different novel images instead of just one.
+
+However, for use in simulated prosthetic vision, multi-modal output is a low priority.
+Firstly, the ability to incorporate multi-modality into a /Generator/ which does /not/ have direct access to its final render is not clear.
+Secondly, it may actually be desirable to limit the output to one "good" phosphene pattern per digit; in practice, subjects are likely to find it easier to learn one phosphene pattern per digit only rather than having to deal with many "similar" patterns with extra variable features.
+
+Because this is the first attempt at developing a GAN for our purpose, it is unknown what neural network architecture is best suited for this task.
+Our task consists of a simple mapping between 10 image categories (digit identities) to deterministic vectors as we purposefully removed the usual random seed input.
+We therefore used a neural network with a minimal number of hidden layers to reduce training times, depicted in Figure (TODO).
+
+The /Generator/ network consisted of:
+1. An /input/ layer, containing a single neuron taking a digit from 0-9 as input.
+2. An /embedding/ layer, which maps the single categorical digit class into a 10-element continuous vector.
+3. A /batch normalization/ layer, which applies a normalisation for each mini-batch before feeding into the next layer.
+4. A /leaky ReLU/ layer, which applies a rectifier activation function to dampen negative values.
+5. A /dense/ layer, which outputs a vector of simulated electrode instructions for a specified number of electrodes.
+6. A /sigmoid/ layer, which applies a sigmoid activation function to constrain all output values between 0 and 1.
+
+My passing an image category (digit 0-9) into the /Generator/ as input, the /Generator/ therefore outputs a vector of simulated electrode instructions according to the specified number of electrodes.
+The simulated electrode instructions take the form of a vector of floating-point numbers between 0 and 1 inclusive, with the number of elements equalling the number of electrodes.
+Each floating-point number indicates the "brightness" at which an electrode should be activated to represent a particular image category (digit).
+Notably, there is no information encoded about what electrode actually /does/, nor where it is located; the /Generator/ network is effectively blind to these elements of the simulation.
+
+7. [ ] TODO: Graphical depiction of the encoder network
+
+*** Renderer
+
+The /Renderer/ is a custom simulation of prosthetic vision, which takes instructions for each "electrode" as input, and outputs the simulated render as a grayscale image.
+The /Renderer/ is a simulated stand-in for real implantees and their perception of vision through a CVP.
+
+The /Renderer/ is essentially a 3D volume of pre-rendered 2D grayscale image slices, each slice corresponding to the visual percept of a single electrode.
+These pre-rendered grayscale slices allow each electrode to produce a distinct, unique percept; for example, one electrode in the /Renderer/ may produce a small phosphene located near the center of vision, while another may produce a much larger phosphene in the peripheries.
+When an instruction for each electrode is supplied, each slice in the 3D volume is weighted according to its value.
+The slices are then aggregated together by summing along the long axis, and clipping values between 0 and 1 to produce a final grayscale render.
+The final render is then rescaled between -1 and 1 before being supplied to the discriminator.
+This process is visualised in Figure (TODO).
+
+- [ ] TODO: Graphic visualisation of the renderer
+
+Because the /Renderer/ base is a 3D volume of pre-rendered slices, different subjects can be simulated by using different pre-rendered volumes without requiring changes to the rendering process.
+In addition, the use of pre-rendered slices makes training much more efficient, as creating the render consists merely of bulk matrix operations which are easily vectorisable.
+
+In order to generate test grids for use with training, two different means of generating pre-rendered slices were implemented:
+1) Cartesian-spaced phosphenes, which maps electrodes to positions in a regular Cartesian plane and assigns the same size and strength to each phosphene.
+   This was chosen as a basic control as this grid essentially approximates a normal (albeit low-resolution) pixel image.
+2) Polar-spaced phosphenes, which maps electrodes to positions in a regular Polar grid and assigns to each phosphene a size corresponding to its location, as given by the equation $log(k \times (x^2 + y^2) + a)$ for parametrically-set values $k$ and $a$.
+   This was chosen to more closely reflect the visual qualities of phosphenes known to appear to subjects from experimental trials of cortical stimulation.
+
+For each of the two implementations above, two optional flags were also added:
+1) A randomising flag, which produces phosphenes at random locations instead of along a regular Cartesian or Polar grid.
+2) A half-flag, which constrains phosphenes to appear only in a single half of the visual fields (simulating a single implant, inserted into only one hemisphere of the brain).
+
+The /Renderer/ can theoretically simulate any number of phosphenes, but for our purposes, we focused on phosphene grids containing 64 phosphenes only.
+This reflects a highly conservative estimate of the number of useful electrodes achievable by first-generation CVPs.
+
+
+These grids are illustrated in Figure (TODO).
+- [ ] Graphic visualisation of layouts of the grids described in this step!
+
+*** Modifier
+
+In order for GANs to work effectively for the next step (feeding into the /Discriminator/), the generated fake renders must have the capability of looking as close to the real images as possible.
+Because the generated renders necessarily create simulated phosphenes, there would usually be no chance of the renders actually looking like digits unless the rendering resolution (i.e. number of phosphenes) was fairly high (at least 27x27 pixels, the original MNIST digit resolution).
+To resolve this problem, a /Modifier/ network can be added in order to bring the domain of the generated renders closer to the domain of real handwritten digit images to simulate basic "inference" that humans might make.
+This amounts to simple "hole-filling" for most purposes - i.e. connecting spaces between phosphenes, as a human might be able to do, and outputting a new "inferred" image.
+In this sense, the /Modifier/ allows the computer to simulate the sort of inference a person might be able to make from simple phosphene dots into more cohesive outlines and forms.
+
+For this project, the /Modifier/ consisted of a simple style-transfer GAN which mapped between phosphene images and "filled" forms.
+Style-transfer GANs are well-studied architectures, and the architecture of the /Modifier/ closely followed a basic style-transfer GAN architecture comprising:
+1. An /input/ layer, taking the entire 2D grayscale render image (reshaped as a 3D slice with a depth of 1).
+2. Multiple /2D convolutional/ layers (48, 96, 128 and 128 filters), each followed by a /batch normalization/ and a /leaky ReLU/ activation layer, which progressively downsample the image into extracted features.
+3. Two /2D deconvolutional/ layers (48 and 1 filter/s), which progressively upsample the extracted features into a new modified image render.
+   The last layer is passed through a $tanh$ activation function to remap the output between -1 and 1, as in the original render.
+This process is illustrated in Figure (TODO).
+
+In order to train the /Modifier/, MNIST digits were passed under 4800 random polar grids of 64 phosphenes with a simple masking operation to generate pairs of phosphene images real digit images.
+These phosphene-real pairs were used to train the weights of the /Modifier/ network.
+Once the /Modifier/ was trained, its weights were saved and frozen for subsequent use as a simple phoshene-to-forms image processor.
+Examples of the style transfer output of the trained /Modifier/ is shown in Figure (TODO).
+
+- [ ] TODO: Reference style-transfer GANs either here or in the Background section.
+- [ ] Modifier network figures
+
+*** Discriminator
+
+The /Discriminator/ is the final major processing step of the GAN training architecture, and the major element involved in actually training the /Generator/.
+The /Discriminator/ takes a modified rendered grayscale image, and outputs an 11-element vector of probabilities.
+The first ten elements correspond to the probability the /Discriminator/ believes the input image is a 0, 1, 2 etc.
+The final element corresponds to the probability the /Discriminator/ believes that the input image is not a digit at all, and is instead "garbage."
+The /DIscriminator/ is therefore a classifier which classifies images as either belonging to one of 10 digit classifications, or as being garbage instead.
+
+The /Discriminator/ itself is a convolutional neural network with a relatively small number of layers. It comprises:
+1. An /input/ layer, taking the 2D grayscale modified render image (reshaped as a 3D slice with a depth of 1).
+2. Two /2D convolutional/ layers (64 and 128 filters), each followed by a /leaky ReLU/ activation function and a 25% /dropout/ layer (randomly discarding 25% of prior inputs, to protect against overfitting)
+3. A /flatten/ and a /dense/ layer, to output an 11-element vector, which is then passed through a /softmax/ activation function to ensure all probabilities add to 1.
+This process is illustrated in Figure (TODO).
+
+- [ ] TODO: Discriminator network figure.
+
+The 11-element vector of probabilities output by the /Discriminator/ is then used to train the /Generator/ and /Discriminator/ itself through their respective loss functions.
+
+*** Loss Functions and Training
+
+Once an image, generated or real, has passed through to the /Discriminator/ to output probabilities, these probabilities can then be used as the basis for adjusting the /Generator/ and /Discriminator/ to optimise them toward their respective goals.
+This is the foundational basis of any GAN training architecture.
+
+The /Generator/'s goal is to have the modified renders produced from its encodings look as indistinguishable from real digits as possible.
+When its modified renders are passed through the /Discriminator/, it should therefore be optimised to produce a probability of 1 corresponding to the original /Generator/'s digit class input and a 0 for every other possibility.
+The /loss/ of the /Generator/ is given by the categorical cross-entropy between a one-hot vector corresponding to the original image class input, and the /Discriminator/'s predicted output.
+
+The /Discriminator/'s goal is to correctly classify real handwritten digits into their respective digit, as well as to correctly identify the modified renders produced by the /Generator/ as "garbage".
+The /loss/ of the /Discriminator/ is therefore given by the sum of categorical cross-entropies between:
+1. A one-hot vector corresponding to the real digit class of real images, and the predicted output of real images, and:
+2. A one-hot vector corresponding to the "garbage" class, and the predicted output of images from modifier renders produced by the /Generator/.
+
+These two losses are backpropagated through the network for each image sample and the weights within the /Generator/ and /Discriminator/ networks are updated according to their respective gradients over their loss function.
+For this project, the optimiser for gradient descent used was the Adam optimiser with a learning rate between 0.0001 and 0.01.
+
+*** Performing Training
+
+Training was performed in batches of 500 MNIST images, over all 60,000 images for up to 30 or 40 epochs.
+All training was performed on the M3 MASSIVE high-performance-computing service, and required approximately 10 hours to complete training for a single specified grid.
+The weights of the /Generator/ and intermediate phosphene render results were saved after each epoch to permit early stopping and reuse of any epochs renders.
+Overall, the training was conducted on over 100 different grids during development; 11 of which were randomly chosen for primarily validation in the psychophysics experiment.
+
+** Psychophysics Experiment
+*** Development
+*** Recruitment
+*** Setting
+*** Conduct
+*** Analysis
+
+#+LATEX: \clearpage
 
 * Results
 
@@ -216,12 +414,39 @@ All 11 participants were included in the analysis.
 All participants provided at least one complete block each of digit recognition data for both the control processor and the trained encoder for their grid.
 All data was considered valid and included in the analysis.
 
-**** Accuracy 
+**** Overall Accuracy 
+
+***** Pooled
+
+***** By Participant
+
+**** Statistical Effects
+
+***** Condition
+
+***** Progress
+
+***** Digit
+
+**** Response Time
+
+**** Initial Accuracy
 
 * Discussion
+** Relation to Aims
+** Implications
+** Limitations
+** Future Directions
 * Conclusion
+#+LATEX: \begin{appendices}
 * Appendices
+** Additional Qualitative Results: Examples
+** Psychophysics Explanatory Statement
+** Psychophysics Consent Form
+** Selected Code
+*** Plotting
 #+LATEX: \clearpage
-
+* References
 bibliographystyle:vancouver
 bibliography:refs.bib
+#+LATEX: \end{appendices}
