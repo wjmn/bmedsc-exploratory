@@ -1,0 +1,38 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces A modelled render of the Gennaris bionic vision headgear. Figure courtesy of Monash Vision Group.\relax }}{17}{figure.caption.9}% 
+\contentsline {figure}{\numberline {3.2}{\ignorespaces A basic flowchart of the process of prosthetic vision compared to normal vision. Figure made by the author.\relax }}{19}{figure.caption.12}% 
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Spatial distribution of phosphenes mapped to the visual fields (left) in a patient implanted with an early 64-electrode array (right). Figure from Dobelle et al. 1979 \cite {dobelle_mapping_1979}\relax }}{24}{figure.caption.17}% 
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Examples of different simulated renders of phosphenes. Figure from Chen et al. 2009. \cite {chen_simulating_2009-1}\relax }}{31}{figure.caption.22}% 
+\contentsline {figure}{\numberline {5.2}{\ignorespaces An example of an edge-detection algorithm with a CNN-driven object-filling algorithm to render a clean simulated phosphene image. Figure from \cite {sanchez-garcia_structural_2018}\relax }}{33}{figure.caption.26}% 
+\contentsline {figure}{\numberline {5.3}{\ignorespaces An example of a saliency-based algorithm to highlight a region of interest of the image. Figure from \cite {li_image_2018}\relax }}{34}{figure.caption.28}% 
+\contentsline {figure}{\numberline {5.4}{\ignorespaces An example of a transformative approach to image processing to re-encode information. Figure from \cite {lui_transformative_2012}\relax }}{35}{figure.caption.30}% 
+\contentsline {figure}{\numberline {5.5}{\ignorespaces An example of a temporal approach to conveying information through phosphenes, where electrodes are stimulated in succession instead of simultaneously. Figure taken from \cite {beauchamp_dynamic_2018}\relax }}{36}{figure.caption.32}% 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {8.1}{\ignorespaces Overview of GAN training architecture implementation.\relax }}{47}{figure.caption.41}% 
+\contentsline {figure}{\numberline {8.2}{\ignorespaces 16 randomly-selected digits from the MNIST handwritten digit dataset.\relax }}{49}{figure.caption.43}% 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {10.1}{\ignorespaces Phosphene patterns generated for the digit 4 for a regular cartesian grid of 576 phosphenes. The digit form approaches a recognisable digit 4 until approximately epoch 20, before the subsequently drifting away.\relax }}{65}{figure.caption.59}% 
+\contentsline {figure}{\numberline {10.2}{\ignorespaces Phosphene patterns generated for different phosphene resolutions of a regular Cartesian grid for the digit 0. The first column shows the phosphene locations and relative sizes; the second, third and fourth columns show the simulated patterns at the 2nd, 4th and 8th epoch respectively.\relax }}{66}{figure.caption.61}% 
+\contentsline {figure}{\numberline {10.3}{\ignorespaces Phosphene patterns generated for the digit 6 for 4 different grid arrangements with 576 phosphenes at 10, 20 and 30 epochs with the base phosphene map on the left for comparison.\relax }}{67}{figure.caption.63}% 
+\contentsline {figure}{\numberline {10.4}{\ignorespaces Phosphene patterns generated for each digit 0-9 for a regular cartesian grid of 576 phosphenes at the 16th epoch.\relax }}{68}{figure.caption.65}% 
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {11.1}{\ignorespaces Mean digit recognition accuracy by condition, pooled participant data.\relax }}{71}{figure.caption.71}% 
+\contentsline {figure}{\numberline {11.2}{\ignorespaces Mean digit recognition accuracy by participant and condition.\relax }}{72}{figure.caption.73}% 
+\contentsline {figure}{\numberline {11.3}{\ignorespaces Predictors of a correct response in a logistic regression model. Error bars indiate 95\% confidence intervals.\relax }}{72}{figure.caption.76}% 
+\contentsline {figure}{\numberline {11.4}{\ignorespaces Response time per cue by participant. Error bars show standard deviation.\relax }}{74}{figure.caption.78}% 
+\contentsline {figure}{\numberline {11.5}{\ignorespaces Rolling average of accuracy over pooled trial blocks by condition and participant.\relax }}{75}{figure.caption.80}% 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }

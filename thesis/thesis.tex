@@ -1,0 +1,91 @@
+\documentclass[12pt]{book}
+\title{THESIS DRAFT}
+\author{Jamin Wu}
+\date{}
+\begin{document}
+
+\begin{titlepage}
+  \begin{center}
+    (DRAFT) Thesis presented for the degree of Bachelor of Medical Science (Honours).
+  \end{center}
+\end{titlepage}
+
+\chapter{Background}
+
+\begin{itemize}
+    \item Largely the same as literature review for this section, though I will probably include some more detail on the literature referencing the various GAN architectures we explored (most importantly, multiclass CGAN and image style transfer networks as the impetus for the hole-filler)
+    \item Literature review to be added here! Maybe
+\end{itemize}
+
+\chapter{Methods}
+
+\section{Encoder Training}
+
+The primary aim of this project was to explore the prospect of training image processors using machine learning algorithms to optimise the arrangement of phosphenes for a particular task - in this case, digit recognition.
+
+\subsection{Phosphene Modelling}
+
+To simulate prosthetic vision, phosphenes must be modelled so they can be displayed on a computer screen. The most prevalent phosphene models for prosthetic vision experiments arrange phosphenes in regular linear or polar grids with uniform characteristics. These models are simple, fast and usually computationally efficient.
+
+However, as discussed in section {}, these phosphene representations are extremely unlikely to reflect the reality of cortical visual prostheses. All prior in-vivo experiments of cortical visual prostheses have demonstrated that phosphenes do not show uniform characteristics. Phosphene locations, sizes, shapes and brightness are generally unpredictable. We know some degree of control over phosphene brightness is possible by modulating the amplitude of stimulation, but this behaviour has only been demonstrated in phosphenes tested individually.
+
+\begin{itemize}
+  \item Electrode grid modelled as a pre-rendered 3D volume, with each phosphene/electrode individually parameterised (X-Y location, size, strength). Each slice of the 3D volume receives a separate value (analogous to a value provided to individual electrodes) which is scalar multiplied against the pre-rendered slice, and the volume is summed along the primary dimension to produce the final render.
+  \item The advantage of this is that each phosphene is modellable separately, in properties which are (currently) primarily independent of each other but are easily modelled to be dependent (e.g. scaling the final render by the strength of the strongest slice, or by passing the values through a dependent-valued function prior to scalar multiplication). This is in contrast to methods of phosphene modelling which are based on image remapping and traditional image processing.
+  \item This method is flexible enough to allow different methods of deriving electrode/phosphene values - namely, direct image mapping (i.e. finding the brightness of local piel areas) or more abstract methods (e.g. training an encoder to produce any arbitrary set of values). The method of rendering phosphenes is entirely independent of the means used to derive the phosphene values.
+  \item Modelled with custom code in Python with the standard Python libraries for matrix and image manipulation (numpy, scipy).
+\end{itemize}
+
+
+\subsection{Training Architecture}
+
+Broad overview of the training architecture and its intention --- i.e.\ to optimise the appearance of the phosphene renders to match its underlying digit.
+
+
+\subsection{Encoder Model}
+
+
+
+\subsection{Decoder Model}
+
+\subsection{Filler Model}
+
+\subsection{Data Acquisition}
+
+\section{Experimental Pilot}
+
+Primary intention was preliminary validation of suitability of encoder in an experimental context compared to a reasonable control. Given that the exact nature of prosthetic vision is not known, the simulation can only give a very rough approximation of the conditions the implantee will face.
+
+\subsection{Participant Demographics}
+
+\begin{itemize}
+  \item As per prior ethics approval, participants sourced from university students and staff
+  \item Participants healthy, normal-sighted individuals; none excluded (screened prior to participation) (? male, ? female, ages ?-?)
+\end{itemize}
+
+\subsection{Psychophysics Experiment}
+
+\begin{itemize}
+  \item Experiment conducted as psychophysics experiment involving learning and performing recognition of digits from simulated phosphene patterns.
+  \item Several different experimental formats conducted: two non-interleaved blocks of 25x20 digits, one block with a direct processor and one block with a trained processor (will describe this in much more detail!!); and four interleaved blocks of 12x20 digits, again with one direct processor and one trained processor
+  \item All participants were given different random grids; clearly, this makes it difficult to compare between participants, but chose this to prevent a single ``difficult'' grid to bias the results (but the sample size isn't that big anyway)
+  \item (Will describe the actual psychophysics trials - pretty simple though)
+\end{itemize}
+
+\chapter{Results}
+
+\section{Training Results}
+
+\begin{itemize}
+    \item Comparison of different phosphene resolutions - in particular, noting that it is relatively easy to achieve digit-like forms with higher phosphene-resolution, but much more difficult as phosphene resolution dwindles. Possibly an effect of inadequate training data for this resolution.
+    \item Loss curves, example renders,
+\end{itemize}
+
+\section{Experimental Results}
+
+\chapter{Discussion}
+
+\chapter{Conclusion}
+
+
+\end{document}

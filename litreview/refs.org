@@ -1,0 +1,1660 @@
+#+TITLE: Annotated References
+
+* Reviews
+** WAIT 2009 - Simulating Prosthetic Vision: I. Visual Models of Phosphenes
+ :PROPERTIES:
+  :Custom_ID: chen09_simul_prost_vision
+  :AUTHOR: Spencer Chen, Gregg Suaning, John Morley \& Nigel Lovell
+  :JOURNAL: Vision Research
+  :YEAR: 2009
+  :VOLUME: 49
+  :PAGES: 1493-1506
+  :DOI: 10.1016/j.visres.2009.02.003
+  :URL: https://doi.org/10.1016/j.visres.2009.02.003
+  :NOTER_DOCUMENT: pdfs/chen2009_partI.pdf
+ :END:
+
+cite:chen09_simul_prost_vision
+
+*** Summary
+
+    Discusses necessary modules for implementation of simulated prosthetic
+    vision (SPV) and how these modules have previously been implemented.
+    Includes discussion of phosphene typefaces, maps, processors and renderers.
+    The discuss on phosphene processing is quite cursory (mostly limited to
+    straight image processing algorithms), but the review as a whole provides
+    useful links to previous studies of simulated prosthetic vision to look at
+    further.
+
+*** Phosphenes (from Cortical Stimulation)
+:PROPERTIES:
+:NOTER_PAGE: (1 . 0.6206896551724138)
+:END:
+
+- Pioneers - Brindley and Lewin (1968) - "stimulated visual cortex of blind
+  female volunteer." "Size of a grain of sago at arm's length"
+
+  | Center                   | Periphery                        |
+  |--------------------------+----------------------------------|
+  | "Punctate spot of light" | "Cloudy at wider eccentricities" |
+
+  Also described as "round and *carrying colour*".
+
+  They provide links to multiple reviews on cortical phosphenes which might be
+  worth reading.
+
+  They mention reports of "elongated phosphenes", "doughnuts" and "dot
+  clusters".
+
+*** Phosphenes (from Optic Nerve)
+:PROPERTIES:
+:NOTER_PAGE: (1 . 0.7651451660516605)
+:END:
+
+Optic nerve based stimulation produces differnt types of phosphenes - "clusters
+arranged in oval or rectangular areas of the visual field sometimes superimposed
+on a coloured background"
+
+*** Phosphene Table
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.10038468142681425)
+:END:
+
+There's a great table of phosphene appearances based on site of stimulation.
+
+Something I'm a little confused by :
+
+
+| Multiplicity | "Reflection about the horizontal and vertical meridians" |
+
+Does this mean phosphenes are reflected? I hope not...
+
+*** Simulating prosthetic vision non-generalisable?
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.5148650545454545)
+:END:
+
+Authors recognise this limitation.
+
+To resolve, simulations try to build components "from first principles" of
+"descriptions  provided by first-hand observers."
+
+*** Phosphene utility for prosthetic vision
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.5594719444794953)
+:END:
+
+"It has been shown...that it is possible to form recognizable symbols and
+rudimentary shapes from mutliple simultaneously elicited phosphenes"(!)
+
+There are some references I might have a look at here.
+
+Notably - "no device has been demonstrated to render a complete visual scene
+with simultaneosly presented phosphenes "
+
+*** Phosphene definition
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.7857935636363635)
+:END:
+
+Here's an actual definition for phosphenes - "any visual sensation caused by
+means other than stimulation of the visual system by light." (including
+mechanical forces, magnetic stimulation, and electric stimulation)
+
+"Single elementary spot of light in the visual field."
+
+*** Phosphenes required for close to normal visual acuity and navigation
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.8066342181818181)
+:END:
+
+Reference included here, might be useful to take a look at .
+
+This is an old paper though, and "many other investigators have since published
+their own SPV investigations."
+
+*** Simulated prosthetic vision components and process
+:PROPERTIES:
+:NOTER_PAGE: (3 . 0.18141458181818182)
+:END:
+
+There's a discussion of what's needed in a SPV:
+
+1. Phosphene typeface - set of phosphene styles that could be retrived by
+   indexing on Phosphene Modulation Indices (PMIs) such as size index and luminance
+2. Phosphene map - location of phosphenes on the visual field
+3. Phosphene processor - image processing component, that takes a visual scene
+   and calculates the PMIs for each location on the map that could then be
+   rendered to a typeface
+4. Phosphene renderer - displays / composes the processed phosphene field.
+
+
+#+begin_notes
+
+As an aside:
+
+Funnily enough, I can sort of see a parallel of the SPV with Elm and Elm-webgl.
+
+On init, you create the *phosphene map* as a set of vertices. Your
+*phosphene typeface* is part of the vertex or fragment shader. You can then, on
+every animation frame (which should coincide with the framerate of the camera)
+process the image and create a list of uniforms which correspond to *phosphene
+modulation indices* - e.g. luminance and size index (which are easy enough to
+modify the vertex shader with).
+
+If Elm can communicate with the camera on say an iPhone or the webcam, then this
+could be an easy way to demonstrate these on the browser. The only difficult
+thing is how to process the image in the browser efficiently...
+
+(It seems like this should be done with getusermedia, which elm doesn't have
+supported at the moment so would need to be done through a port/ports).
+
+#+end_notes
+
+In terms of correlating this with what's seen clinically:
+
+- Phosphene typefaces could be created based on observations and data from the
+  implant recipient
+- PMIs "correlate to appropriate electrical stimulus parameters for eliciting
+  the desired phosphene appearance"
+
+The design is modularised so each can be mixed and matched. I suppose I would be
+working on the phosphene processor aspect.
+
+*** "Common form" of phosphenes
+:PROPERTIES:
+:NOTER_PAGE: (3 . 0.37805680110497236)
+:END:
+
+"The common form of phosphenes is a small round *colored*[?] sport of light in
+the visual field."
+
+| Fovea/parafovea  | Sharper edges |
+| Peripheral field | Cloudy edges  |
+
+Unsure what they mean by colored - what color? Same color throughout space/time?
+
+In the next paragraph - phosphene descriptions are "dominated by the common form"
+
+They mention that it's actually unlikely for these pto be circular - round can
+mean many things.
+
+*** Phosphene visual appearance table
+:PROPERTIES:
+:NOTER_PAGE: (4 . 0.06895853482260184)
+:END:
+
+Really comprehensive table on how different simulated prosthetic vision devices
+have been implemented by paper with lots of references.
+
+
+- Shapes :: mostly circle, square, Gaussian. Not sure what they mean by Gaussian
+  shape? They might just mean circles which have a Gaussian gradient on them, so
+  instead of having a fixed brightness throughout the circle, theyhave a bit of
+  a "less bright as you go further out" kind of thing
+- Size :: not sure how to comment except they're quite fine (I think) - the
+     resolution may not actually be that bad.
+- Lattice :: not entirely sure the didfference between bitmap and square (are
+     they implying the square lattice has a gap between pixels), but I think it
+     makes sense to have a square/bitmap representation for ease purposes.
+- Resolution :: eccentric seems like a good thing to represent how it might
+     "realistically" look.
+- Field of view :: small, but I'm not sure what our own field of view is, so I
+     can't compare at this stage.
+- No of grays :: Not sure what this might mean except perhaps the luminosity as
+     a PMI.
+- Image processing :: This is probably the most interesting part for me. I can
+     see some ones I'd expect and some that are familiar to me (mean, edges,
+     depth, DoG, LoG, Gaussian,) but some really interesting ones (*Neural
+     network* - Eckmiller et al 2004/2005, Becker et al 1999, HanziConverter -
+     Chai et al 2007.  )
+
+
+*** Image flowcharts of SPV modules
+:PROPERTIES:
+:NOTER_PAGE: (5 . 0.06030325641025641)
+:END:
+
+Good flowchart of how SPV modules connect.
+
+*** Phosphenes don't have sharp boundaries
+:PROPERTIES:
+:NOTER_PAGE: (5 . 0.867365205128205)
+:END:
+
+‘phosphenes elicited electrically in the retina do not resemble
+sharp-edged round dots”
+
+Here they also specifically state that they use a Gaussian luminous distribution
+over teach pixel to "feather" the edges I suppose - makes sense!
+
+*** Phosphene colours
+:PROPERTIES:
+:NOTER_PAGE: (6 . 0.6120930232558139)
+:END:
+
+Some further discussion about phosphene olours- seems like this might not be
+controllable. May be dependent on luminance (seems the colour changed as
+stimulation current increased with the luminance).
+
+"Colourless (white) or lightly coloured phosphenes dominate the isual
+descriptions from chronc implantees."
+
+Because colours are hard tocontrol, using a grascale model is pretty much the
+standard. - but this is not actually realistic, as patients report seeing some
+colour (and this would need to be incorporated into the simulation).
+
+*** Stimulus strength increases luminance and maybe size of phosphenes
+:PROPERTIES:
+:NOTER_PAGE: (6 . 0.7162790697674418)
+:END:
+
+So multiple luminence levels could be achieved
+
+*** Epiretinal stimulation difficulty reproduce
+:PROPERTIES:
+:NOTER_PAGE: (6 . 0.9246511627906976)
+:END:
+
+Seems to be a problem if you can't reproduce the percept!
+
+*** Phosphene sizes
+:PROPERTIES:
+:NOTER_PAGE: (7 . 0.11720930232558138)
+:END:
+
+Usually around *0.5-2.0 degrees* (but large variability in size, usually
+compared to things at arm's length. )
+
+*** TODO Braille reading exercise to check utility of phosphenes
+:PROPERTIES:
+:NOTER_PAGE: (7 . 0.3516279069767442)
+:END:
+
+Sounds like an interesting experiment, should followup to read about what what
+they did and their results.
+
+*** Phosphene typeface should be different for each electrode
+:PROPERTIES:
+:NOTER_PAGE: (7 . 0.9116279069767441)
+:END:
+
+Raised a good point - the phosphene typefaces probably should be different for
+each electrode in the recipient.
+
+*** Mapping procedure to calibrate phosphene map
+:PROPERTIES:
+:NOTER_PAGE: (8 . 0.5599999999999999)
+:END:
+
+They talk briefly about the difficulty of this - one of the methods, using
+relative distance between phosphenes and triangulation, seems like it actually
+would be pretty useful and possible to solve somehow mathematically.
+
+*** Using regular vs irregular phosphene map lattices
+:PROPERTIES:
+:NOTER_PAGE: (8 . 0.7423255813953488)
+:END:
+
+Mentions specifically that while regular maps may be more amenable to certain
+transforms (Fourier transform of spatial frequencies?), "may not be readily
+applicable to irregular phosphene maps in implant recipients"
+
+It seems irregularity could be implemented as another parameter.
+
+*** Processing time lag is very critical
+:PROPERTIES:
+:NOTER_PAGE: (9 . 0.19534883720930232)
+:END:
+
+Need to minimise this as much as possible - incongruence with "vestibular and
+visual sensory input...is a prime factor leading to motion sickness symptoms
+such as nausea, dizziness, headaches, disorientation etc. as demonstrated by
+Howarth and co-workers."
+
+*** Image processing on overlapping phosphenes
+:PROPERTIES:
+:NOTER_PAGE: (9 . 0.27348837209302324)
+:END:
+
+This sounds like an interesting avenue to pursue - interactions between
+neighbouring phosphenes.
+
+*** Techniques for image processing
+:PROPERTIES:
+:NOTER_PAGE: (9 . 0.3125581395348837)
+:END:
+
+
+- Impulse sampling :: Directly maps image grey level values to the phosphene map to produce a PMI
+- Mean filter :: "average gray value over area centered at location designated
+     by phosphene map" - sounds similar to a non-weighted blur (it's just an
+     aveage kernel) - "most comonly used process for calculating PMIs in the
+     literature"
+- Gaussian filter :: weighted towards the center
+- Laplacian of Gaussian filter - "luminance contrast between the centre and the
+  surround of this receptive field is represented by the phosphene" - a very
+  interesting way of describing edge detection!
+
+*** Spatiotemporal vs spatial phosphene processor
+:PROPERTIES:
+:NOTER_PAGE: (10 . 0.45581395348837206)
+:END:
+
+Sounds like an interesting paradigm shift - might be worth look up these papers.
+
+** TODO 2009 - Simulating Prosthetic Vision: Ii. Measuring Functional Capacity
+ :PROPERTIES:
+  :Custom_ID: chen09_simul_prost_vision_ii
+  :AUTHOR: Spencer Chen, Gregg Suaning, John Morley \& Nigel Lovell
+  :JOURNAL: Vision Research
+  :YEAR: 2009
+  :VOLUME: 49
+  :PAGES: 2329-2343
+  :DOI: 10.1016/j.visres.2009.07.003
+  :URL: https://doi.org/10.1016/j.visres.2009.07.003
+  :NOTER_DOCUMENT: pdfs/chen2009_partII.pdf
+ :END:
+
+cite:chen09_simul_prost_vision_ii
+
+*** Table of visual task trials with SPV
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.5865006955835962)
+:END:
+
+Seems like a good reference table of exercises done with SPV and techniques.
+
+*** Recognises fundamental issues with simulated prosthetic vision
+:PROPERTIES:
+:NOTER_PAGE: (3 . 0.6384790630914826)
+:END:
+
+- Simplified representations of phosphenes
+
+*** Critical sampling rate (phosphenes) for reading/character recognition
+:PROPERTIES:
+:NOTER_PAGE: (4 . 0.37352266666666667)
+:END:
+
+"Critical sampling rate of at least 3-4 phosphenes per axis per character is
+required for individual letter recognition" - with a 20x20 grid, hat seems like
+it would be extremely limiting...
+
+*** Facial recognition and spatial frequencies
+:PROPERTIES:
+:NOTER_PAGE: (4 . 0.46452069230769233)
+:END:
+
+#+begin_quote
+
+...spatial frequencies in the range 8-16 cyclces per face width are critical
+for face recognition.
+
+#+end_quote
+
+#+begin_quote
+this means to render a face requires a 16x16 to 32x32 phosphene lattice.
+#+end_quote
+
+*** Letter acuity charts test finest perceivable sinusoidal frequency
+:PROPERTIES:
+:NOTER_PAGE: (5 . 0.8545122307692308)
+:END:
+
+I'd never thought of it that way before, but it makes a lot of sense.
+
+*** Potentially useful table about learning during simulated prosthetic vision
+:PROPERTIES:
+:NOTER_PAGE: (9 . 0.5815181538461538)
+:END:
+
+** WAIT 2015 - Restoration of Vision in Blind Individuals Using Bionic Devices: a Review With a Focus on Cortical Visual Prostheses
+ :PROPERTIES:
+  :Custom_ID: lewis15_restor_vision_blind_indiv_using_bionic_devic
+  :AUTHOR: Philip Lewis, Helen Ackland, Arthur Lowery \& Jeffrey Rosenfeld
+  :JOURNAL: Brain Research
+  :YEAR: 2015
+  :VOLUME: 1595
+  :PAGES: 51-73
+  :DOI: 10.1016/j.brainres.2014.11.020
+  :URL: https://doi.org/10.1016/j.brainres.2014.11.020
+  :NOTER_DOCUMENT: pdfs/lewis2014._review_cortical.pdf
+ :END:
+
+cite:lewis15_restor_vision_blind_indiv_using_bionic_devic
+
+*** TODO Table of institutions who are developing a cortical visual prosthesis
+:PROPERTIES:
+:NOTER_PAGE: (5 . 0.5373613794466403)
+:END:
+
+These might be interesting to look at:
+
+For example for the university of Illinois:
+
+http://neural.iit.edu/research/icvp/
+
+Here's a quote from their website:
+
+#+begin_quote
+However, even with 1000 electrodes, it is uncertain whether or not there would
+be a sufficient density of phosphenes to rely upon a bit-map approach to vision.
+
+While only a portion of the primary visual cortex (V1) would have implanted
+electrodes, preliminary studies suggest that we can compensate for this lack of
+spatial coverage through user scanning, allowing the user to perform at least
+elementary visual tasks such as navigation and object recognition.
+#+end_quote
+
+That's quite importat.
+
+There's some work from the group of mapping phosphenes which might be useful to
+read.
+
+- https://iovs.arvojournals.org/article.aspx?articleid=2334254
+- https://ieeexplore-ieee-org.ezproxy.lib.monash.edu.au/document/7146662
+
+There's also one of the members' dissertation, which has a short section on
+image processing:
+
+- https://search-proquest-com.ezproxy.lib.monash.edu.au/docview/2023814113?pq-origsite=primo
+
+It sounds like the image processing algorithm is based on pixel intensities.
+
+Here's a nice quote from the article..(I've downloaded the PDF and should make
+separate notes but just in case I forget to):
+
+#+begin_quote
+
+Another set of criteria identified as an important feature for future ICVP
+systems is an interface for user interaction in selecting appropriate image
+processing algorithms.
+
+#+end_quote
+
+*** Suggestion that "rudimentary prosthetic vision" can be beneficial and benefits often underestimated by sighted individuals
+:PROPERTIES:
+:NOTER_PAGE: (8 . 0.6563207458563536)
+:END:
+
+#+begin_quote
+
+Importantly, the likely beneﬁts of even limited visual restoration to a blind
+individual are often under appreciated by sighted individuals (Lane et al.,
+2012). Even rudimentary prosthetic vision in the setting of profound blindness
+may have signiﬁcant positive psychological and functional rami- ﬁcations for a
+blind individual, contributing to reduced feel- ings of isolation and depression
+(Dagnelie, 2008). Only a few reproducible phosphenes may be required to improve
+an individual's quality of life. For example, a recipient of the Dobelle implant
+was able to navigate independently and read letters on a Snellen chart with only
+21 phosphenes at his disposal (Dobelle, 2000).
+
+#+end_quote
+
+Sounds like a really good outcome - but I wonder how consistently this can be
+achieved.
+
+#+begin_quote
+
+In the most simple of demonstra- tions, the reported elation felt by blind
+volunteers stimulated with only 4 occipital electrodes, in addition to their
+ability to independently locate a light source (Button and Putnam, 1962),
+suggests that questions of what constitutes “accepta- ble” performance by both
+recipients and treating physicians alike, needs to be carefully balanced.
+
+#+end_quote
+
+This is quite heartening to hear.
+
+*** Phosphene maps move with eye saccades
+:PROPERTIES:
+:NOTER_PAGE: (10 . 0.5924761712707183)
+:END:
+
+
+#+begin_quote
+
+Not only does this compli- cate the generation of consistent phosphene maps, but
+it also introduces a requirement for central gaze ﬁxation during head turning,
+or sophisticated eye tracking technology to ensure image stability during
+changes in eye position.
+
+#+end_quote
+
+*** Neuroplasticity can make unrecognisable images gradually useful
+:PROPERTIES:
+:NOTER_PAGE: (10 . 0.858495232044199)
+:END:
+
+#+begin_quote
+
+The work of Dobelle (2000) provided clear evidence that preserved
+neuroplasticity in visual cortex can permit a blind individual, who had an
+initially poor response to patterned stimulation, to gradually recognize shapes,
+letters and features in a relatively complex physical environment. According to
+Dobelle (2000), a key factor in achieving this goal was increased computing
+power, which permitted the use of more sophisti- cated image processing
+algorithms providing enhanced edge detection, whilst keeping frame rates at
+acceptable levels.
+
+#+end_quote
+
+I'm actually very interested in the role of neuroplasticity in interpreting
+these patterned images. If neuroplasticity and learning is sufficient, then
+sophisticated helping image processing algorithms may not ultimately be
+necessary (though would perhaps facilitate the training phase by providing
+feedback).
+
+
+
+*** Phosphenes will usually be clustered in center of visual field
+:PROPERTIES:
+:NOTER_PAGE: (10 . 0.911699044198895)
+:END:
+
+*** The choice of what to represent could have serious implications for utility
+:PROPERTIES:
+:NOTER_PAGE: (11 . 0.14556414917127072)
+:END:
+
+#+begin_quote
+
+The choice by Brindley and Dobelle to present Braille characters instead of
+conventional lettering could be consid- ered a conceptually similar
+“repurposing” of a poor quality phosphene map to maximize its utility
+
+#+end_quote
+
+
+Modification of the image processing isn't the only option - could also look at
+modification of physical environment (though this isn't necessarily desirable in
+all situations).
+
+For example, QR codes, tagged clothes/gloves to help identify hand positions,
+
+*** Description of prior attempts, where simulated represention "remains a downsampled version of the original"
+:PROPERTIES:
+:NOTER_PAGE: (11 . 0.4328647348066299)
+:END:
+
+
+#+begin_quote
+
+Nonetheless, the same approach is essentially employed, wherein the resultant
+image remains a downsampled version of the original, albeit with phosphenes
+conforming to a more realistic electrode/ phosphene coordinate system.
+
+#+end_quote
+
+* Phosphene Mapping
+** TODO 2002 - Mapping of the Human Visual Cortex Using Image-Guided Transcranial Magnetic Stimulation
+ :PROPERTIES:
+  :Custom_ID: fernandez02_mappin_human_visual_cortex_using
+  :AUTHOR: E Fernandez, A Alfaro, M Tormos, R Climent, M Martı́nez, H Vilanova, V Walsh \& A Pascual-Leone
+  :JOURNAL: Brain Research Protocols
+  :YEAR: 2002
+  :VOLUME: 10
+  :PAGES: 115-124
+  :DOI: 10.1016/s1385-299x(02)00189-7
+  :URL: https://doi.org/10.1016/s1385-299x(02)00189-7
+ :END:
+
+cite:fernandez02_mappin_human_visual_cortex_using
+
+** 2017 - Phosphene Simulations, Mapping and Psychophysical Evaluation (Dissertation)
+:PROPERTIES:
+:NOTER_DOCUMENT: pdfs/kaskhedikar2017_dissertation.pdf
+:END:
+
+*** User interaction to select image processing algorithms
+:PROPERTIES:
+:NOTER_PAGE: (37 . 0.5122343448275861)
+:END:
+
+Something I think is important, and referenced here with a few references that I
+think I should follow.
+
+*** Image processing by segmentation of objects then split by luminance
+:PROPERTIES:
+:NOTER_PAGE: (39 . 0.09708284482758621)
+:END:
+
+#+begin_quote
+
+Gilmont et al. developed image processing algorithm for an optic nerve visual
+prosthesis by segmentating the image such that objects in the image are assigned
+different constant luminances so as to create sharp contrast.
+
+#+end_quote
+
+Very interesting.
+
+*** Region of interest (ROI) method (Boyle) to identify importance map
+:PROPERTIES:
+:NOTER_PAGE: (39 . 0.2688696724137931)
+:END:
+
+#+begin_quote
+
+In another image processing technique called the Region of Interest (ROI) method
+implemented by Boyle et al., the significant or salient features of an image
+were identified and were assigned weights. These weights were then combined to
+obtain an ‘importance map’ that included only the ‘important’ features which
+were further processed for feature enhancement prior to display.
+
+#+end_quote
+
+*** Actual image processing used was average pixel intensity in receptive field for phosphene
+:PROPERTIES:
+:NOTER_PAGE: (42 . 0.18297625862068964)
+:END:
+
+*** Phosphenes move in space with eye movement?
+:PROPERTIES:
+:NOTER_PAGE: (95 . 0.24023853448275864)
+:END:
+
+#+begin_quote
+
+In the cortical studies, it was also found that the phosphenes move in space with the
+eye movement (Brindley and Lewin 1968; Dobelle and Mladejovsky 1974). In this study,
+gaze stabilization was simulated by locking the dotted image formed on the retina of the
+subject under test. So, if the eye moved then dotted image presented on the screen also
+moved accordingly.
+
+#+end_quote
+** DONE 1974 - Phosphenes Produced By Electrical Stimulation of Human Occipital Cortex, and Their Application To the Development of a Prosthesis for the Blind
+CLOSED: [2019-03-20 Wed 13:29]
+ :PROPERTIES:
+  :Custom_ID: dobelle74_phosp_produc_by_elect_stimul
+  :AUTHOR: Dobelle \& Mladejovsky
+  :JOURNAL: The Journal of Physiology
+  :YEAR: 1974
+  :VOLUME: 243
+  :PAGES: 553-576
+  :DOI: 10.1113/jphysiol.1974.sp010766
+  :URL: https://doi.org/10.1113/jphysiol.1974.sp010766
+  :NOTER_DOCUMENT: pdfs/dobelle1974_phosphenes_produced.pdf
+ :END:
+
+cite:dobelle74_phosp_produc_by_elect_stimul
+
+*** Electrode size does not affect subjective sensation
+:PROPERTIES:
+:NOTER_PAGE: (1 . 0.463581)
+:END:
+
+*** Large phosphenes (more than a coin at arms length) may be effect of prolonged blindness
+:PROPERTIES:
+:NOTER_PAGE: (1 . 0.673075551724138)
+:END:
+
+#+begin_quote
+Stimulation of a single electrode usually produces one phosphene,
+whose size ranges from tiny punctate sensations like 'a star in the sky'
+up to a large coin at arm's length. Very large elongated phosphenes, like
+those seen by Brindley's second patient, have not been reported despite
+the number of patients, electrodes, and combinations of stimulus para-
+meters tested. These large phosphenes may be an effect of prolonged
+blindness.
+#+end_quote
+
+*** Reflected phosphenes (in horizontal meridian) may produce second conjugate if stimulation above threshold
+:PROPERTIES:
+:NOTER_PAGE: (1 . 0.7030033448275862)
+:END:
+
+#+begin_quote
+Stimulation substantially above threshold may produce a second
+conjugate phosphene, inverted about the horizontal meridian.
+#+end_quote
+
+*** "Phosphenes fade after 10-15 seconds of continuous stimulation?"
+:PROPERTIES:
+:NOTER_PAGE: (1 . 0.8227145172413795)
+:END:
+
+NEED to read up on this - very important!
+
+*** "Brightness modulation can easily be achieved by changing the amplitude"
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.07451968965517242)
+:END:
+
+This seems at odds with some of the more modern reviews...?
+
+*** Recognition of phosphene patterns
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.23912255172413793)
+:END:
+
+#+begin_quote
+Patterns of up to four phosphenes produced by four electrodes
+have been recognized. However, a variety of complex interactions have
+been reported.
+#+end_quote
+
+*** "Phosphenes appear immediately when stimulation is begun and disappear immediately upon cessation of stimulation."
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.3289059310344828)
+:END:
+
+*** Study participants were patients undergoing neurosurgery
+:PROPERTIES:
+:NOTER_PAGE: (4 . 0.22413793103448276)
+:END:
+
+Very clearly recognised limitations of extending the results from this
+population to the blind population (who are the primary targets of cortical
+visual prostheses)
+
+#+begin_quote
+The principal disadvantage of studying volunteers undergoing other
+surgery is the difficulty in conclusively extrapolating the results from
+sighted patients, or from those with short-term hemianopias, to blind
+subjects. Other disadvantages include technical difficulties in conducting
+psychophysical experiments under local anaethesia in the operating room,
+the limited amount of time available with any given subject, and the fact
+that the cortex of interest is frequently affected by pathological processes.
+#+end_quote
+
+*** Innovar = droperidol.
+:PROPERTIES:
+:NOTER_PAGE: (4 . 0.6896551724137931)
+:END:
+
+
+*** Patients given prophylactic codeine for cough suppression?
+:PROPERTIES:
+:NOTER_PAGE: (4 . 0.7068965517241379)
+:END:
+
+#+begin_quote
+Most patients were also given prophylactic codeine for cough
+suppression.
+#+end_quote
+
+Maybe this should have been obvious, but why was this? Why was cough expected?
+
+*** "However, use of power tools for opening the skull proved undesirable due to dural heating, noise and vibration which are uncomfortable for the patient."
+:PROPERTIES:
+:NOTER_PAGE: (4 . 0.8145956607495068)
+:END:
+
+Jesus Christ. This must have been scary under just local
+anaesthesia..."uncomfortable" is an understatement.
+
+*** Could not get phosphenes after surgical resection of tumours.
+:PROPERTIES:
+:NOTER_PAGE: (5 . 0.1380670611439842)
+:END:
+
+This is very interesting - temporarily unable to stimulate phosphenes after resection.
+
+#+begin_quote
+We have been unsuccess- ful in producing phosphenes when stimulating after
+surgical resection. For example, in case no. 36 previously responsive areas were
+restimulated immediately after resection. No phosphenes could be produced,
+although the same areas were responsive again on the first post-operative day.
+#+end_quote
+
+*** Cortical changes in blindness
+:PROPERTIES:
+:NOTER_PAGE: (13 . 0.717948717948718)
+:END:
+
+Maybe read up on these references (though they are very old)
+
+#+begin_quote
+Physiological (Wiesel & Hubel, 1965) and anatomical (Valverde, 1968)
+changes in the cortex of blind animals are well established in the physio-
+logical literature, although such studies have concentrated on deprivation
+of sight at the time of birth.
+#+end_quote
+
+*** Blind fields - phosphenes still able to be generated
+:PROPERTIES:
+:NOTER_PAGE: (14 . 0.3727810650887574)
+:END:
+
+This sounds promising -
+
+
+#+begin_quote
+Patient no. 11 indicated that, for at least 5 years, he had been
+aware of severely limited vision on his right side. During stimulation he
+reported small sensations of light, 'like a match-head' in his blind field.
+#+end_quote
+
+*** Referred pain from trigeminal nerve
+:PROPERTIES:
+:NOTER_PAGE: (14 . 0.717948717948718)
+:END:
+
+#+begin_quote
+
+Patients have not reported 'deep pain' similar to that experienced by
+Brindley's first patient. Instead, they invariably refer pain to the forehead
+and the area around the orbits, as does Brindley's patient when this sensa-
+tion is severe. This referral of pain is almost certainly due to the innervation
+of the dura by the ophthalmic division of the trigeminal nerve.
+
+#+end_quote
+
+*** "Colour from another world" - chromatic sensations
+:PROPERTIES:
+:NOTER_PAGE: (16 . 0.41420118343195267)
+:END:
+
+Very interesting section on chromatic sensations with phosphenes.
+
+#+begin_quote
+
+These chromatic effects are vivid, and patients generally report coloured
+phosphenes as being red, blue or occasionally green. It is interesting to
+speculate that on the relationship between these colours and the funda-
+mental mechanisms of colour perception. On a number of occasions,
+subjects have reported 'unreal' colours. This was first reported by
+patient no. 3, whose best description was a 'non-spectral brown' or 'a
+colour from another world'. Two other patients in our series (cases nos.
+22 and 36) have made similar observations during post-operative de-
+briefings.
+
+#+end_quote
+
+*** Brightness /can/ be modulated, but not studied much?
+:PROPERTIES:
+:NOTER_PAGE: (16 . 0.5108481262327416)
+:END:
+
+Seems that can be increased by pulse amplitude, but this wasn't studied
+extensively due to "time limitations" and reliability issues.
+
+*** Accommodation effects of phosphenes(!)
+:PROPERTIES:
+:NOTER_PAGE: (17 . 0.4292779426310584)
+:END:
+
+Phosphenes fade after continuous stimulation, but can reappear after turning it
+back off.
+
+#+begin_quote
+
+Thresholds increase, and the phosphenes fade during continuous
+stimulation of more than 10-15 sec. However, turning the stimulator off
+for a few seconds, and then turning it back on, generally caused the
+phosphene to reappear at its original brightness.
+
+#+end_quote
+
+Limited the length of "trains" they were able to test (e.g. eye movements in a
+30 second train)
+
+*** Eye movements - patients may reflexively try to "chase" the phosphene
+:PROPERTIES:
+:NOTER_PAGE: (18 . 0.08308605341246292)
+:END:
+
+Very interesting...
+
+Phosphenes move with eye movements (so they suggested a microcircuit camera
+inside the orbit/attached to the extraocular muscles!).
+
+When a phosphene appears, patients might try to fixate on it, but then it moves,
+and they try to fixate again...and they chase it across the visual field. jjj
+
+*** "How does the electrode position on the brain relate to the position of phosphenes produced by that electrode in the visual field?"
+:PROPERTIES:
+:NOTER_PAGE: (18 . 0.6785361028684471)
+:END:
+
+This is the most interesting questions for me! (at the moment)
+
+Important caveat:
+
+#+begin_quote
+However, precise mapping is quite difficult to accomplish in the
+operating room. Phosphenes move with eye position, and are frequently
+too close together to be resolved due to inaccuracies in pointing.
+
+#+end_quote
+
+
+Very important:
+
+#+begin_quote
+
+This difficulty is compounded in hemianopic patients, since they have no visual
+feed-back.
+
+#+end_quote
+
+*** Phosphene map example figure
+:PROPERTIES:
+:NOTER_PAGE: (20 . 0.8031651829871415)
+:END:
+
+*** Phosphenes close together blend together
+:PROPERTIES:
+:NOTER_PAGE: (21 . 0.456973293768546)
+:END:
+
+*** TODO Brindley reference on first patient - to read?
+:PROPERTIES:
+:NOTER_PAGE: (22 . 0.26310583580613256)
+:END:
+
+Also "unexpected" findings confirmed:
+
+#+begin_quote
+
+This includes unexpected findings such as a second 'high
+threshold' phosphene inverted about the horizontal meridian from single
+electrodes, and the movement of phosphenes with deviations in gaze.
+
+#+end_quote
+
+* Transformative Reality
+** 2011 - Transformative reality: Augmented reality for visual prostheses
+ :PROPERTIES:
+  :Custom_ID: lui11_trans
+  :AUTHOR: Wen Lik Dennis Lui, Damien Browne, Lindsay Kleeman, Tom Drummond \& Wai Ho Li
+  :JOURNAL:
+  :YEAR: 2011
+  :VOLUME:
+  :PAGES: nil
+  :DOI: 10.1109/ismar.2011.6092402
+  :URL: https://doi.org/10.1109/ismar.2011.6092402
+  :NOTER_DOCUMENT: pdfs/lui2012_transformative_reality.pdf
+ :END:
+
+cite:lui11_trans
+
+*** Summary
+
+Seems like a very interesting paper. I see three modes they've described:
+
+- Face mode: using Viola-Jones cascading classifiers for real-time face
+  detection from camera image.
+- Empty ground mode: use range camera with accelerometer to segment the ground
+- Structural edges: use the range camera to highlight edges.
+
+Wondering if perhaps pre-trained models/kernels could be used in a similar
+fashion to identify other types of objects.
+* Image Processing
+
+** TODO 2015 - A Fast and Flexible Computer Vision System for Implanted Visual Prostheses
+ :PROPERTIES:
+  :Custom_ID: li15_fast_flexib_comput_vision_system
+  :AUTHOR: Wai Ho Li
+  :JOURNAL:
+  :YEAR: 2015
+  :VOLUME:
+  :PAGES: 686-701
+  :DOI: 10.1007/978-3-319-16199-0_48
+  :URL: https://doi.org/10.1007/978-3-319-16199-0_48
+ :END:
+
+cite:li15_fast_flexib_comput_vision_system
+
+* Neuroplasticity
+
+** TODO 2017 - Learning To See Again: Biological Constraints on Cortical Plasticity and the Implications for Sight Restoration Technologies
+ :PROPERTIES:
+  :Custom_ID: beyeler17_learn_to_see_again
+  :AUTHOR: Michael Beyeler, Ariel Rokem, Geoffrey M Boynton \& Ione Fine
+  :JOURNAL: Journal of Neural Engineering
+  :YEAR: 2017
+  :VOLUME: 14
+  :PAGES: 051003
+  :DOI: 10.1088/1741-2552/aa795e
+  :URL: https://doi.org/10.1088/1741-2552/aa795e
+  :NOTER_DOCUMENT: pdfs/beyeler2017_plasticity_constraints.pdf
+ :END:
+
+cite:beyeler17_learn_to_see_again
+
+It actually seems like this is more to do with the retina...
+
+*** TODO Clinical trials of visual prostheses for object localisation, motion discrimination, letter identification
+:PROPERTIES:
+:NOTER_PAGE: (3 . 0.19510897435897437)
+:END:
+
+I should follow up and read these.
+
+#+begin_quote
+
+Clinical trials suggest that, for some patients, visual pros- theses can provide
+visual information that is useful in daily life; facilitating simple object
+localization, motion discrimina- tion, and letter identification (Zrenner et al
+2011, Humayun et al 2012, Stingl et al 2013, Dagnelie et al 2017).
+
+#+end_quote
+
+** TODO 2005 - Development of a Cortical Visual Neuroprosthesis for the Blind: the Relevance of Neuroplasticity
+ :PROPERTIES:
+  :Custom_ID: fernandez05_devel_cortic_visual_neurop_blind
+  :AUTHOR: E Fern\'andez, F Pelayo, S Romero, M Bongard, C Marin, A Alfaro \& L Merabet
+  :JOURNAL: Journal of Neural Engineering
+  :YEAR: 2005
+  :VOLUME: 2
+  :PAGES: R1-R12
+  :DOI: 10.1088/1741-2560/2/4/r01
+  :URL: https://doi.org/10.1088/1741-2560/2/4/r01
+  :NOTER_DOCUMENT: pdfs/fernandez2005_neuroplasticity_relevance.pdf
+ :END:
+
+cite:fernandez05_devel_cortic_visual_neurop_blind
+
+* Specific Prostheses
+** Retinal
+*** Argus II
+**** TODO 2018 - Argus Ii Retinal Prosthesis System: a Review of Patient Selection Criteria, Surgical Considerations, and Post-Operative Outcomes
+ :PROPERTIES:
+  :Custom_ID: finn18_argus_ii_retin_prost_system
+  :AUTHOR: Avni Finn, Dilraj Grewal \& Lejla Vajzovic
+  :JOURNAL: Clinical Ophthalmology
+  :YEAR: 2018
+  :VOLUME: Volume 12
+  :PAGES: 1089-1097
+  :DOI: 10.2147/opth.s137525
+  :URL: https://doi.org/10.2147/opth.s137525
+ :END:
+
+cite:finn18_argus_ii_retin_prost_system
+
+***** Summary
+
+Attributes:
+
+- 6 x 10 grid of electrodes (60 total)
+- Retinal
+- Video camera on glasses -> processor on patient's belt "VPU" -> coil on
+  glasses side
+
+
+Dot point summary:
+
+- The Argus II prosthesis is aimed at adults who have become blind (or
+  near-blind) due to retinitis pigmentosa.
+- Part of the pre-implantation process is ensuring patients understand that what
+  they see will not be vision as they know it.
+
+  #+begin_quote
+  The vision generated by the Argus II device is very different from sight and
+  the patient must be ready to learn a new “language” of sight. Patients with
+  the Argus II prosthesis have been able to perform the following tasks after
+  implantation and rehabilitation: locate doors, windows and elevators; use a
+  crosswalk to cross a street; locate coins; locate utensils on a table; locate
+  but not identify people; and track a ball or players on a field
+  #+end_quote
+
+
+
+** Cortical
+* General
+** Principles of Neural Science (Kandel)
+:PROPERTIES:
+:NOTER_DOCUMENT: pdfs/kandel.pdf
+:END:
+*** Vision comparison to camera is incorrect!
+:PROPERTIES:
+:NOTER_PAGE: (607 . 0.6182965299684543)
+:END:
+*** "Previously learned rules about the structure of the world"
+:PROPERTIES:
+:NOTER_PAGE: (607 . 0.7949526813880127)
+:END:
+
+It seems any sort of form of artificial vision may require this to "make sense"
+of things.
+*** Wertheimer - the properties of a stimulus are dependent on the whole?
+:PROPERTIES:
+:NOTER_PAGE: (608 . 0.5410094637223974)
+:END:
+*** Evidence of perception being linked to the whole rather than simply the sum of its parts
+:PROPERTIES:
+:NOTER_PAGE: (608 . 0.7066246056782335)
+:END:
+
+- Rows and columns in a uniform array of dots
+- SMooth countours on complex backgrounds
+
+#+begin_quote
+If the dots in each column are
+closer together than those in the rows, we are more dis-
+posed to see a pattern of columns (Figure 25–1B). The
+principle of good continuation is an important basis
+for linking line elements into unified shapes (Figure
+25–1C). It is also seen in the phenomenon of contour
+saliency, whereby smooth contours tend to pop out
+from complex backgrounds (Figure 25–1D).
+#+end_quote
+*** Image segmentation "relies not just on geometric principles, but attention and expectation"
+:PROPERTIES:
+:NOTER_PAGE: (608 . 0.8943217665615142)
+:END:
+*** Three main pathways from retina - geniculostriate (main vision), one going through superior colliculus (eye movements) and pretectal (pupillary reflexes)
+:PROPERTIES:
+:NOTER_PAGE: (610 . 0.695583596214511)
+:END:
+*** "Almost half of the cerebral cortex is involved with vision"
+:PROPERTIES:
+:NOTER_PAGE: (613 . 0.23186119873817035)
+:END:
+*** Visual areas differentiable by functional or topographic properties
+:PROPERTIES:
+:NOTER_PAGE: (613 . 0.3312302839116719)
+:END:
+
+Topographic perhaps continuous/ordinal whereas functional as discrete classes?
+
+Functional largely:
+- Ventral (object recognition) - ventral pathway courses through tht temporal
+  lobe (shapes, identities, information - the "what" pathway)
+- Dorsal (guiding movements) - dorsal pathway courses through parietal cortex
+  (visuomotor integration) - the "where" pathway
+
+
+#+begin_quote
+At higher levels...the receptive fields become larger...map less precise and
+wisuotopic organization is therefore a less reliable basis to delineate the
+boundaries of an area.
+#+end_quote
+
+*** Reciprocity is an important feature of the connectivity between cortical areas
+:PROPERTIES:
+:NOTER_PAGE: (615 . 0.27667984189723316)
+:END:
+
+#+begin_quote
+All connections between cor-
+tical areas are reciprocal—each area sends information
+back to the areas from which it receives input
+#+end_quote
+
+*** Receptive fields - a bit of history
+:PROPERTIES:
+:NOTER_PAGE: (615 . 0.39655172413793105)
+:END:
+
+#+begin_quote
+When it became possi-
+ble to record from single neurons in the eye, H. Keffer
+Hartline applied the concept of the receptive field in
+his study of the retina of the horseshoe crab, Limulus:
+“The region of the retina which must be illuminated
+in order to obtain a response in any given fiber . . . is
+termed the receptive field of that fiber.”
+#+end_quote
+
+*** Receptive fields - on or off center
+:PROPERTIES:
+:NOTER_PAGE: (615 . 0.6724137931034483)
+:END:
+
+#+begin_quote
+The on-center cells fire when a spot of light is
+turned on within a circular central region. Off-center
+cells fire when a spot of light in the center of their
+receptive field is turned off.
+#+end_quote
+
+*** Middle temporal (MT, or V5) area in the dorsal pathway
+:PROPERTIES:
+:NOTER_PAGE: (615 . 0.8793103448275862)
+:END:
+
+
+#+begin_quote
+Strong selectivity for the direction of movement across their receptive fields.
+
+Lesions of this area produce deficits in the ability to track moving objects.
+
+#+end_quote
+=======
+
+** TODO 2017 - Magnitude, temporal trends, and projections of the global prevalence of blindness and distance and near vision impairment: a systematic review and meta-analysis
+ :PROPERTIES:
+  :Custom_ID: Bourne2017
+  :AUTHOR: Rupert R A Bourne {\it et al.}
+  :JOURNAL: The Lancet Global Health
+  :YEAR: 2017
+  :VOLUME: 5
+  :PAGES: e888--e897
+  :DOI: 10.1016/s2214-109x(17)30293-0
+  :URL: https://doi.org/10.1016/s2214-109x(17)30293-0
+  :NOTER_DOCUMENT: pdfs/bourne2017_systematic_review_vision_impairment.pdf
+ :END:
+
+cite:Bourne2017
+*** References on impact of visual loss
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.5449303219605959)
+:END:
+
+They mention
+- Economic opportunities
+- Quality of life
+- Risk of death
+
+Might be worth looking at these?
+*** "Uncorrect presbyopia is the most common cause of vision impairment"
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.7179240749639596)
+:END:
+* Unsorted
+** TODO 2015 - Decoding Brain Responses To Pixelized Images in the Primary Visual Cortex: Implications for Visual Cortical Prostheses
+ :PROPERTIES:
+  :Custom_ID: hou15_decod_brain_respon_to_pixel
+  :AUTHOR: Wen-sheng Hou, Bing-bing Guo, Xiao-lin Zheng, Zhen-gang Lu, Xing Wang, Zheng-qin Yin \& Ming Meng
+  :JOURNAL: Neural Regeneration Research
+  :YEAR: 2015
+  :VOLUME: 10
+  :PAGES: 1622
+  :DOI: 10.4103/1673-5374.167761
+  :URL: https://doi.org/10.4103/1673-5374.167761
+ :END:
+
+cite:hou15_decod_brain_respon_to_pixel
+
+** TODO 2015 - Cortical Magnification Plus Cortical Plasticity Equals Vision?
+ :PROPERTIES:
+  :Custom_ID: born15_cortic_magnif_plus_cortic_plast_equal_vision
+  :AUTHOR: Richard Born, Alexander Trott \& Till Hartmann
+  :JOURNAL: Vision Research
+  :YEAR: 2015
+  :VOLUME: 111
+  :PAGES: 161-169
+  :DOI: 10.1016/j.visres.2014.10.002
+  :URL: https://doi.org/10.1016/j.visres.2014.10.002
+ :END:
+
+cite:born15_cortic_magnif_plus_cortic_plast_equal_vision
+
+** TODO 2015 - Increased Audiovisual Integration in Cochlear-Implanted Deaf Patients: Independent Components Analysis of Longitudinal Positron Emission Tomography Data
+ :PROPERTIES:
+  :Custom_ID: strelnikov15_increas_audiov_integ_cochl_implan_deaf_patien
+  :AUTHOR: Strelnikov, Rouger, Lagleyre, Fraysse, D\'emonet, D\'eguine \& Barone
+  :JOURNAL: European Journal of Neuroscience
+  :YEAR: 2015
+  :VOLUME: 41
+  :PAGES: 677-685
+  :DOI: 10.1111/ejn.12827
+  :URL: https://doi.org/10.1111/ejn.12827
+ :END:
+
+cite:strelnikov15_increas_audiov_integ_cochl_implan_deaf_patien
+
+** TODO 2014 - Artificial Vision Support System (AVS2) for Improved Prosthetic Vision
+ :PROPERTIES:
+  :Custom_ID: fink14_artif_vision_suppor_system_avs2
+  :AUTHOR: Wolfgang Fink \& Mark Tarbell
+  :JOURNAL: Journal of Medical Engineering \& Technology
+  :YEAR: 2014
+  :VOLUME: 38
+  :PAGES: 385-395
+  :DOI: 10.3109/03091902.2014.957869
+  :URL: https://doi.org/10.3109/03091902.2014.957869
+  :NOTER_DOCUMENT: pdfs/fink2014_artificial_visual_support_avs2.pdf
+ :END:
+
+cite:fink14_artif_vision_suppor_system_avs2
+
+** TODO 2013 - Neural Stimulation for Visual Rehabilitation: Advances and Challenges
+ :PROPERTIES:
+  :Custom_ID: lorach13_neural_stimul_visual_rehab
+  :AUTHOR: Henri Lorach, Olivier Marre, Jos\'e-Alain Sahel, Ryad Benosman \& Serge Picaud
+  :JOURNAL: Journal of Physiology-Paris
+  :YEAR: 2013
+  :VOLUME: 107
+  :PAGES: 421-431
+  :DOI: 10.1016/j.jphysparis.2012.10.003
+  :URL: https://doi.org/10.1016/j.jphysparis.2012.10.003
+ :END:
+
+cite:lorach13_neural_stimul_visual_rehab
+
+** TODO 2013 - Holographic Display System for Restoration of Sight To the Blind
+ :PROPERTIES:
+  :Custom_ID: goetz13_holog_displ_system_restor_sight_to_blind
+  :AUTHOR: G A Goetz, Y Mandel, R Manivanh, D V Palanker \& T \VCižm\'ar
+  :JOURNAL: Journal of Neural Engineering
+  :YEAR: 2013
+  :VOLUME: 10
+  :PAGES: 056021
+  :DOI: 10.1088/1741-2560/10/5/056021
+  :URL: https://doi.org/10.1088/1741-2560/10/5/056021
+  :NOTER_DOCUMENT: pdfs/goetz2013_holographic_display_system.pdf
+ :END:
+
+cite:goetz13_holog_displ_system_restor_sight_to_blind
+
+** TODO 2012 - An Image Processing Approach for Blind Mobility Facilitated Through Visual Intracortical Stimulation
+ :PROPERTIES:
+  :Custom_ID: mohammadi12_image_proces_approac_blind_mobil
+  :AUTHOR: Hossein Mahvash Mohammadi, Ebrahim Ghafar-Zadeh \& Mohamad Sawan
+  :JOURNAL: Artificial Organs
+  :YEAR: 2012
+  :VOLUME: 36
+  :PAGES: 616-628
+  :DOI: 10.1111/j.1525-1594.2011.01421.x
+  :URL: https://doi.org/10.1111/j.1525-1594.2011.01421.x
+  :NOTER_DOCUMENT: pdfs/mohammadi2012_image_processing_approach_distance.pdf
+ :END:
+
+cite:mohammadi12_image_proces_approac_blind_mobil
+*** Limitations of phosphenes - irregular spacing, interaction and unreliable levels
+:PROPERTIES:
+:NOTER_PAGE: (1 . 0.5503125295508274)
+:END:
+*** They mention the tongue stimulation method of transferring visual information
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.26415001418439715)
+:END:
+
+Maybe check reference 16!
+*** TODO Walking aid devices references to look up
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.2751562647754137)
+:END:
+
+
+*** TODO Survey on image processing strategies
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.4512562742316785)
+:END:
+
+This sounds like itmight be useful to read :
+
+#+begin_quote
+A survey on imge processing strategies introduced for a visual cortex
+stimulation system is presented by Buffoni et al...
+#+end_quote
+*** Resolution reduction strategy for image processing
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.5833312813238771)
+:END:
+
+
+Also incorporates image thresholding.
+*** Distance perception of phosphenes differs when multiple phosphenes elicited simultaneously
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.5943375319148936)
+:END:
+
+Check this reference - (22) -
+
+*** Image processing based on distance rather than raw image processing
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.902512548463357)
+:END:
+
+*** Depth encoding phosphene image with depth phosphenes on the right
+:PROPERTIES:
+:NOTER_PAGE: (9 . 0.29310344827586204)
+:END:
+
+** TODO 2010 - Real-Time Simulation of Phosphene Images Evoked by Electrical Stimulation of the Visual Cortex
+ :PROPERTIES:
+  :Custom_ID: fehervari10_real_time_simul_phosp_images
+  :AUTHOR: Tamas Fehervari, Masaru Matsuoka, Hirotsugu Okuno \& Tetsuya Yagi
+  :JOURNAL:
+  :YEAR: 2010
+  :VOLUME:
+  :PAGES: 171-178
+  :DOI: 10.1007/978-3-642-17537-4_22
+  :URL: https://doi.org/10.1007/978-3-642-17537-4_22
+ :END:
+
+cite:fehervari10_real_time_simul_phosp_images
+
+** TODO 2005 - A proposed intracortical visual prosthesis image processing system
+ :PROPERTIES:
+  :Custom_ID: srivastava05
+  :AUTHOR: Srivastava \& Troyk
+  :JOURNAL:
+  :YEAR: 2005
+  :VOLUME:
+  :PAGES: nil
+  :DOI: 10.1109/iembs.2005.1615667
+  :URL: https://doi.org/10.1109/iembs.2005.1615667
+ :END:
+
+cite:srivastava05
+
+** TODO 2004 - Translating Image Sequences Into Spike Patterns for Cortical Neuro-Stimulation
+ :PROPERTIES:
+  :Custom_ID: pelayo04_trans_image_sequen_into_spike
+  :AUTHOR: Francisco Pelayo, Samuel Romero, Christian Morillas, Antonio Martı́nez, Eduardo Ros \& Eduardo Fern\'andez
+  :JOURNAL: Neurocomputing
+  :YEAR: 2004
+  :VOLUME: 58-60
+  :PAGES: 885-892
+  :DOI: 10.1016/j.neucom.2004.01.142
+  :URL: https://doi.org/10.1016/j.neucom.2004.01.142
+ :END:
+
+cite:pelayo04_trans_image_sequen_into_spike
+
+** TODO 2018 - Cortical Visual Prostheses: From Microstimulation To Functional Percept
+ :PROPERTIES:
+  :Custom_ID: foroushani18_cortic_visual_prost
+  :AUTHOR: Armin Najarpour Foroushani, Christopher C Pack \& Mohamad Sawan
+  :JOURNAL: Journal of Neural Engineering
+  :YEAR: 2018
+  :VOLUME: 15
+  :PAGES: 021005
+  :DOI: 10.1088/1741-2552/aaa904
+  :URL: https://doi.org/10.1088/1741-2552/aaa904
+ :END:
+
+cite:foroushani18_cortic_visual_prost
+
+** TODO 2015 - Visual Prostheses: Technological and Socioeconomic Challenges
+ :PROPERTIES:
+  :Custom_ID: troy15_visual_prost
+  :AUTHOR: John Troy
+  :JOURNAL: Engineering
+  :YEAR: 2015
+  :VOLUME: 1
+  :PAGES: 288-291
+  :DOI: 10.15302/j-eng-2015080
+  :URL: https://doi.org/10.15302/j-eng-2015080
+ :END:
+
+cite:troy15_visual_prost
+** TODO 2017 - A Deep-Learning-Based Floor Detection System for the Visually Impaired
+ :PROPERTIES:
+  :Custom_ID: delahoz17_deep_learn_based_floor_detec
+  :AUTHOR: Yueng Delahoz \& Miguel Labrador
+  :JOURNAL:
+  :YEAR: 2017
+  :VOLUME:
+  :PAGES: nil
+  :DOI: 10.1109/dasc-picom-datacom-cyberscitec.2017.148
+  :URL: https://doi.org/10.1109/dasc-picom-datacom-cyberscitec.2017.148
+ :END:
+
+cite:delahoz17_deep_learn_based_floor_detec
+
+** TODO 2018 - Phone based Video Processing Aimed at Outdoor Guidance for the Visually Impaired
+ :PROPERTIES:
+  :Custom_ID: langenkamp18_phone_video_proces_aimed_outdoor
+  :AUTHOR: Stephen PPC Langenkamp \& Muhammad Rizwan Abid
+  :JOURNAL:
+  :YEAR: 2018
+  :VOLUME:
+  :PAGES: nil
+  :DOI: 10.1145/3206098.3206106
+  :URL: https://doi.org/10.1145/3206098.3206106
+ :END:
+
+cite:langenkamp18_phone_video_proces_aimed_outdoor
+
+** TODO 1948 - A Mathematical Theory of Communication
+ :PROPERTIES:
+  :Custom_ID: shannon48_mathem_theor_commun
+  :AUTHOR: Shannon
+  :JOURNAL: Bell System Technical Journal
+  :YEAR: 1948
+  :VOLUME: 27
+  :PAGES: 623-656
+  :DOI: 10.1002/j.1538-7305.1948.tb00917.x
+  :URL: https://doi.org/10.1002/j.1538-7305.1948.tb00917.x
+  :NOTER_DOCUMENT: pdfs/shannon1948_mathematical_theory_communication.pdf
+ :END:
+
+cite:shannon48_mathem_theor_commun
+
+** TODO 2006 - Image Information and Visual Quality
+ :PROPERTIES:
+  :Custom_ID: sheikh06_image_infor_visual_qualit
+  :AUTHOR: Sheikh \& Bovik
+  :JOURNAL: IEEE Transactions on Image Processing
+  :YEAR: 2006
+  :VOLUME: 15
+  :PAGES: 430-444
+  :DOI: 10.1109/tip.2005.859378
+  :URL: https://doi.org/10.1109/tip.2005.859378
+  :NOTER_DOCUMENT: pdfs/sheikh2006_image_information_quality.pdf
+ :END:
+
+cite:sheikh06_image_infor_visual_qualit
+*** Simple widely used fidelity measure - PSNR, MSE
+:PROPERTIES:
+:NOTER_PAGE: (1 . 0.5487847904040405)
+:END:
+
+#+begin_quote
+A simple and widely used fidelity measure is the peak
+signal-to-noise ratio (PSNR), or the corresponding distortion
+metric, the mean-squared error (MSE). The MSE is the
+norm of the arithmetic difference between the reference and the
+test signals. It is an attractive measure for the (loss of) image
+quality due to its simplicity and mathematical convenience.
+#+end_quote
+
+This seems like it'd be useful for images with minimal processing, but I'm not
+so sure about when the image is degraded to the extent that I'm expect in
+simulated prosthetic vision.
+
+Plus, I suppose that image information for simulated prosthetic vision may be
+useful even if ultimately transformed in a non-obvious way - such as if the
+image is heavily distorted or deconstructed and simply encoded in a way that is
+distinct, but contains equal information, to the original image.
+
+** TODO 2004 - Image Quality Assessment: From Error Visibility To Structural Similarity
+ :PROPERTIES:
+  :Custom_ID: wang04_image_qualit_asses
+  :AUTHOR: Wang, Bovik, Sheikh \& Simoncelli
+  :JOURNAL: IEEE Transactions on Image Processing
+  :YEAR: 2004
+  :VOLUME: 13
+  :PAGES: 600-612
+  :DOI: 10.1109/tip.2003.819861
+  :URL: https://doi.org/10.1109/tip.2003.819861
+ :END:
+
+cite:wang04_image_qualit_asses
+
+** TODO 2013 - Visual challenges in the everyday lives of blind people
+ :PROPERTIES:
+  :Custom_ID: brady13_visual
+  :AUTHOR: Erin Brady, Meredith Ringel Morris, Yu Zhong, Samuel White \& Jeffrey Bigham
+  :JOURNAL:
+  :YEAR: 2013
+  :VOLUME:
+  :PAGES: nil
+  :DOI: 10.1145/2470654.2481291
+  :URL: https://doi.org/10.1145/2470654.2481291
+  :NOTER_DOCUMENT: pdfs/brady2013_visual_challenges_in_lives_of_blind.pdf
+ :END:
+
+cite:brady13_visual
+
+
+*** Taxonomy of questions asked
+:PROPERTIES:
+:NOTER_PAGE: (4 . 0.09278561728395063)
+:END:
+
+Main headings:
+
+1. Identification (41%) - most common, most of which were "No context"
+2. Reading (24%)
+3. Description (17%)
+4. Other (17%)
+
+*** Important caveat - static, singular image only, asynchronous
+:PROPERTIES:
+:NOTER_PAGE: (1 . 0.5175737037037038)
+:END:
+
+** TODO 2016 - Overcoming Challenges To Medicines Use By Visually Disabled Patients in Sri Lanka: a Review of Pioneering Local Research and the International Trends
+ :PROPERTIES:
+  :Custom_ID: weeraratne16_overc_chall_to_medic_use
+  :AUTHOR: Weeraratne
+  :JOURNAL: Pharmaceutical Journal of Sri Lanka
+  :YEAR: 2016
+  :VOLUME: 6
+  :PAGES: 15
+  :DOI: 10.4038/pjsl.v6i0.11
+  :URL: https://doi.org/10.4038/pjsl.v6i0.11
+  :NOTER_DOCUMENT: pdfs/weeraratne2012_challenges_visually_disabled_medicines.pdf
+ :END:
+
+cite:weeraratne16_overc_chall_to_medic_use
+
+*** Difficulties for drug administrationg
+:PROPERTIES:
+:NOTER_PAGE: (3 . 0.13628837931034482)
+:END:
+
+1. Locating drugs
+2. Differentiating medicine containers (different sizes and shape can help)
+3. Misidentification
+4. Incorrect dose (e.g. half a tablet)
+5. Tracking
+6. Missing doses (most common reason)
+7. Spilling medication
+8. Difficulty liquid medication etc.
+
+** TODO 2017 - Sensor-Based Assistive Devices for Visually-Impaired People: Current Status, Challenges, and Future Directions
+ :PROPERTIES:
+  :Custom_ID: elmannai17_sensor_based_assis_devic_visual_impair_peopl
+  :AUTHOR: Wafa Elmannai \& Khaled Elleithy
+  :JOURNAL: Sensors
+  :YEAR: 2017
+  :VOLUME: 17
+  :PAGES: 565
+  :DOI: 10.3390/s17030565
+  :URL: https://doi.org/10.3390/s17030565
+ :END:
+
+cite:elmannai17_sensor_based_assis_devic_visual_impair_peopl
+
+** TODO 2008 - Blind Navigation and the Role of Technology
+ :PROPERTIES:
+  :Custom_ID: giudice08_blind_navig_role_techn
+  :AUTHOR: Nicholas Giudice \& Gordon Legge
+  :JOURNAL:
+  :YEAR: 2008
+  :VOLUME:
+  :PAGES: 479-500
+  :DOI: 10.1002/9780470379424.ch25
+  :URL: https://doi.org/10.1002/9780470379424.ch25
+  :NOTER_DOCUMENT: pdfs/giudice2008_blind_navigation_technology.pdf
+ :END:
+
+cite:giudice08_blind_navig_role_techn
+*** Major issue - printed material "in the wild" for navigation tasks
+:PROPERTIES:
+:NOTER_PAGE: (3 . 0.3975434649446495)
+:END:
+
+** Search for Paradise: A Patient's Account of the Artificial Vision Experiment
+Jens Neumann
+

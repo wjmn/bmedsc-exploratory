@@ -1,0 +1,245 @@
+#+TITLE: Thesis
+#+AUTHOR: Jamin Wu
+#+DATE:
+
+Loss of vision can significantly impact a person's independence.
+To restore vision, devices known as visual prostheses may be implanted to bypass damaged structures in the visual pathway.
+Cortical visual prostheses (CVPs) are visual prostheses implanted on the surface of the brain, effectively bypassing all peripheral structures usually necessary for vision.
+Interest in CVPs emerged after observational studies in the 1960s showed that local stimulation of visual cortex produced point-like sensations of light in the visual fields of blind subjects.
+Evidence from these studies have suggested that the visual sensations produced by
+
+
+* Summary/Abstract
+
+1. Cortical visual prostheses are devices implanted on the surface of the brain
+   which stimulate the visual cortex to produce visual sensations.
+2. Cortical visual prostheses are in early development; several devices are
+   being developed worldwide, with clinical safety trials either initiating or
+   in early stages of planning.
+3. The fundamental basis behind the mechanism of a cortical visual prosthesis is
+   the observation that stimulating local regions of brain tissue produces
+   localisable sensations of light, called phosphenes.
+4. However, the evidence from in vivo studies currently available suggests that
+   the arrangement of these phosphenes in the visual fields is likely to be
+   highly irregular and individualised, due to the inherent granularity of
+   neural receptive fields in the brain.
+5. Most studies of how implantees might experience vision from an implant are
+   conducted using simulations of prosthetic vision; however, most simulations
+   model phosphenes within a regular pattern of phosphenes and approach the
+   problem of prosthetic vision as simply one of image interpretion in a
+   low-resolution, binary depiction of the world.
+6. As of yet, few studies have simulated prosthetic vision at levels of
+   distortion more consistent with currently known cortical stimulations. Even
+   fewer attempt to find image processing methods which are more specifically
+   suited at addressing these distortions.
+7. In this project, we demonstrate
+
+* Background
+
+** Summary
+
+A prosthetic device implanted on the brain could eventually be an option for
+restoring vision in blind adults. Research groups worldwide are developing early
+prototypes of these devices to be tested in human clinical trials.
+
+Our understanding of what people experience when their visual cortex is
+stimulated comes primarily from two sources:
+
+1) Historical experiments of early brain stimulation in the late 20th century
+   using rudimentary equipment, and
+2) Studies in epilepsy patients who have a prior clinical indication for the
+   placement of electrodes on the brain.
+
+These early experiments demonstrate a number of features of visual phenomena
+elicited by cortical stimulation which are important for the development of a
+visual prosthesis:
+
+1) Localised stimulation of brain tissue produces consistently localisable
+   sensations of light, which roughly corresponds to sensory corticotopic maps
+   in the brain. This means a stationery implanted prosthesis can be expected to
+   produce a stable distribution of light in a grossly predictable location
+   amongst the visual fields, at least in the short term.
+2) Analysing videos of
+
+Because of the youth of human-worthy cortical visual prostheses, there is a
+significant lack of research into the
+
+* Research Question
+
+Guiding questions:
+
+1. Can machines learn to improve the appearance of digits for arbitrarily
+   arranged grids of phosphenes, such that humans are better able to recognise
+   them?
+   1. What training architecture is best? How does the architecture affect the
+      output?
+   2. What is meant by "better able to recognise"? Discriminability? Based on
+      perceptions of digit forms?
+   3. What arrangements of grids are most conducive to this process? How can the
+      capability of a grid be assessed or compared for this task?
+
+
+
+* Methods
+
+For clarity, the computational and experimental methods are described separately.
+
+** Computational Methods
+
+To train an image encoder that would transform a raw pixel image into a vector of electrode amplitudes, we designed a training architecture  composed of a conditional generative adversarial network (cGAN).
+This architecture is outlined in Figure {}.
+
+The training architecture proceeds as follows:
+1. An image, represented as a 2D matrix of grayscale pixel values, is the initial input to the network and begins a training step.
+2. The image is fed to an encoder network, which outputs a vector of electrode amplitudes.
+3. The vector of phosphene amplitudes is fed to a fixed simulated renderer, which renders the electrode amplitudes into a  new 2D matrix of grayscale pixel values.
+   This renderer simulates the visual sensations produced when electrode amplitudes are sent to a device for an implantee.
+4. The 2D image render is passed to a fixed pre-trained hole-filling network, which produces a new 2D image render.
+5. The hole-filled 2D image render is passed to a decoder network.
+   The decoder network attempts to classify the 2D image render as one of ten possible digits, or as "garbage" representing no digit.
+6.
+
+
+** Overview
+
+All code was written using the Python programming language.
+
+1. To train the machine to optimise the appearance of digit patterns.
+
+
+** Phosphene Modelling
+
+The basic flow of prosthetic vision
+
+To simulate prosthetic vision, phosphenes must be modelled so they can be displayed on a computer screen.
+The most prevalent phosphene models for prosthetic vision experiments arrange phosphenes in regular linear or polar grids with uniform characteristics.
+The
+These models are simple, fast and usually computationally efficient.
+
+However, as discussed in section {}, these phosphene representations are
+extremely unlikely to reflect the reality of cortical visual prostheses. All
+prior in-vivo experiments of cortical visual prostheses have demonstrated that
+phosphenes do not show uniform characteristics. Phosphene locations, sizes,
+shapes and brightness are generally unpredictable. We know some degree of
+control over phosphene brightness is possible by modulating the amplitude of
+stimulation, but this behaviour has only been demonstrated in phosphenes tested
+individually.
+
+- Electrode grid modelled as a pre-rendered 3D volume, with each
+  phosphene/electrode individually parameterised (X-Y location, size, strength).
+  Each slice of the 3D volume receives a separate value (analogous to a value
+  provided to individual electrodes) which is scalar multiplied against the
+  pre-rendered slice, and the volume is summed along the primary dimension to
+  produce the final render.
+- The advantage of this is that each phosphene is modellable separately, in
+  properties which are (currently) primarily independent of each other but are
+  easily modelled to be dependent (e.g. scaling the final render by the strength
+  of the strongest slice, or by passing the values through a dependent-valued
+  function prior to scalar multiplication). This is in contrast to methods of
+  phosphene modelling which are based on image remapping and traditional image
+  processing.
+- This method is flexible enough to allow different methods of deriving
+  electrode/phosphene values - namely, direct image mapping (i.e. finding the
+  brightness of local piel areas) or more abstract methods (e.g. training an
+  encoder to produce any arbitrary set of values). The method of rendering
+  phosphenes is entirely independent of the means used to derive the phosphene
+  values.
+- Modelled with custom code in Python with the standard Python libraries for
+  matrix and image manipulation (numpy, scipy).
+
+** Encoder Training
+
+The training architecture was modelled after multi-class conditional
+generational adversarial neural networks (cGAN). In general, GANs are a training
+design which trains two neural network models with opposing goals. One model is
+a generator, which attempts to generate realistic samples. The other model is a
+discriminator, which attempts to discriminate between real and generated
+samples. The generator continuously produces new generated samples in an attempt
+to fool the discriminator. Each iteration is used as an opportunity to train the
+generator and discriminator on their respective opposing goals.
+
+
+The encoder was trained on the MASSIVE M3 supercomputer
+
+*** Encoder Models
+
+For this project, basic encoder models were chosen with a minimal number of
+hidden layers between the input and output layers. In some cases, it is
+desirable to produce multimodal distributions; for this particular project,
+multimodal output was not tested.
+
+Three basic encoder architectures were tested. Each encoder
+took as input a single digit class and produced as output a one-dimensional
+vector of electrode weights equal to the number of electrodes in the input
+phosphene grid.
+
+1. An encoder consisting of a basic single embedding layer and a dense output
+   layer.
+2. An encoder equivalent to the first, with an extra dense hidden layer, and
+3. A direct encoder consisting only of two dense hidden layers.
+
+
+*** Decoder Models
+
+The decoder was modelled as a convolutional neural network with a minimal number
+of hidden layers. Performance of the decoder on the MNIST input was > 98%,
+which was deemed sufficient to justify its use for the GAN training step.
+
+The decoder model was validated on the MNIST dataset (without the intervening
+grid rendering).
+
+
+** Experimental Pilot
+
+*** Participant Demographics
+
+11 (potentially more) participants were recruited from students and staff at
+Monash University, in accordance with the MUHREC application for this project.
+Participants were briefed on the purpose and conduct of the experiment and
+signed a consent form for the experiment.
+
+*** Psychophysics Experiment
+
+A psychophysics experiment was designed and implemented in Python using
+PsychoPy.
+
+The experiment consisted of four blocks conducted one after the other on a
+single day. Each block consisted of 12 digit-classification trials. At the start
+of each trial, participants were shown a grey screen indicating their progress
+in the block and an instruction to press any key to initiate the trial. When the
+participant pressed a key, the trial was initiated. Each trial consisted of 25
+digits to classify. At the start of the trial, a phosphene pattern is shown in
+the center of the screen. The trial waits for the participant to press a digit
+on the number pad corresponding to what they believe the underlying digit to be.
+Once a digit key is pressed, two forms of feedback are given through the
+headphones. First, a voice says the identity of the /correct/ digit in English.
+Second, a tone is played indicating if the response was correct or incorrect (a
+high tone indicating correct, and a low tone indicating incorrect, at an
+interval of a tritone). The next digit immediately continues and begins waiting
+for the next keypress. This continued over 12 trials.
+
+At the conclusion of each block, the participant was given the opportunity to
+rest. Participants were instructed to take as much time as they required. All
+experiments were concluded at the end of 1.5 hours regardless of whether the
+participant had completed all the trials.
+
+At the end of each block, the participant was given the opportunity
+
+* Results
+
+** Encoder Training
+
+The encoder was
+
+** Experimental Results
+
+*** Mean Accuracy
+
+*** Logistic Regression
+
+***
+
+* Discussion
+
+
+* Conclusions

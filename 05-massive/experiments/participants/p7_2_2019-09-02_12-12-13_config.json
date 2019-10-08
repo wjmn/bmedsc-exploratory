@@ -1,0 +1,81 @@
+{
+    "BINARISED": false,
+    "CHECKPOINT_NUM": 38,
+    "CHECKPOINT_TEMPLATE": "./output/C-2019-09-02-01-37-38-659602/checkpoints/checkpoint_-38",
+    "CONDITION": 1,
+    "CONFIG_FILE_TEMPLATE": "./experiments/participants/{}_{}_config.json",
+    "CONFIG_ID": "C-2019-09-02-01-37-38-659602",
+    "CORRECT_NOTE": "G",
+    "DATETIME_FORMAT": "%Y-%m-%d_%H-%M-%S",
+    "DIGIT_SOUND_TEMPLATE": "./sounds/{}.wav",
+    "END_TEXT": "Thank you. \n\nPress any key to exit.",
+    "EXCLUDED": [
+        "STIMULI",
+        "GRID",
+        "IMAGES",
+        "BLANK_IMAGE",
+        "PROCESSOR"
+    ],
+    "IMAGE_SIZE": [
+        72,
+        72,
+        4
+    ],
+    "IMAGE_TEMPLATE": "./images/{}.png",
+    "INCORRECT_NOTE": "Csh",
+    "KEY_LIST": [
+        "num_0",
+        "num_1",
+        "num_2",
+        "num_3",
+        "num_4",
+        "num_5",
+        "num_6",
+        "num_7",
+        "num_8",
+        "num_9"
+    ],
+    "MOUSE_FILE_TEMPLATE": "./experiments/participants/{}_{}_mouse.csv",
+    "MOUSE_HEADER": "trial,cue,digit,xmouse,ymouse,cuetime,trialtime,sessiontime\n",
+    "MOUSE_RECORD_INTERVAL": 0.2,
+    "MOUSE_ROW_TEMPLATE": "{trial},{cue},{digit},{xmouse},{ymouse},{cuetime},{trialtime},{sessiontime}\n",
+    "MOUSE_VARS": [
+        "trial",
+        "cue",
+        "digit",
+        "xmouse",
+        "ymouse",
+        "cuetime",
+        "trialtime",
+        "sessiontime"
+    ],
+    "NCUES": 20,
+    "NOTE_DURATION": 0.1,
+    "NOTE_VOLUME": 0.5,
+    "NO_NUMPAD": false,
+    "NTRIALS": 12,
+    "PROMPT_TEXT": "{}% complete.\n\nPress any key when ready.",
+    "SESSION_FILE_TEMPLATE": "./experiments/participants/{}_{}_session.csv",
+    "SESSION_HEADER": "trial,cue,digit,keypress,cuetime,trialtime,sessiontime\n",
+    "SESSION_ROW_TEMPLATE": "{trial},{cue},{digit},{keypress},{cuetime},{trialtime},{sessiontime}\n",
+    "SESSION_VARS": [
+        "trial",
+        "cue",
+        "digit",
+        "keypress",
+        "cuetime",
+        "trialtime",
+        "sessiontime"
+    ],
+    "TESTING": false,
+    "WITH_SCANNING": false,
+    "XSIZE": 100,
+    "YSIZE": 100,
+    "configFile": "./experiments/participants/p7_2_2019-09-02_12-12-13_config.json",
+    "details": {
+        "datetime": "2019-09-02_12-12-13",
+        "participant": "p7_2"
+    },
+    "mouseFile": "./experiments/participants/p7_2_2019-09-02_12-12-13_mouse.csv",
+    "sessionFile": "./experiments/participants/p7_2_2019-09-02_12-12-13_session.csv"
+}

@@ -1,0 +1,14 @@
+#!/bin/bash
+#SBATCH --job-name=CGANRUN
+#SBATCH --account=fs11
+#SBATCH --time=48:00:00
+#SBATCH --ntasks=1
+#SBATCH --mem-per-cpu=4096
+#SBATCH --cpus-per-task=2
+#SBATCH --partition=m3g
+#SBATCH --gres=gpu:1
+#SBATCH --output=./data/slurm/%j.out
+#SBATCH --error=./data/slurm/%j.err
+
+module load tensorflow/2.0.0-beta1
+python ./train.py
