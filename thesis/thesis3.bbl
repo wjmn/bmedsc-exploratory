@@ -1,4 +1,664 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
+
+\bibitem{dobelle_mapping_1979}
+Dobelle WH, Turkel J, Henderson DC, Evans JR.
+\newblock Mapping the {Representation} of the {Visual} {Field} by {Electrical}
+  {Stimulation} of {Human} {Visual} {Cortex}.
+\newblock American Journal of Ophthalmology. 1979 Oct;88(4):727--735.
+\newblock Available from:
+  \url{https://linkinghub.elsevier.com/retrieve/pii/0002939479906731}.
+
+\bibitem{chen_simulating_2009-1}
+Chen SC, Suaning GJ, Morley JW, Lovell NH.
+\newblock Simulating prosthetic vision: {I}. {Visual} models of phosphenes.
+\newblock Vision Research. 2009 Jun;49(12):1493--1506.
+\newblock Available from:
+  \url{http://www.sciencedirect.com/science/article/pii/S0042698909000467}.
+
+\bibitem{sanchez-garcia_structural_2018}
+Sanchez-Garcia M, Martinez-Cantin R, Guerrero JJ.
+\newblock Structural and object detection for phosphene images.
+\newblock arXiv:180909607 [cs]. 2018 Sep;ArXiv: 1809.09607.
+\newblock Available from: \url{http://arxiv.org/abs/1809.09607}.
+
+\bibitem{li_image_2018}
+Li H, Su X, Wang J, Kan H, Han T, Zeng Y, et~al.
+\newblock Image processing strategies based on saliency segmentation for object
+  recognition under simulated prosthetic vision.
+\newblock Artificial Intelligence in Medicine. 2018 Jan;84:64--78.
+\newblock Available from:
+  \url{http://www.sciencedirect.com/science/article/pii/S0933365716304195}.
+
+\bibitem{lui_transformative_2012}
+Lui WLD, Browne D, Kleeman L, Drummond T, {Wai Ho Li}.
+\newblock Transformative {Reality}: {Improving} bionic vision with robotic
+  sensing.
+\newblock In: 2012 {Annual} {International} {Conference} of the {IEEE}
+  {Engineering} in {Medicine} and {Biology} {Society}. San Diego, CA: IEEE;
+  2012. p. 304--307.
+\newblock Available from: \url{http://ieeexplore.ieee.org/document/6345929/}.
+
+\bibitem{beauchamp_dynamic_2018}
+Beauchamp MS, Bosking W, Sun P, Foster B, Niketeghad S, Pouratian N, et~al.
+\newblock Dynamic {Electrical} {Stimulation} of {Sites} in {Visual} {Cortex}
+  {Produces} {Form} {Vision} in {Sighted} and {Blind} {Humans}.
+\newblock bioRxiv. 2018 Nov;p. 462697.
+\newblock Available from:
+  \url{https://www.biorxiv.org/content/10.1101/462697v1}.
+
+\bibitem{bourne_magnitude_2017}
+Bourne RRA, Flaxman SR, Braithwaite T, Cicinelli MV, Das A, Jonas JB, et~al.
+\newblock Magnitude, temporal trends, and projections of the global prevalence
+  of blindness and distance and near vision impairment: a systematic review and
+  meta-analysis.
+\newblock The Lancet Global Health. 2017 Sep;5(9):e888--e897.
+\newblock Available from:
+  \url{https://www.thelancet.com/journals/langlo/article/PIIS2214-109X(17)30293-0/abstract}.
+
+\bibitem{flaxman_global_2017}
+Flaxman SR, Bourne RRA, Resnikoff S, Ackland P, Braithwaite T, Cicinelli MV,
+  et~al.
+\newblock Global causes of blindness and distance vision impairment
+  1990–2020: a systematic review and meta-analysis.
+\newblock The Lancet Global Health. 2017 Dec;5(12):e1221--e1234.
+\newblock Available from:
+  \url{https://linkinghub.elsevier.com/retrieve/pii/S2214109X17303935}.
+
+\bibitem{lee_glaucoma_2005}
+Lee DA, Higginbotham EJ.
+\newblock Glaucoma and its treatment: {A} review.
+\newblock American Journal of Health-System Pharmacy. 2005 Apr;62(7):691--699.
+\newblock Available from:
+  \url{https://academic.oup.com/ajhp/article/62/7/691/5134357}.
+
+\bibitem{zachariades_blindness_1996}
+Zachariades N, Papavassiliou D, Christopoulos P.
+\newblock Blindness after facial trauma.
+\newblock Oral Surgery, Oral Medicine, Oral Pathology, Oral Radiology, and
+  Endodontology. 1996 Jan;81(1):34--37.
+\newblock Available from:
+  \url{http://www.sciencedirect.com/science/article/pii/S1079210496801442}.
+
+\bibitem{normann_toward_2009}
+Normann RA, Greger BA, House P, Romero SF, Pelayo F, Fernandez E.
+\newblock Toward the development of a cortically based visual neuroprosthesis.
+\newblock Journal of Neural Engineering. 2009 May;6(3):035001.
+\newblock Available from:
+  \url{https://doi.org/10.1088%2F1741-2560%2F6%2F3%2F035001}.
+
+\bibitem{lewis_restoration_2015}
+Lewis PM, Ackland HM, Lowery AJ, Rosenfeld JV.
+\newblock Restoration of vision in blind individuals using bionic devices: {A}
+  review with a focus on cortical visual prostheses.
+\newblock Brain Research. 2015 Jan;1595:51--73.
+\newblock Available from:
+  \url{http://www.sciencedirect.com/science/article/pii/S0006899314015674}.
+
+\bibitem{foroushani_cortical_2018}
+Foroushani AN, Pack CC, Sawan M.
+\newblock Cortical visual prostheses: from microstimulation to functional
+  percept.
+\newblock Journal of Neural Engineering. 2018 Feb;15(2):021005.
+\newblock Available from: \url{https://doi.org/10.1088%2F1741-2552%2Faaa904}.
+
+\bibitem{brindley_sensations_1968}
+Brindley GS, Lewin WS.
+\newblock The sensations produced by electrical stimulation of the visual
+  cortex.
+\newblock The Journal of Physiology. 1968 May;196(2):479--493.
+\newblock Available from:
+  \url{http://doi.wiley.com/10.1113/jphysiol.1968.sp008519}.
+
+\bibitem{dobelle_phosphenes_1974}
+Dobelle WH, Mladejovsky MG.
+\newblock Phosphenes produced by electrical stimulation of human occipital
+  cortex, and their application to the development of a prosthesis for the
+  blind.
+\newblock The Journal of Physiology. 1974 Dec;243(2):553--576.
+\newblock Available from:
+  \url{http://doi.wiley.com/10.1113/jphysiol.1974.sp010766}.
+
+\bibitem{bak_visual_1990}
+Bak M, Girvin J, Hambrecht DFT, Kufta CV, Loeb GE, Schmidt EM.
+\newblock Visual sensations produced by intracortical microstimulation of the
+  human occipital cortex.
+\newblock Medical and Biological Engineering and Computing. 1990;28:257--259.
+
+\bibitem{bosking_electrical_2017}
+Bosking WH, Beauchamp MS, Yoshor D.
+\newblock Electrical {Stimulation} of {Visual} {Cortex}: {Relevance} for the
+  {Development} of {Visual} {Cortical} {Prosthetics}.
+\newblock Annual Review of Vision Science. 2017 Sep;3(1):141--166.
+\newblock Available from:
+  \url{http://www.annualreviews.org/doi/10.1146/annurev-vision-111815-114525}.
+
+\bibitem{rushton_properties_1978}
+Rushton DN, Brindley GS.
+\newblock Properties of {Cortical} {Electrical} {Phosphenes}.
+\newblock In: Cool SJ, Smith EL, editors. Frontiers in {Visual} {Science}.
+  Springer {Series} in {Optical} {Sciences}. Springer Berlin Heidelberg; 1978.
+  p. 574--593.
+
+\bibitem{schmidt_feasibility_1996}
+Schmidt EM, Bak MJ, Hambrecht FT, Kufta CV, O'Rourke DK, Vallabhanath P.
+\newblock Feasibility of a visual prosthesis for the blind based on
+  intracortical micro stimulation of the visual cortex.
+\newblock Brain. 1996 Apr;119(2):507--522.
+\newblock Available from:
+  \url{https://academic.oup.com/brain/article/119/2/507/382434}.
+
+\bibitem{fernandez_development_2005}
+Fernández E, Pelayo F, Romero S, Bongard M, Marin C, Alfaro A, et~al.
+\newblock Development of a cortical visual neuroprosthesis for the blind: the
+  relevance of neuroplasticity.
+\newblock Journal of Neural Engineering. 2005 Nov;2(4):R1--R12.
+\newblock Available from:
+  \url{https://doi.org/10.1088%2F1741-2560%2F2%2F4%2Fr01}.
+
+\bibitem{beyeler_learning_2017}
+Beyeler M, Rokem A, Boynton GM, Fine I.
+\newblock Learning to see again: biological constraints on cortical plasticity
+  and the implications for sight restoration technologies.
+\newblock bioRxiv. 2017 Mar;p. 115188.
+\newblock Available from:
+  \url{https://www.biorxiv.org/content/10.1101/115188v1}.
+
+\bibitem{barnes_role_2012}
+Barnes N.
+\newblock The role of computer vision in prosthetic vision.
+\newblock Image and Vision Computing. 2012 Aug;30(8):478--479.
+\newblock Available from:
+  \url{http://www.sciencedirect.com/science/article/pii/S0262885612000832}.
+
+\bibitem{buffoni_image_2005}
+Buffoni LX, Coulombe J, Sawan M.
+\newblock Image {Processing} {Strategies} {Dedicated} to {Visual} {Cortical}
+  {Stimulators}: {A} {Survey}.
+\newblock Artificial Organs. 2005;29(8):658--664.
+\newblock Available from:
+  \url{http://onlinelibrary.wiley.com/doi/abs/10.1111/j.1525-1594.2005.29104.x}.
+
+\bibitem{chang_facial_2012}
+Chang MH, Kim HS, Shin JH, Park KS.
+\newblock Facial identification in very low-resolution images simulating
+  prosthetic vision.
+\newblock Journal of Neural Engineering. 2012 Aug;9(4):046012.
+\newblock Available from:
+  \url{http://stacks.iop.org/1741-2552/9/i=4/a=046012?key=crossref.82f47f235753f422323435341cb2f4b0}.
+
+\bibitem{sharmili_comparative_2017}
+Sharmili N, Swapna N, Ramakrishna G.
+\newblock Comparative analysis of image processing algorithms for visual
+  prosthesis.
+\newblock In: 2017 {International} {Conference} on {Communication} and {Signal}
+  {Processing} ({ICCSP}); 2017. p. 1120--1124.
+
+\bibitem{guo_deep_2016}
+Guo Y, Liu Y, Oerlemans A, Lao S, Wu S, Lew MS.
+\newblock Deep learning for visual understanding: {A} review.
+\newblock Neurocomputing. 2016 Apr;187:27--48.
+\newblock Available from:
+  \url{http://www.sciencedirect.com/science/article/pii/S0925231215017634}.
+
+\bibitem{ciresan_multi-column_2012}
+Cireşan D, Meier U, Schmidhuber J.
+\newblock Multi-column {Deep} {Neural} {Networks} for {Image} {Classification}.
+\newblock arXiv:12022745 [cs]. 2012 Feb;ArXiv: 1202.2745.
+\newblock Available from: \url{http://arxiv.org/abs/1202.2745}.
+
+\bibitem{ciresan_deep_2012}
+Ciresan D, Giusti A, Gambardella LM, Schmidhuber J.
+\newblock Deep {Neural} {Networks} {Segment} {Neuronal} {Membranes} in
+  {Electron} {Microscopy} {Images}.
+\newblock In: Pereira F, Burges CJC, Bottou L, Weinberger KQ, editors. Advances
+  in {Neural} {Information} {Processing} {Systems} 25. Curran Associates, Inc.;
+  2012. p. 2843--2851.
+\newblock Available from:
+  \url{http://papers.nips.cc/paper/4741-deep-neural-networks-segment-neuronal-membranes-in-electron-microscopy-images.pdf}.
+
+\bibitem{gatys_image_2016}
+Gatys LA, Ecker AS, Bethge M.
+\newblock Image {Style} {Transfer} {Using} {Convolutional} {Neural} {Networks}.
+\newblock In: 2016 {IEEE} {Conference} on {Computer} {Vision} and {Pattern}
+  {Recognition} ({CVPR}). Las Vegas, NV, USA: IEEE; 2016. p. 2414--2423.
+\newblock Available from: \url{http://ieeexplore.ieee.org/document/7780634/}.
+
+\bibitem{thurston_pare_2007}
+Thurston AJ.
+\newblock Paré and {Prosthetics}: {The} {Early} {History} of {Artificial}
+  {Limbs}.
+\newblock ANZ Journal of Surgery. 2007;77(12):1114--1119.
+\newblock Available from:
+  \url{https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1445-2197.2007.04330.x}.
+
+\bibitem{weiland_visual_2008}
+Weiland JD, Humayun MS.
+\newblock Visual {Prosthesis}.
+\newblock Proceedings of the IEEE. 2008 Jul;96(7):1076--1084.
+
+\bibitem{ong_bionic_2012}
+Ong JM, da~Cruz L.
+\newblock The bionic eye: a review.
+\newblock Clinical \& Experimental Ophthalmology. 2012 Jan;40(1):6--17.
+\newblock Available from:
+  \url{https://onlinelibrary.wiley.com/doi/full/10.1111/j.1442-9071.2011.02590.x}.
+
+\bibitem{humayun_visual_1996}
+Humayun MS, de~Juan E, Dagnelie G, Greenberg RJ, Propst RH, Phillips DH.
+\newblock Visual perception elicited by electrical stimulation of retina in
+  blind humans.
+\newblock Archives of Ophthalmology (Chicago, Ill: 1960). 1996
+  Jan;114(1):40--46.
+
+\bibitem{stingl_interim_2017}
+Stingl K, Schippert R, Bartz-Schmidt KU, Besch D, Cottriall CL, Edwards TL,
+  et~al.
+\newblock Interim {Results} of a {Multicenter} {Trial} with the {New}
+  {Electronic} {Subretinal} {Implant} {Alpha} {AMS} in 15 {Patients} {Blind}
+  from {Inherited} {Retinal} {Degenerations}.
+\newblock Frontiers in Neuroscience. 2017;11.
+\newblock Available from:
+  \url{https://www.frontiersin.org/articles/10.3389/fnins.2017.00445/full}.
+
+\bibitem{veraart_visual_1998}
+Veraart C, Raftopoulos C, Mortimer JT, Delbeke J, Pins D, Michaux G, et~al.
+\newblock Visual sensations produced by optic nerve stimulation using an
+  implanted self-sizing spiral cuff electrode.
+\newblock Brain Research. 1998 Nov;813(1):181--186.
+\newblock Available from:
+  \url{http://www.sciencedirect.com/science/article/pii/S0006899398009779}.
+
+\bibitem{panetsos_consistent_2011}
+Panetsos F, Sanchez-Jimenez A, Diaz-de Cerio ER, Diaz-Guemes I, Sanchez FM.
+\newblock Consistent {Phosphenes} {Generated} by {Electrical}
+  {Microstimulation} of the {Visual} {Thalamus}. {An} {Experimental} {Approach}
+  for {Thalamic} {Visual} {Neuroprostheses}.
+\newblock Frontiers in Neuroscience. 2011;5.
+\newblock Available from:
+  \url{https://www.frontiersin.org/articles/10.3389/fnins.2011.00084/full}.
+
+\bibitem{lowery_restoration_2015}
+Lowery AJ, Rosenfeld JV, Lewis PM, Browne D, Mohan A, Brunton E, et~al.
+\newblock Restoration of vision using wireless cortical implants: {The}
+  {Monash} {Vision} {Group} project.
+\newblock In: 2015 37th {Annual} {International} {Conference} of the {IEEE}
+  {Engineering} in {Medicine} and {Biology} {Society} ({EMBC}); 2015. p.
+  1041--1044.
+
+\bibitem{lowery_monash_2017}
+Lowery AJ, Rosenfeld JV, Rosa MGP, Brunton E, Rajan R, Mann C, et~al.
+\newblock Monash {Vision} {Group}’s {Gennaris} {Cortical} {Implant} for
+  {Vision} {Restoration}.
+\newblock In: Gabel VP, editor. Artificial {Vision}: {A} {Clinical} {Guide}.
+  Cham: Springer International Publishing; 2017. p. 215--225.
+\newblock Available from: \url{https://doi.org/10.1007/978-3-319-41876-6_17}.
+
+\bibitem{troyk_intracortical_2017}
+Troyk PR.
+\newblock The {Intracortical} {Visual} {Prosthesis} {Project}.
+\newblock In: Gabel VP, editor. Artificial {Vision}: {A} {Clinical} {Guide}.
+  Cham: Springer International Publishing; 2017. p. 203--214.
+\newblock Available from: \url{https://doi.org/10.1007/978-3-319-41876-6_16}.
+
+\bibitem{fernandez_cortivis_2017}
+Fernández E, Normann RA.
+\newblock {CORTIVIS} {Approach} for an {Intracortical} {Visual} {Prostheses}.
+\newblock In: Gabel VP, editor. Artificial {Vision}: {A} {Clinical} {Guide}.
+  Cham: Springer International Publishing; 2017. p. 191--201.
+\newblock Available from: \url{https://doi.org/10.1007/978-3-319-41876-6_15}.
+
+\bibitem{secondsight_second_nodate}
+SecondSight.
+\newblock Second {Sight} {Medical} {Products}, {Inc}. {Presents} {Positive}
+  {Interim} {Results} at the {Fifth} {Annual} {BRAIN} {Initiative}®
+  {Investigators} {Meeting};p.~2.
+
+\bibitem{deering_limits_1998}
+Deering MF.
+\newblock The {Limits} of {Human} {Vision}.
+\newblock In: 2nd {International} {Immersive} {Projection} {Technology}
+  {Workshop}. vol.~2; 1998. p.~6.
+
+\bibitem{niketeghad_brain_2019}
+Niketeghad S, Pouratian N.
+\newblock Brain {Machine} {Interfaces} for {Vision} {Restoration}: {The}
+  {Current} {State} of {Cortical} {Visual} {Prosthetics}.
+\newblock Neurotherapeutics. 2019 Jan;16(1):134--143.
+\newblock Available from: \url{https://doi.org/10.1007/s13311-018-0660-1}.
+
+\bibitem{secondsight_early_nodate}
+SecondSight. Early {Feasibility} {Study} of the {Orion} {Visual} {Cortical}
+  {Prosthesis} {System} - {Full} {Text} {View} - {ClinicalTrials}.gov;.
+\newblock Available from:
+  \url{https://clinicaltrials.gov/ct2/show/NCT03344848}.
+
+\bibitem{anzctr_first_2018}
+ANZCTR. The first safety study of a {Bionic} {Vision} {Prosthesis} in adults
+  with complete and untreatable blindness; 2018.
+\newblock Available from:
+  \url{https://www.anzctr.org.au/Trial/Registration/TrialReview.aspx?id=373899}.
+
+\bibitem{dobelle_artificial_1974}
+Dobelle WH, Mladejovsky MG, Girvin JP.
+\newblock Artificial {Vision} for the {Blind}: {Electrical} {Stimulation} of
+  {Visual} {Cortex} {Offers} {Hope} for a {Functional} {Prosthesis}.
+\newblock Science. 1974 Feb;183(4123):440--444.
+\newblock Available from:
+  \url{http://www.sciencemag.org/cgi/doi/10.1126/science.183.4123.440}.
+
+\bibitem{lee_mapping_2000}
+Lee HW, Hong SB, Seo DW, Tae WS, Hong SC.
+\newblock Mapping of functional organization in human visual cortex:
+  {Electrical} cortical stimulation.
+\newblock Neurology. 2000 Feb;54(4):849--854.
+\newblock Available from:
+  \url{http://www.neurology.org/cgi/doi/10.1212/WNL.54.4.849}.
+
+\bibitem{winawer_linking_2016}
+Winawer J, Parvizi J.
+\newblock Linking {Electrical} {Stimulation} of {Human} {Primary} {Visual}
+  {Cortex}, {Size} of {Affected} {Cortical} {Area}, {Neuronal} {Responses}, and
+  {Subjective} {Experience}.
+\newblock Neuron. 2016 Dec;92(6):1213--1219.
+\newblock Available from:
+  \url{https://linkinghub.elsevier.com/retrieve/pii/S0896627316308467}.
+
+\bibitem{murphey_perceiving_2009}
+Murphey DK, Maunsell JHR, Beauchamp MS, Yoshor D.
+\newblock Perceiving electrical stimulation of identified human visual areas.
+\newblock Proceedings of the National Academy of Sciences. 2009
+  Mar;106(13):5389--5393.
+\newblock Available from: \url{https://www.pnas.org/content/106/13/5389}.
+
+\bibitem{collins_preserved_2019}
+Collins KL, Sarma D, Hakimian S, Tsai JJ, Ojemann JG.
+\newblock Preserved evoked conscious perception of phosphenes with direct
+  stimulation of deafferented primary visual cortex.
+\newblock Epilepsy \& Behavior Case Reports. 2019 Jan;11:84--86.
+\newblock Available from:
+  \url{http://www.sciencedirect.com/science/article/pii/S2213323218301270}.
+
+\bibitem{tehovnik_phosphene_2005}
+Tehovnik EJ, Slocum WM, Carvey CE, Schiller PH.
+\newblock Phosphene induction and the generation of saccadic eye movements by
+  striate cortex.
+\newblock Journal of Neurophysiology. 2005 Jan;93(1):1--19.
+
+\bibitem{tehovnik_phosphene_2007}
+Tehovnik EJ, Slocum WM.
+\newblock Phosphene {Induction} by {Microstimulation} of {Macaque} {V}1.
+\newblock Brain research reviews. 2007 Feb;53(2):337--343.
+\newblock Available from:
+  \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1850969/}.
+
+\bibitem{tehovnik_microstimulation_2007}
+Tehovnik EJ, Slocum WM.
+\newblock Microstimulation of {V}1 delays visually guided saccades: a
+  parametric evaluation of delay fields.
+\newblock Experimental Brain Research. 2007 Jan;176(3):413--424.
+
+\bibitem{tehovnik_microstimulation_2009}
+Tehovnik EJ, Slocum WM, Smirnakis SM, Tolias AS.
+\newblock Microstimulation of visual cortex to restore vision.
+\newblock Progress in Brain Research. 2009;175:347--375.
+
+\bibitem{dobelle_braille_1976}
+Dobelle WH, Mladejovsky MG, Evans JR, Roberts TS, Girvin JP.
+\newblock ‘{Braille}’ reading by a blind volunteer by visual cortex
+  stimulation.
+\newblock Nature. 1976 Jan;259(5539):111--112.
+\newblock Available from: \url{http://www.nature.com/articles/259111a0}.
+
+\bibitem{allison_face_1994}
+Allison T, Ginter H, McCarthy G, Nobre AC, Puce A, Luby M, et~al.
+\newblock Face recognition in human extrastriate cortex.
+\newblock Journal of Neurophysiology. 1994 Feb;71(2):821--825.
+\newblock Available from:
+  \url{https://www.physiology.org/doi/abs/10.1152/jn.1994.71.2.821}.
+
+\bibitem{puce_electrophysiological_1999}
+Puce A, Allison T, McCarthy G.
+\newblock Electrophysiological {Studies} of {Human} {Face} {Perception}. {III}:
+  {Effects} of {Top}-down {Processing} on {Face}-specific {Potentials}.
+\newblock Cerebral Cortex. 1999 Jul;9(5):445--458.
+\newblock Available from:
+  \url{https://academic.oup.com/cercor/article/9/5/445/310738}.
+
+\bibitem{dobelle_artificial_2000}
+Dobelle WH.
+\newblock Artificial {Vision} for the {Blind} by {Connecting} a {Television}
+  {Camera} to the {Visual} {Cortex}.
+\newblock ASAIO Journal. 2000 Feb;46(1):3.
+\newblock Available from:
+  \url{https://journals.lww.com/asaiojournal/Fulltext/2000/01000/Artificial_Vision_for_the_Blind_by_Connecting_a.2.aspx}.
+
+\bibitem{bosking_saturation_2017}
+Bosking WH, Sun P, Ozker M, Pei X, Foster BL, Beauchamp MS, et~al.
+\newblock Saturation in {Phosphene} {Size} with {Increasing} {Current} {Levels}
+  {Delivered} to {Human} {Visual} {Cortex}.
+\newblock The Journal of Neuroscience: The Official Journal of the Society for
+  Neuroscience. 2017;37(30):7188--7197.
+
+\bibitem{bosking_rules_2018}
+Bosking WH, Foster B, Sun P, Beauchamp MS, Yoshor D.
+\newblock Rules {Governing} {Perception} of {Multiple} {Phosphenes} by {Human}
+  {Observers}.
+\newblock Neuroscience; 2018.
+\newblock Available from: \url{http://biorxiv.org/lookup/doi/10.1101/302547}.
+
+\bibitem{solomon_machinery_2007}
+Solomon SG, Lennie P.
+\newblock The machinery of colour vision.
+\newblock Nature Reviews Neuroscience. 2007 Apr;8(4):276--286.
+\newblock Available from: \url{https://www.nature.com/articles/nrn2094}.
+
+\bibitem{vladusich_brightness_2007}
+Vladusich T, Lucassen MP, Cornelissen FW.
+\newblock Brightness and {Darkness} as {Perceptual} {Dimensions}.
+\newblock PLOS Computational Biology. 2007 Oct;3(10):e179.
+\newblock Available from:
+  \url{https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.0030179}.
+
+\bibitem{fox_retinotopic_1987}
+Fox PT, Miezin FM, Allman JM, Essen DV, Raichle ME.
+\newblock Retinotopic organization of human visual cortex mapped with positron-
+  emission tomography.
+\newblock Journal of Neuroscience. 1987 Mar;7(3):913--922.
+\newblock Available from: \url{http://www.jneurosci.org/content/7/3/913}.
+
+\bibitem{engel_retinotopic_1997}
+Engel SA, Glover GH, Wandell BA.
+\newblock Retinotopic organization in human visual cortex and the spatial
+  precision of functional {MRI}.
+\newblock Cerebral Cortex. 1997 Mar;7(2):181--192.
+\newblock Available from:
+  \url{https://academic.oup.com/cercor/article/7/2/181/318870}.
+
+\bibitem{born_cortical_2015}
+Born RT, Trott AR, Hartmann TS.
+\newblock Cortical magnification plus cortical plasticity equals vision?
+\newblock Vision Research. 2015 Jun;111:161--169.
+\newblock Available from:
+  \url{http://www.sciencedirect.com/science/article/pii/S0042698914002351}.
+
+\bibitem{ghose_strong_2012}
+Ghose K, Maunsell JHR.
+\newblock A {Strong} {Constraint} to the {Joint} {Processing} of {Pairs} of
+  {Cortical} {Signals}.
+\newblock Journal of Neuroscience. 2012 Nov;32(45):15922--15933.
+\newblock Available from: \url{http://www.jneurosci.org/content/32/45/15922}.
+
+\bibitem{ben-yishai_theory_1995}
+Ben-Yishai R, Bar-Or RL, Sompolinsky H.
+\newblock Theory of orientation tuning in visual cortex.
+\newblock Proceedings of the National Academy of Sciences. 1995
+  Apr;92(9):3844--3848.
+\newblock Available from: \url{https://www.pnas.org/content/92/9/3844}.
+
+\bibitem{chen_simulating_2009}
+Chen SC, Suaning GJ, Morley JW, Lovell NH.
+\newblock Simulating prosthetic vision: {II}. {Measuring} functional capacity.
+\newblock Vision Research. 2009 Sep;49(19):2329--2343.
+\newblock Available from:
+  \url{https://linkinghub.elsevier.com/retrieve/pii/S0042698909003253}.
+
+\bibitem{cha_simulation_1992}
+Cha K, Horch K, A~Normann R.
+\newblock Simulation of a phosphene-based visual field: {Visual} acuity in a
+  pixelized vision system.
+\newblock Annals of biomedical engineering. 1992 Feb;20:439--49.
+
+\bibitem{canny_readings_1987}
+Canny J.
+\newblock Readings in computer vision.
+\newblock In: A {Computational} {Approach} to {Edge} {Detection}. Morgan
+  Kaufmann; 1987. p. 184--203.
+
+\bibitem{han_object_2015}
+Han T, Li H, Lyu Q, Zeng Y, Chai X.
+\newblock Object recognition based on a foreground extraction method under
+  simulated prosthetic vision.
+\newblock In: 2015 {International} {Symposium} on {Bioelectronics} and
+  {Bioinformatics} ({ISBB}); 2015. p. 172--175.
+
+\bibitem{pal_review_1993}
+Pal NR, Pal SK.
+\newblock A review on image segmentation techniques.
+\newblock Pattern Recognition. 1993 Sep;26(9):1277--1294.
+\newblock Available from:
+  \url{http://www.sciencedirect.com/science/article/pii/003132039390135J}.
+
+\bibitem{guo_optimization_2018}
+Guo F, Yang Y, Gao Y.
+\newblock Optimization of {Visual} {Information} {Presentation} for {Visual}
+  {Prosthesis}.
+\newblock International Journal of Biomedical Imaging. 2018;2018:1--12.
+\newblock Available from:
+  \url{https://www.hindawi.com/journals/ijbi/2018/3198342/}.
+
+\bibitem{mace_simulated_2015}
+Macé MJM, Guivarch V, Denis G, Jouffrais C.
+\newblock Simulated {Prosthetic} {Vision}: {The} {Benefits} of
+  {Computer}-{Based} {Object} {Recognition} and {Localization}: {Computer}
+  {Vision} for {Low} {Resolution} {Visual} {Implants}.
+\newblock Artificial Organs. 2015 Jul;39(7):E102--E113.
+\newblock Available from: \url{http://doi.wiley.com/10.1111/aor.12476}.
+
+\bibitem{rawat_deep_2017}
+Rawat W, Wang Z.
+\newblock Deep {Convolutional} {Neural} {Networks} for {Image}
+  {Classification}: {A} {Comprehensive} {Review}.
+\newblock Neural Computation. 2017 Jun;29(9):2352--2449.
+\newblock Available from: \url{https://doi.org/10.1162/neco_a_00990}.
+
+\bibitem{chichilnisky_eduardo-jose_smart_2018}
+Chichilnisky EJ, Greschner M, Jepson L.
+\newblock {SMART} {PROSTHESIS} {FOR} {FACILITATING} {ARTIFICIAL} {VISION}
+  {USING} {SCENE} {ABSTRACTION}. 2018;p.~27.
+
+\bibitem{li_going_2013}
+Li WH, Tang TJJ, Lui WLD.
+\newblock Going beyond vision to improve bionic vision.
+\newblock In: 2013 {IEEE} {International} {Conference} on {Image} {Processing}.
+  Melbourne, Australia: IEEE; 2013. p. 1555--1558.
+\newblock Available from: \url{http://ieeexplore.ieee.org/document/6738320/}.
+
+\bibitem{spencer_creating_2018}
+Spencer TC, Fallon JB, Shivdasani MN.
+\newblock Creating virtual electrodes with 2D current steering.
+\newblock Journal of Neural Engineering. 2018 Mar;15(3):035002.
+\newblock Available from: \url{https://doi.org/10.1088%2F1741-2552%2Faab1b8}.
+
+\bibitem{grossman_brain_2002}
+Grossman ED, Blake R.
+\newblock Brain {Areas} {Active} during {Visual} {Perception} of {Biological}
+  {Motion}.
+\newblock Neuron. 2002 Sep;35(6):1167--1175.
+\newblock Available from:
+  \url{http://www.sciencedirect.com/science/article/pii/S0896627302008978}.
+
+\bibitem{mccarthy_mobility_2014}
+McCarthy C, Walker JG, Lieby P, Scott A, Barnes N.
+\newblock Mobility and low contrast trip hazard avoidance using augmented
+  depth.
+\newblock Journal of Neural Engineering. 2014 Nov;12(1):016003.
+\newblock Available from:
+  \url{https://doi.org/10.1088%2F1741-2560%2F12%2F1%2F016003}.
+
+\bibitem{hu_recognition_2014}
+Hu J, Xia P, Gu C, Qi J, Li S, Peng Y.
+\newblock Recognition of {Similar} {Objects} {Using} {Simulated} {Prosthetic}
+  {Vision}.
+\newblock Artificial Organs. 2014;38(2):159--167.
+\newblock Available from:
+  \url{http://www.onlinelibrary.wiley.com/doi/abs/10.1111/aor.12147}.
+
+\bibitem{chen_effect_2004}
+Chen SC, Lovell NH, Suaning GJ.
+\newblock Effect on prosthetic vision visual acuity by filtering schemes,
+  filter cut-off frequency and phosphene matrix: a virtual reality simulation.
+\newblock In: The 26th {Annual} {International} {Conference} of the {IEEE}
+  {Engineering} in {Medicine} and {Biology} {Society}. vol.~2; 2004. p.
+  4201--4204.
+
+\bibitem{josh_real-time_2011}
+Josh H, Yong B, Kleeman L, Road W.
+\newblock A {Real}-time {FPGA}-based {Vision} {System} for a {Bionic} {Eye}.
+  2011;p.~8.
+
+\bibitem{josh_psychophysics_2013}
+Josh H, Mann C, Kleeman L, Lui WLD.
+\newblock Psychophysics testing of bionic vision image processing algorithms
+  using an {FPGA} {Hatpack}.
+\newblock In: 2013 {IEEE} {International} {Conference} on {Image} {Processing}.
+  Melbourne, Australia: IEEE; 2013. p. 1550--1554.
+\newblock Available from: \url{http://ieeexplore.ieee.org/document/6738319/}.
+
+\bibitem{luo_argus_2016}
+Luo YHL, da~Cruz L.
+\newblock The {Argus}® {II} {Retinal} {Prosthesis} {System}.
+\newblock Progress in Retinal and Eye Research. 2016 Jan;50:89--107.
+\newblock Available from:
+  \url{http://www.sciencedirect.com/science/article/pii/S1350946215000701}.
+
+\bibitem{markowitz_rehabilitation_2018}
+Markowitz M, Rankin M, Mongy M, Patino BE, Manusow J, Devenyi RG, et~al.
+\newblock Rehabilitation of lost functional vision with the {Argus} {II}
+  retinal prosthesis.
+\newblock Canadian Journal of Ophthalmology. 2018 Feb;53(1):14--22.
+\newblock Available from:
+  \url{https://linkinghub.elsevier.com/retrieve/pii/S0008418217309729}.
+
+\bibitem{krizhevsky_imagenet_2012}
+Krizhevsky A, Sutskever I, Hinton GE.
+\newblock {ImageNet} {Classification} with {Deep} {Convolutional} {Neural}
+  {Networks}.
+\newblock In: Pereira F, Burges CJC, Bottou L, Weinberger KQ, editors. Advances
+  in {Neural} {Information} {Processing} {Systems} 25. Curran Associates, Inc.;
+  2012. p. 1097--1105.
+\newblock Available from:
+  \url{http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf}.
+
+\bibitem{karpathy_large-scale_2014}
+Karpathy A, Toderici G, Shetty S, Leung T, Sukthankar R, Fei-Fei L.
+\newblock Large-scale {Video} {Classification} with {Convolutional} {Neural}
+  {Networks}; 2014. p. 1725--1732.
+\newblock Available from:
+  \url{https://www.cv-foundation.org/openaccess/content_cvpr_2014/html/Karpathy_Large-scale_Video_Classification_2014_CVPR_paper.html}.
+
+\bibitem{ge_spiking_2017}
+Ge C, Kasabov N, Liu Z, Yang J.
+\newblock A spiking neural network model for obstacle avoidance in simulated
+  prosthetic vision.
+\newblock Information Sciences. 2017 Aug;399:30--42.
+\newblock Available from:
+  \url{http://www.sciencedirect.com/science/article/pii/S0020025517305819}.
+
+\bibitem{moore_cramming_1998}
+Moore GE.
+\newblock Cramming {More} {Components} {Onto} {Integrated} {Circuits}.
+\newblock Proceedings of the IEEE. 1998 Jan;86(1):82--85.
+\newblock Available from: \url{http://ieeexplore.ieee.org/document/658762/}.
 
 \bibitem{Lecun1998}
 Lecun Y, Bottou L, Bengio Y, Haffner P.
