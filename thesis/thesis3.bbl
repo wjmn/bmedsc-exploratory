@@ -1,51 +1,5 @@
 \begin{thebibliography}{10}
 
-\bibitem{dobelle_mapping_1979}
-Dobelle WH, Turkel J, Henderson DC, Evans JR.
-\newblock Mapping the {Representation} of the {Visual} {Field} by {Electrical}
-  {Stimulation} of {Human} {Visual} {Cortex}.
-\newblock American Journal of Ophthalmology. 1979 Oct;88(4):727--735.
-\newblock Available from:
-  \url{https://linkinghub.elsevier.com/retrieve/pii/0002939479906731}.
-
-\bibitem{chen_simulating_2009-1}
-Chen SC, Suaning GJ, Morley JW, Lovell NH.
-\newblock Simulating prosthetic vision: {I}. {Visual} models of phosphenes.
-\newblock Vision Research. 2009 Jun;49(12):1493--1506.
-\newblock Available from:
-  \url{http://www.sciencedirect.com/science/article/pii/S0042698909000467}.
-
-\bibitem{sanchez-garcia_structural_2018}
-Sanchez-Garcia M, Martinez-Cantin R, Guerrero JJ.
-\newblock Structural and object detection for phosphene images.
-\newblock arXiv:180909607 [cs]. 2018 Sep;ArXiv: 1809.09607.
-\newblock Available from: \url{http://arxiv.org/abs/1809.09607}.
-
-\bibitem{li_image_2018}
-Li H, Su X, Wang J, Kan H, Han T, Zeng Y, et~al.
-\newblock Image processing strategies based on saliency segmentation for object
-  recognition under simulated prosthetic vision.
-\newblock Artificial Intelligence in Medicine. 2018 Jan;84:64--78.
-\newblock Available from:
-  \url{http://www.sciencedirect.com/science/article/pii/S0933365716304195}.
-
-\bibitem{lui_transformative_2012}
-Lui WLD, Browne D, Kleeman L, Drummond T, {Wai Ho Li}.
-\newblock Transformative {Reality}: {Improving} bionic vision with robotic
-  sensing.
-\newblock In: 2012 {Annual} {International} {Conference} of the {IEEE}
-  {Engineering} in {Medicine} and {Biology} {Society}. San Diego, CA: IEEE;
-  2012. p. 304--307.
-\newblock Available from: \url{http://ieeexplore.ieee.org/document/6345929/}.
-
-\bibitem{beauchamp_dynamic_2018}
-Beauchamp MS, Bosking W, Sun P, Foster B, Niketeghad S, Pouratian N, et~al.
-\newblock Dynamic {Electrical} {Stimulation} of {Sites} in {Visual} {Cortex}
-  {Produces} {Form} {Vision} in {Sighted} and {Blind} {Humans}.
-\newblock bioRxiv. 2018 Nov;p. 462697.
-\newblock Available from:
-  \url{https://www.biorxiv.org/content/10.1101/462697v1}.
-
 \bibitem{bourne_magnitude_2017}
 Bourne RRA, Flaxman SR, Braithwaite T, Cicinelli MV, Das A, Jonas JB, et~al.
 \newblock Magnitude, temporal trends, and projections of the global prevalence
@@ -199,22 +153,6 @@ Guo Y, Liu Y, Oerlemans A, Lao S, Wu S, Lew MS.
 \newblock Neurocomputing. 2016 Apr;187:27--48.
 \newblock Available from:
   \url{http://www.sciencedirect.com/science/article/pii/S0925231215017634}.
-
-\bibitem{ciresan_multi-column_2012}
-Cireşan D, Meier U, Schmidhuber J.
-\newblock Multi-column {Deep} {Neural} {Networks} for {Image} {Classification}.
-\newblock arXiv:12022745 [cs]. 2012 Feb;ArXiv: 1202.2745.
-\newblock Available from: \url{http://arxiv.org/abs/1202.2745}.
-
-\bibitem{ciresan_deep_2012}
-Ciresan D, Giusti A, Gambardella LM, Schmidhuber J.
-\newblock Deep {Neural} {Networks} {Segment} {Neuronal} {Membranes} in
-  {Electron} {Microscopy} {Images}.
-\newblock In: Pereira F, Burges CJC, Bottou L, Weinberger KQ, editors. Advances
-  in {Neural} {Information} {Processing} {Systems} 25. Curran Associates, Inc.;
-  2012. p. 2843--2851.
-\newblock Available from:
-  \url{http://papers.nips.cc/paper/4741-deep-neural-networks-segment-neuronal-membranes-in-electron-microscopy-images.pdf}.
 
 \bibitem{gatys_image_2016}
 Gatys LA, Ecker AS, Bethge M.
@@ -409,6 +347,14 @@ Dobelle WH, Mladejovsky MG, Evans JR, Roberts TS, Girvin JP.
 \newblock Nature. 1976 Jan;259(5539):111--112.
 \newblock Available from: \url{http://www.nature.com/articles/259111a0}.
 
+\bibitem{dobelle_mapping_1979}
+Dobelle WH, Turkel J, Henderson DC, Evans JR.
+\newblock Mapping the {Representation} of the {Visual} {Field} by {Electrical}
+  {Stimulation} of {Human} {Visual} {Cortex}.
+\newblock American Journal of Ophthalmology. 1979 Oct;88(4):727--735.
+\newblock Available from:
+  \url{https://linkinghub.elsevier.com/retrieve/pii/0002939479906731}.
+
 \bibitem{allison_face_1994}
 Allison T, Ginter H, McCarthy G, Nobre AC, Puce A, Luby M, et~al.
 \newblock Face recognition in human extrastriate cortex.
@@ -445,6 +391,14 @@ Bosking WH, Foster B, Sun P, Beauchamp MS, Yoshor D.
   {Observers}.
 \newblock Neuroscience; 2018.
 \newblock Available from: \url{http://biorxiv.org/lookup/doi/10.1101/302547}.
+
+\bibitem{beauchamp_dynamic_2018}
+Beauchamp MS, Bosking W, Sun P, Foster B, Niketeghad S, Pouratian N, et~al.
+\newblock Dynamic {Electrical} {Stimulation} of {Sites} in {Visual} {Cortex}
+  {Produces} {Form} {Vision} in {Sighted} and {Blind} {Humans}.
+\newblock bioRxiv. 2018 Nov;p. 462697.
+\newblock Available from:
+  \url{https://www.biorxiv.org/content/10.1101/462697v1}.
 
 \bibitem{solomon_machinery_2007}
 Solomon SG, Lennie P.
@@ -495,6 +449,13 @@ Ben-Yishai R, Bar-Or RL, Sompolinsky H.
   Apr;92(9):3844--3848.
 \newblock Available from: \url{https://www.pnas.org/content/92/9/3844}.
 
+\bibitem{chen_simulating_2009-1}
+Chen SC, Suaning GJ, Morley JW, Lovell NH.
+\newblock Simulating prosthetic vision: {I}. {Visual} models of phosphenes.
+\newblock Vision Research. 2009 Jun;49(12):1493--1506.
+\newblock Available from:
+  \url{http://www.sciencedirect.com/science/article/pii/S0042698909000467}.
+
 \bibitem{chen_simulating_2009}
 Chen SC, Suaning GJ, Morley JW, Lovell NH.
 \newblock Simulating prosthetic vision: {II}. {Measuring} functional capacity.
@@ -508,11 +469,34 @@ Cha K, Horch K, A~Normann R.
   pixelized vision system.
 \newblock Annals of biomedical engineering. 1992 Feb;20:439--49.
 
+\bibitem{li_image_2018}
+Li H, Su X, Wang J, Kan H, Han T, Zeng Y, et~al.
+\newblock Image processing strategies based on saliency segmentation for object
+  recognition under simulated prosthetic vision.
+\newblock Artificial Intelligence in Medicine. 2018 Jan;84:64--78.
+\newblock Available from:
+  \url{http://www.sciencedirect.com/science/article/pii/S0933365716304195}.
+
 \bibitem{canny_readings_1987}
 Canny J.
 \newblock Readings in computer vision.
 \newblock In: A {Computational} {Approach} to {Edge} {Detection}. Morgan
   Kaufmann; 1987. p. 184--203.
+
+\bibitem{lui_transformative_2012}
+Lui WLD, Browne D, Kleeman L, Drummond T, {Wai Ho Li}.
+\newblock Transformative {Reality}: {Improving} bionic vision with robotic
+  sensing.
+\newblock In: 2012 {Annual} {International} {Conference} of the {IEEE}
+  {Engineering} in {Medicine} and {Biology} {Society}. San Diego, CA: IEEE;
+  2012. p. 304--307.
+\newblock Available from: \url{http://ieeexplore.ieee.org/document/6345929/}.
+
+\bibitem{sanchez-garcia_structural_2018}
+Sanchez-Garcia M, Martinez-Cantin R, Guerrero JJ.
+\newblock Structural and object detection for phosphene images.
+\newblock arXiv:180909607 [cs]. 2018 Sep;ArXiv: 1809.09607.
+\newblock Available from: \url{http://arxiv.org/abs/1809.09607}.
 
 \bibitem{han_object_2015}
 Han T, Li H, Lyu Q, Zeng Y, Chai X.
@@ -659,6 +643,14 @@ Moore GE.
 \newblock Cramming {More} {Components} {Onto} {Integrated} {Circuits}.
 \newblock Proceedings of the IEEE. 1998 Jan;86(1):82--85.
 \newblock Available from: \url{http://ieeexplore.ieee.org/document/658762/}.
+
+\bibitem{Goscinski2014}
+Goscinski WJ, McIntosh P, Felzmann U, Maksimenko A, Hall CJ, Gureyev T, et~al.
+\newblock The multi-modal Australian {ScienceS} Imaging and Visualization
+  Environment ({MASSIVE}) high performance computing infrastructure:
+  applications in neuroscience and neuroinformatics research.
+\newblock Frontiers in Neuroinformatics. 2014 Mar;8.
+\newblock Available from: \url{https://doi.org/10.3389/fninf.2014.00030}.
 
 \bibitem{Lecun1998}
 Lecun Y, Bottou L, Bengio Y, Haffner P.

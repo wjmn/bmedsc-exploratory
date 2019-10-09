@@ -202,6 +202,9 @@
     "grossman_brain_2002"
     "krizhevsky_imagenet_2012"
     "karpathy_large-scale_2014"
-    "Lecun1998"))
+    "Lecun1998"
+    "NIPS2014_5423"
+    "Goscinski2014"
+    "tensorflow2015-whitepaper"))
  :bibtex)
 
