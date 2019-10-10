@@ -205,6 +205,11 @@
     "Lecun1998"
     "NIPS2014_5423"
     "Goscinski2014"
-    "tensorflow2015-whitepaper"))
+    "tensorflow2015-whitepaper"
+    "1412.6980"
+    "Peirce2019"
+    "1611.01673"
+    "1511.06390"
+    "1411.1784"))
  :bibtex)
 

@@ -21,7 +21,7 @@ def width_bound(
 ) -> Tuple[int, int]:
     """ Returns the integer, bounded min and max about value with width.
     """
-    v_min = ceil(max(lower, value - width / 2))
+    v_min = floor(max(lower, value - width / 2))
     v_max = floor(min(upper, value + width / 2))
     return v_min, v_max
 
@@ -304,7 +304,7 @@ class PolarGrid(AbstractGrid):
             ])
 
         k = x_render / 2 + y_render / 2
-        a = e * (x_render + y_render) / 128
+        a = e * (x_render + y_render) / 32
 
         self.sizes = np.array([
             (np.log(k * ((x - 0.5) ** 2 + (y - 0.5) ** 2) + a),
@@ -323,7 +323,6 @@ class PolarGrid(AbstractGrid):
             y_render,
         )
 
-    @staticmethod
     def i_angle(self, i_theta: float, n_theta: float, half: bool = False) -> float:
         """ Calculates the angle for angle of index i in range n.
         """

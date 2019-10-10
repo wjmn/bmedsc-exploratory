@@ -630,6 +630,25 @@ Karpathy A, Toderici G, Shetty S, Leung T, Sukthankar R, Fei-Fei L.
 \newblock Available from:
   \url{https://www.cv-foundation.org/openaccess/content_cvpr_2014/html/Karpathy_Large-scale_Video_Classification_2014_CVPR_paper.html}.
 
+\bibitem{NIPS2014_5423}
+Goodfellow I, Pouget-Abadie J, Mirza M, Xu B, Warde-Farley D, Ozair S, et~al.
+\newblock Generative Adversarial Nets.
+\newblock In: Ghahramani Z, Welling M, Cortes C, Lawrence ND, Weinberger KQ,
+  editors. Advances in Neural Information Processing Systems 27. Curran
+  Associates, Inc.; 2014. p. 2672--2680.
+\newblock Available from:
+  \url{http://papers.nips.cc/paper/5423-generative-adversarial-nets.pdf}.
+
+\bibitem{1511.06390}
+Springenberg JT. Unsupervised and Semi-supervised Learning with Categorical
+  Generative Adversarial Networks; 2015.
+
+\bibitem{1611.01673}
+Durugkar I, Gemp I, Mahadevan S. Generative Multi-Adversarial Networks; 2016.
+
+\bibitem{1411.1784}
+Mirza M, Osindero S. Conditional Generative Adversarial Nets; 2014.
+
 \bibitem{ge_spiking_2017}
 Ge C, Kasabov N, Liu Z, Yang J.
 \newblock A spiking neural network model for obstacle avoidance in simulated
@@ -657,5 +676,20 @@ Lecun Y, Bottou L, Bengio Y, Haffner P.
 \newblock Gradient-based learning applied to document recognition.
 \newblock Proceedings of the {IEEE}. 1998;86(11):2278--2324.
 \newblock Available from: \url{https://doi.org/10.1109/5.726791}.
+
+\bibitem{tensorflow2015-whitepaper}
+Abadi M, Agarwal A, Barham P, Brevdo E, Chen Z, Citro C, et~al.. {TensorFlow}:
+  Large-Scale Machine Learning on Heterogeneous Systems; 2015.
+\newblock Software available from tensorflow.org.
+\newblock Available from: \url{https://www.tensorflow.org/}.
+
+\bibitem{1412.6980}
+Kingma DP, Ba J. Adam: A Method for Stochastic Optimization; 2014.
+
+\bibitem{Peirce2019}
+Peirce J, Gray JR, Simpson S, MacAskill M, H\"{o}chenberger R, Sogo H, et~al.
+\newblock {PsychoPy}2: Experiments in behavior made easy.
+\newblock Behavior Research Methods. 2019 Feb;51(1):195--203.
+\newblock Available from: \url{https://doi.org/10.3758/s13428-018-01193-y}.
 
 \end{thebibliography}

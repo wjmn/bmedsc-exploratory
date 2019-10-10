@@ -1,4 +1,4 @@
-% Created 2019-10-09 Wed 13:04
+% Created 2019-10-09 Wed 15:58
 % Intended LaTeX compiler: pdflatex
 \documentclass[a4paper,11pt,openany]{book}
 \usepackage[utf8]{inputenc}
@@ -30,11 +30,11 @@
 \usepackage[sort&compress,numbers]{natbib}
 \usepackage[font=small,labelfont=bf]{caption}
 \setcounter{secnumdepth}{2}
-\author{\textbf{Student:} Jamin Wu \\ \textbf{Student ID:} 27025861 \\ \\ \textbf{Supervisor:} Dr Yan Tat Wong \\ \textbf{Co-Supervisor:} Dr Nicholas Price \\ \\ Department of Physiology \\ Department of Electrical \& Computer Systems Engineering \\ \textbf{Faculty of Medicine, Nursing and Health Sciences, Monash University} \\ \\ Minor thesis submitted in partial fulfillment of the requirements for the \\ degree \textbf{Bachelor of Medical Science (Honours)} at Monash University. \\ \\ Word Count: <> words}
+\author{\textbf{Student:} Jamin Wu \\ \textbf{Student ID:} 27025861 \\ \\ \textbf{Supervisor:} Dr Yan Tat Wong \\ \textbf{Co-Supervisor:} Dr Nicholas Price \\ \\ Department of Physiology \\ Department of Electrical \& Computer Systems Engineering \\ \textbf{Faculty of Medicine, Nursing and Health Sciences, Monash University} \\ \\ Minor thesis submitted in partial fulfillment of the requirements for the \\ degree \textbf{Bachelor of Medical Science (Honours)} at Monash University. \\ \\ Word Count: 14,934 words}
 \date{}
 \title{\textbf{Using Generative Adversarial Networks to Derive Phosphene Patterns in Simulated Prosthetic Vision}}
 \hypersetup{
- pdfauthor={\textbf{Student:} Jamin Wu \\ \textbf{Student ID:} 27025861 \\ \\ \textbf{Supervisor:} Dr Yan Tat Wong \\ \textbf{Co-Supervisor:} Dr Nicholas Price \\ \\ Department of Physiology \\ Department of Electrical \& Computer Systems Engineering \\ \textbf{Faculty of Medicine, Nursing and Health Sciences, Monash University} \\ \\ Minor thesis submitted in partial fulfillment of the requirements for the \\ degree \textbf{Bachelor of Medical Science (Honours)} at Monash University. \\ \\ Word Count: <> words},
+ pdfauthor={\textbf{Student:} Jamin Wu \\ \textbf{Student ID:} 27025861 \\ \\ \textbf{Supervisor:} Dr Yan Tat Wong \\ \textbf{Co-Supervisor:} Dr Nicholas Price \\ \\ Department of Physiology \\ Department of Electrical \& Computer Systems Engineering \\ \textbf{Faculty of Medicine, Nursing and Health Sciences, Monash University} \\ \\ Minor thesis submitted in partial fulfillment of the requirements for the \\ degree \textbf{Bachelor of Medical Science (Honours)} at Monash University. \\ \\ Word Count: 14,934 words},
  pdftitle={\textbf{Using Generative Adversarial Networks to Derive Phosphene Patterns in Simulated Prosthetic Vision}},
  pdfkeywords={},
  pdfsubject={},
@@ -121,7 +121,9 @@ I wrote and edited this thesis, and its contents were discussed and reviewed wit
 
 \begin{description}
 \item[{CVP}] cortical visual prosthesis
+\item[{CNN}] convolutional neural networks
 \item[{GAN}] generative adversarial network
+\item[{GPU}] graphic processing unit
 \item[{HPC}] high performance computing
 \item[{MASSIVE}] multi-modal Australian ScienceS Imaging and Visualization Environment
 \item[{MNIST dataset}] modified National Institute of Standards and Technology dataset
@@ -132,10 +134,10 @@ I wrote and edited this thesis, and its contents were discussed and reviewed wit
 \listoffigures
 
 \part{Background}
-\label{sec:org70762b9}
+\label{sec:orge952d5f}
 
 \chapter{Introduction}
-\label{sec:org57ee436}
+\label{sec:org1f793a5}
 
 Around 36 million people worldwide were blind in 2015. \cite{bourne_magnitude_2017,flaxman_global_2017}
 Many patients are left permanently blind when there is irreversible damage to the visual system such as from glaucoma or trauma. \cite{lee_glaucoma_2005,zachariades_blindness_1996}
@@ -162,11 +164,11 @@ This could improve the flexibility of cortical implants for different perceptual
 \clearpage
 
 \chapter{Cortical Visual Prostheses}
-\label{sec:orgf5e4c1c}
-\label{org08cc7af}
+\label{sec:orgf17615c}
+\label{org4a09feb}
 
 \section*{Overview of Cortical Visual Prostheses}
-\label{sec:orgeee4c03}
+\label{sec:org77b9fd2}
 
 A \textbf{prosthesis} is an artificial, implanted device which aims to restore a lost function to the human body. \cite{thurston_pare_2007}
 A \textbf{visual prosthesis} is such a device which aims to restore vision to people with visual impairment. \cite{weiland_visual_2008,ong_bionic_2012}
@@ -182,24 +184,24 @@ These early successes in evoking phosphenes were instrumental in demonstrating t
 
 In the past 50 years since, a small number of research groups have proposed modern cortical prostheses based on the principles of these early results.
 These include the Gennaris bionic vision system \cite{lowery_restoration_2015,lowery_monash_2017}, the Intracortical Visual Prosthesis (ICVP) Project \cite{troyk_intracortical_2017}, CORTIVIS \cite{fernandez_cortivis_2017} and the Orion Visual Cortical Prosthesis. \cite{secondsight_second_nodate}
-To illustrate what modern conceptions of a visual cortical prosthesis may look like, Figure \ref{fig:orged824e5} shows a simulated render of the headgear for the Gennaris bionic vision system.
+To illustrate what modern conceptions of a visual cortical prosthesis may look like, Figure \ref{fig:org091105c} shows a simulated render of the headgear for the Gennaris bionic vision system.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./graphics/litreview/headgear2.jpg}
-\caption[Modelled render of the Gennaris bionic vision headgear]{\label{fig:orged824e5}
+\caption[Modelled render of the Gennaris bionic vision headgear]{\label{fig:org091105c}
 A modelled render of the Gennaris bionic vision headgear. Figure courtesy of Monash Vision Group.}
 \end{figure}
 
 These devices, while still early in development, may eventually be an option for restoring a crude form of vision to patients who would otherwise be left permanently blind.
 The expectation is that these devices could provide gross light perception which might allow the recognition of basic forms and movement. \cite{lowery_monash_2017,lowery_restoration_2015}
 Current technology cannot reproduce anything close to the trichromatic, approximately 15 million pixel resolution of the human eye \cite{deering_limits_1998}, and as such, these devices are not yet a full replacement for vision.
-The development of specific cortical prostheses has been reviewed previously \cite{niketeghad_brain_2019}; we briefly summarise the current progress of these devices in Table \ref{tab:org7a7e0b1}.
+The development of specific cortical prostheses has been reviewed previously \cite{niketeghad_brain_2019}; we briefly summarise the current progress of these devices in Table \ref{tab:org21b9156}.
 
 \renewcommand{\arraystretch}{1.5}
 
 \begin{table}[htbp]
-\caption[Current progress of cortical visual prostheses]{\label{tab:org7a7e0b1}
+\caption[Current progress of cortical visual prostheses]{\label{tab:org21b9156}
 Current progress of cortical visual prostheses. The number of electrodes places a hard upper bound on the resolution (and visual acuity) these devices can provide, so are noted here.}
 \centering
 \scriptsize
@@ -214,7 +216,7 @@ Device & Electrodes & Progress & References\\
 \end{table}
 
 \section*{Mechanism of Cortical Visual Prostheses}
-\label{sec:org0fc6f2e}
+\label{sec:org5a81f8c}
 
 While the specific hardware of each device differs, the fundamental mechanism of these devices is similar.
 Patients must first undergo an operation to surgically implant an electrode array in the primary visual cortex at the back of the brain. \cite{lewis_restoration_2015}
@@ -232,18 +234,18 @@ While these patterns may be difficult to decipher at first, it is expected that 
 
 This process from camera image to neural stimulation loops continuously to produce a stream of images like frames of a video.
 Essentially, this system provides an artificial real-time link between environmental light and visual information; a link ordinarily present in natural vision, but not present in blindness.
-Figure \ref{fig:org18a9ed1} depicts the basic process of prosthetic vision in comparison to normal vision.
+Figure \ref{fig:org1b6cb3b} depicts the basic process of prosthetic vision in comparison to normal vision.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[angle=90,width=.9\linewidth]{./graphics/litreview/flowchart.png}
-\caption[Basic flowchart of the process of prosthetic vision compared to normal vision]{\label{fig:org18a9ed1}
-A basic flowchart of the process of prosthetic vision compared to normal vision. Figure made by the author.}
+\caption[Basic flowchart of the process of prosthetic vision compared to normal vision]{\label{fig:org1b6cb3b}
+A basic flowchart of the process of prosthetic vision compared to normal vision. .}
 \end{figure}
 
 \chapter{Qualities of Prosthetic Vision}
-\label{sec:orgee41574}
-\label{orge5a5eac}
+\label{sec:org94dc068}
+\label{org0f0024e}
 
 Because cortical visual prostheses use phosphenes as the fundamental building block of prosthetic vision, it is imperative that we be able to compose multiple phosphenes into meaningful imagery.
 Whether phosphenes can be composed meaningfully depends on the visual and perceptual properties of phosphenes such as their size, color and interaction with other phosphenes.
@@ -256,7 +258,7 @@ Studies which characterise phosphenes evoked \emph{in vivo} typically fall into 
 \item Modern but conservative experiments in epilepsy patients who already have electrodes implanted for clinical monitoring. \cite{lee_mapping_2000,winawer_linking_2016,murphey_perceiving_2009,bosking_electrical_2017,collins_preserved_2019}
 \end{enumerate}
 
-As the pool of phosphene studies in humans is small and the demographics of these studies are skewed towards specific populations, we summarise the pertinent methodological features of each study in Table \ref{tab:orge4556f0}.
+As the pool of phosphene studies in humans is small and the demographics of these studies are skewed towards specific populations, we summarise the pertinent methodological features of each study in Table \ref{tab:org2a4602b}.
 These studies constitute the major perceptual evidence that a cortical visual prosthesis can produce vision, and point towards what type of vision might be possible.
 
 There are several studies which also attempt to characterise phosphenes in non-human primates from trained behavioural responses. \cite{tehovnik_phosphene_2005,tehovnik_phosphene_2007,tehovnik_microstimulation_2007,tehovnik_microstimulation_2009}
@@ -266,7 +268,7 @@ While the qualitative perceptual information offered by these studies is limited
 \newgeometry{margin=2cm}
 \thispagestyle{empty}
 \begin{sidewaystable}[htbp]
-\caption[Participant demographics of studies looking at cortical phosphenes evoked \emph{in vivo} in humans]{\label{tab:orge4556f0}
+\caption[Participant demographics of studies looking at cortical phosphenes evoked \emph{in vivo} in humans]{\label{tab:org2a4602b}
 The participant demographics of studies which have looked at cortical phosphenes evoked \emph{in vivo} in humans.}
 \centering
 \scriptsize
@@ -295,13 +297,13 @@ Date & Reference & Setting & Electrodes & Parameters & Patient Demographic\\
 \linespread{1.5}
 
 \section*{Phosphenes Produced by Stimulating a Single Electrode}
-\label{sec:orga8db089}
+\label{sec:org10cac35}
 
 The most common result of stimulating a single electrode is a single phosphene characterised as a small, localisable dot of light likened to a star. \cite{brindley_sensations_1968,dobelle_phosphenes_1974,schmidt_feasibility_1996,lee_mapping_2000}
 Every study has, however, demonstrated large variation on this basic percept.
 
 \subsection*{The Quality of a Phosphene}
-\label{sec:org93edac1}
+\label{sec:org3a004ea}
 
 Being able to perceive qualities of light such as brightness and colour gives us richer, more specific information about the world. \cite{solomon_machinery_2007,vladusich_brightness_2007}
 Composing images with phosphenes of different brightness and colour would enable us to mimic the richness of natural visual information.
@@ -319,17 +321,17 @@ While it was previously speculated that blind patients saw colourless phosphenes
 Least promising is that colour is not consistently modifiable using different parameters of electrical stimulation, meaning phosphenes are most often randomly coloured. \cite{rushton_properties_1978}
 
 \subsection*{Spatial Properties of Phosphenes}
-\label{sec:orgd06f90c}
+\label{sec:orgf5f702c}
 
 Of great concern to cortical visual prostheses is how phosphenes are arranged in visual space, which may affect the shapes of patterns that can be formed by prosthetic devices.
 The visual cortex, as a sensory surface, is mapped retinotopically i.e. such that regions in the visual field which are next to each other are also next to each other on the cortex (though they may be distorted). \cite{fox_retinotopic_1987,engel_retinotopic_1997}
 Electrodes placed over visual cortex appear to follow this mapping, and relationships between adjacent electrodes are roughly conserved. \cite{brindley_sensations_1968,dobelle_mapping_1979,beauchamp_dynamic_2018}
-Figure \ref{fig:org570b705} illustrates the mapping of a 64-electrode array to phosphene locations measured by perceptual testing.
+Figure \ref{fig:orge997186} illustrates the mapping of a 64-electrode array to phosphene locations measured by perceptual testing.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./graphics/litreview/map.png}
-\caption[Spatial distribution of phosphenes mapped to the visual fields]{\label{fig:org570b705}
+\caption[Spatial distribution of phosphenes mapped to the visual fields]{\label{fig:orge997186}
 Spatial distribution of phosphenes mapped to the visual fields (left) in a patient implanted with an early 64-electrode array (right). Figure from Dobelle et al. 1979 \cite{dobelle_mapping_1979}}
 \end{figure}
 
@@ -357,7 +359,7 @@ Finally, phosphenes have been repeatedly shown to move with eye movements and ha
 It appears the whole map of phosphenes moves as multiple phosphenes maintain their relative positions after movement. \cite{dobelle_artificial_1974,schmidt_feasibility_1996}
 
 \subsection*{Temporal Properties of a Phosphene}
-\label{sec:org46905c8}
+\label{sec:orgf6006a0}
 
 Phosphenes generally appear synchronous with stimulation. \cite{schmidt_feasibility_1996,beauchamp_dynamic_2018}
 It is difficult to measure the latency of percepts without also including motor reaction time, but studies comparing phosphene onset reaction times to auditory stimuli suggest that additional latency is minimal. \cite{rushton_properties_1978}
@@ -376,7 +378,7 @@ While there are points of agreement between studies, such as the effect of stimu
 It remains unclear whether these disagreements are due to differences in stimulation parameters, hardware, participants or pathology.
 
 \section*{Phosphenes Produced by Stimulating Multiple Electrodes}
-\label{sec:orgc4bdec5}
+\label{sec:org829415b}
 
 The appearance of images containing multiple phosphenes is fundamental to modern cortical prostheses as very little information can be transmitted through only a single electrode at once. \cite{niketeghad_brain_2019,lewis_restoration_2015}
 The intention for cortical prostheses is to produce perceivable \emph{patterns} which can be interpreted.
@@ -411,7 +413,7 @@ Given these limited studies of combinations of phosphenes, there is a tremendous
 It is entirely unclear whether people can perceive phosphene patterns on the order of tens or hundreds, whether people can learn to perceive these patterns in useful ways, or to what degree these patterns may change.
 
 \section*{Summary of the Perceptual Limitations of Phosphenes}
-\label{sec:orga44e0f8}
+\label{sec:org9a8e275}
 
 The major issues surrounding the current literature on phosphenes are therefore:
 
@@ -432,14 +434,14 @@ As a result, there is considerable uncertainty on exactly what visual sensations
 \clearpage
 
 \chapter{Making Prosthetic Vision Useful}
-\label{sec:orgdd8bf31}
-\label{org1f456fd}
+\label{sec:org9339291}
+\label{org323c9e6}
 
 Our ability to control the appearance of individual phosphenes and their patterns is clearly limited.
 In this section, we briefly review current literature on how images can be represented strategically in phophene space to overcome these limitations.
 
 \section*{The Role of Simulated Prosthetic Vision}
-\label{sec:orgca94eac}
+\label{sec:org48b6b81}
 
 Because of the difficulties of implanting electrode arrays, little research has been conducted on what methods of representing information in phosphene space are most useful \emph{in vivo}.
 The only cortical implant which has been connected to a camera in humans was the Dobelle Implant in 2000. \cite{dobelle_artificial_2000}.
@@ -452,19 +454,19 @@ The features of simulated prosthetic vision have been reviewed previously. \cite
 Briefly, camera information is processed and rendered onto a head-mounted or other display as simulated phosphenes.
 Typically, these simulated phosphenes are rendered as the most commonly reported percept - white dots with a Gaussian blur filter applied. \cite{chen_simulating_2009-1}
 In this way, phosphene "images" are displayed for the user with the aim to approximate the prosthetic vision of an implantee.
-Examples of these simulated renders are shown in Figure \ref{fig:org89b4581}.
+Examples of these simulated renders are shown in Figure \ref{fig:org6b164da}.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./graphics/litreview/simulated.png}
-\caption[Examples of different simulated renders of phosphenes]{\label{fig:org89b4581}
+\caption[Examples of different simulated renders of phosphenes]{\label{fig:org6b164da}
 Examples of different simulated renders of phosphenes. Figure from Chen et al. 2009. \cite{chen_simulating_2009-1}}
 \end{figure}
 
 \section*{A Brief Outline of Current Image Processing Approaches}
-\label{sec:orga2e4b30}
+\label{sec:orgcf01bc1}
 \subsection*{Direct Mask-Based Methods}
-\label{sec:org159698d}
+\label{sec:org4468183}
 
 The prevailing paradigm of image processing for early cortical prostheses was to directly map camera images to a grid of electrodes as though they were superimposed. \cite{schmidt_feasibility_1996,dobelle_artificial_2000}
 This produces a phosphene image like a mask full of holes placed on top of the original image.
@@ -483,7 +485,7 @@ No new implants are capable of producing 625 distinct phosphenes. \cite{lewis_re
 Without the resolution to support the interpretation of low-level features of directly processed images, images can be uninterpretable.
 
 \subsection*{Edge-Based Methods}
-\label{sec:org0ee0023}
+\label{sec:org58b03e9}
 
 Edge-detection refers to image processing algorithms methods which highlight the edges of objects only. \cite{canny_readings_1987}
 Edges require less phosphenes at once and may reduce the amount of redundant information in an image.
@@ -494,12 +496,12 @@ These edge detectors are able to detect fast pixel gradients in images, which ty
 If additional inputs to the processing algorithm are possible, then more sophisticated techniques can be used.
 For example, the use of a range camera or other depth sensing devices can be used to more intelligently find non-background edges. \cite{lui_transformative_2012}
 State-of-the-art convolutional neural networks (CNNs) have also been applied to edge detection for prosthetic vision by semantic pixel labelling of images of rooms and determining edges by boundaries between walls. \cite{sanchez-garcia_structural_2018}
-An illustration of an edge-detection algorithm combined with a object-filling algorithm is shown in Figure \ref{fig:org3262cb7}.
+An illustration of an edge-detection algorithm combined with a object-filling algorithm is shown in Figure \ref{fig:orgd769a79}.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./graphics/litreview/edgeandfill.png}
-\caption[Example of using an edge-detection algorithm to render a clean simulated phosphene image]{\label{fig:org3262cb7}
+\caption[Example of using an edge-detection algorithm to render a clean simulated phosphene image]{\label{fig:orgd769a79}
 An example of an edge-detection algorithm with a CNN-driven object-filling algorithm to render a clean simulated phosphene image. Figure from \cite{sanchez-garcia_structural_2018}}
 \end{figure}
 
@@ -508,12 +510,12 @@ One method which aimed to resolve the fragility of edges combined edge-based met
 Such hybrid methods may be more robust than the use of pure edges when faced with significant downsampling.
 
 \subsection*{Saliency-Based Methods}
-\label{sec:org3fbc90b}
+\label{sec:org5244d8f}
 
 As opposed to naively translating brightness values of camera images to electrode stimulation, saliency-based measures more intelligently identify the semantics of objects in a scene.
 Using this semantic structure, the image can be divided or \emph{segmented} into regions of interest which carry a common semantic meaning (e.g. "background" or "foreground"). \cite{pal_review_1993}
 
-With this approach, more deliberate differences between foregound and background can be made as depicted in Figure \ref{fig:orgdbc97a4}. \cite{guo_optimization_2018}
+With this approach, more deliberate differences between foregound and background can be made as depicted in Figure \ref{fig:orga31b62c}. \cite{guo_optimization_2018}
 When applied to an image classification task, saliency-based methods improved the recognition accuracy of common objects. \cite{han_object_2015,li_image_2018}
 
 Object detection neural networks have also been applied to highlight particular salient features of an image. \cite{mace_simulated_2015}
@@ -523,8 +525,8 @@ While these methods were constrained to only specific objects, they demonstrate 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./graphics/litreview/saliency.png}
-\caption[Example of using a saliency-based algorithm to highlight a region of interest]{\label{fig:orgdbc97a4}
-An example of a saliency-based algorithm to highlight a region of interest of the image. Figure from \cite{li_image_2018}}
+\caption[Example of using a saliency-based algorithm to highlight a region of interest]{\label{fig:orga31b62c}
+An example of a saliency-based algorithm to highlight a region of interest of the image; different panels show progressive stages in the process. Figure from \cite{li_image_2018}}
 \end{figure}
 
 The methods help highlight what is most likely to be relevant in an image and suppress background, which may otherwise interfere.
@@ -533,7 +535,7 @@ While simulations have demonstrated the utility of this approach, the fidelity o
 While these methods are advantageous compared to direct methods in that irrelevant information may be reduced, it faces the same limitations that low-level forms may be obscured by phosphene distortions.
 
 \subsection*{Transformative Methods}
-\label{sec:org7a14297}
+\label{sec:org815b61a}
 
 Recent advances in machine learning have meant that computers are now reaching human-level abilities for tasks such as image classification using deep learning methods. \cite{rawat_deep_2017,guo_deep_2016}
 Because the processor in a cortical visual prosthesis has access to the full camera image (as opposed to the user, who can only see the phosphene version), the processor has more information available to interpret.
@@ -542,12 +544,12 @@ Instead of expecting the user to interpret high-level information from degraded 
 Numerous patents have been filed for such a system. \cite{chichilnisky_eduardo-jose_smart_2018,li_going_2013}
 In these systems, important visual cues such as stairs, faces and bank notes are recognised by the computer, which can then remove unnecessary low-level detail and produce compact, abstract images that represent the \emph{concept} of what is seen, not what is actually seen.
 For example, faces can be recognised and re-encoded as emoticons which cleanly fit in low-resolution space. \cite{lui_transformative_2012}
-An example of this approach is shown in \ref{fig:org0f25da0}
+An example of this approach is shown in \ref{fig:orgdf227ab}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./graphics/litreview/transformative.png}
-\caption[Example of using a transformative approach to image processing to re-encode information]{\label{fig:org0f25da0}
+\caption[Example of using a transformative approach to image processing to re-encode information]{\label{fig:orgdf227ab}
 An example of a transformative approach to image processing to re-encode information. Figure from \cite{lui_transformative_2012}}
 \end{figure}
 
@@ -561,11 +563,11 @@ A potential rebuttal is that as these methods re-encode information at the beque
 Individual-level implementations of image processing algorithms are yet to be explored.
 
 \subsection*{Temporal Methods}
-\label{sec:org0c75b7b}
+\label{sec:org56e3860}
 
 Given the challenges already faced by patients when trying to interpret multiple simultaneous phosphenes, some groups have begun to explore non-simultaneous methods of conveying patterned information.
 \emph{Dynamic current steering}, where phosphene patterns are "traced" in quick succession rather than presented all at once have shown sigificant benefits for letter recognition tasks. \cite{beauchamp_dynamic_2018,spencer_creating_2018}
-Figure \ref{fig:org9b68703} illustrates the principle behind this approach.
+Figure \ref{fig:org2d2ba8d} illustrates the principle behind this approach.
 Patients, without prior training, were able to trace the path of phosphenes and interpret simple letterforms accurately.
 Unlike most of these other methods, dynamic current steering \emph{has} been tested \emph{in vivo} in patients with epilepsy with subdural surface electrodes and in fact arose out of perceptual difficulties noted by the investigators. \cite{beauchamp_dynamic_2018}
 This highlights one of the issues with simulated prosthetic vision tests; fundamental perceptual differences of electrical neural stimulation may not be discovered and accounted for until tested in real patients.
@@ -573,8 +575,8 @@ This highlights one of the issues with simulated prosthetic vision tests; fundam
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./graphics/litreview/temporal.png}
-\caption[Example of conveying information temporally through phosphenes]{\label{fig:org9b68703}
-An example of a temporal approach to conveying information through phosphenes, where electrodes are stimulated in succession instead of simultaneously. Figure taken from \cite{beauchamp_dynamic_2018}}
+\caption[Example of conveying information temporally through phosphenes]{\label{fig:org2d2ba8d}
+An example of a temporal approach to conveying information through phosphenes, where electrodes are stimulated in succession instead of simultaneously. A) implant locations, B) phosphene map, C) stimuation order, D) phosphene form, E) participant interpretation. Figure taken from \cite{beauchamp_dynamic_2018}}
 \end{figure}
 
 These methods attempt to resolve the issues surrounding interpreting multiple simultaneous phosphenes by tapping into the brain's natural ability to interpret gross motion. \cite{grossman_brain_2002}
@@ -583,7 +585,7 @@ It is clear, however, that the difference between temporal methods and form-base
 More clinical trials are needed to establish whether temporal methods of information transfer as opposed to spatial methods are better suited for cortical prosthetic devices.
 
 \section*{The Limitations of Simulated Prosthetic Vision}
-\label{sec:org4888e6d}
+\label{sec:orgfd5208a}
 
 The crux of many of these methods rests on tests of simulated prosthetic vision, faces significant limitations for generalisability to \emph{in vivo} implants:
 
@@ -614,7 +616,7 @@ The methods we have described are dependent on being able to replicate the simul
 It is unclear how the image processing algorithms produced by studies of simulated prosthetic vision could be made flexible for the variability in phosphenes previously described.
 
 \section*{Future Directions from Advances in Machine Learning}
-\label{sec:orgfc6dd5c}
+\label{sec:orgc599e10}
 
 The remaining goal for better addressing the perceptual limitations for phosphenes is to find flexible ways to reconcile image processing algorithms in simulated phosphene space with the wide variability in what phosphenes look like.
 Image processing outside of prosthetic vision has experienced a wealth of improvements from advances in machine learning, where computers learn patterns from data without prior knowledge of those patterns. \cite{guo_deep_2016}
@@ -627,38 +629,33 @@ By training CNNs on task performance data rather than programming algorithms to 
 CNNs could also be tailored for individuals' perceptions of phosphenes, as the dependency of the algorithm shifts towards task performance tests rather than perceptual tests.
 This essentially posiions the problem of deriving image processing algorithms from bottom-up (from phosphenes to algorithm) to top-down (from performance to algorithm).
 
-To our knowledge, CNNs have not been applied in this way to derive image processing algorithms for prosthetic vision, and thus research on this topic is scant.
-While CNNs and other neural network architectures have been applied to prosthetic vision to construct new algorithms \cite{mace_simulated_2015,ge_spiking_2017,sanchez-garcia_structural_2018}, these have typically been object detection networks involved in segmentation-based processing.
-There has also been growing interest in using machine learning recognition algorithms for transformative techniques in prosthetic vision. \cite{chichilnisky_eduardo-jose_smart_2018}
-With continuous improvements in the capacity of hardware to support advanced processing \cite{moore_cramming_1998}, it is possible that emergent research in using machine learning to produce flexible, trainable algorithms could improve the utility of a cortical visual prosthesis.
+\textbf{Generative adversarial networks} are a special type of training architecture for developing CNNs. \cite{NIPS2014_5423}
+GANs train two networks - a \emph{Generator} and a \emph{Discriminator} - to perform opposing tasks - one to generate novel imagery, and one to determine whether the generated novel imagery is fake.
+In this way, CNNs can be trained to produce new images when given samples of images, such as digits. \cite{1511.06390,1611.01673,1411.1784}
+Importantly, these novel images are not copies of the provided image samples but represent entirely new samples which exhibit general features similar to the training data.
+The technical implementation of GANs is beyond the scope of this review, but we describe our implementation in contrast with traditional GAN architectures in Section \ref{orgb801cd0}
 
 While GANs have been applied to image-based tasks in other domains, it is not clear how they should be applied to prosthetic vision.
-An important difference between GANs in other domains versus prosthetic vision is that typically GANs directly manipulate every pixel in images they generate.
+An important difference between GANs in other domains versus prosthetic vision is that typically GANs directly manipulate every pixel in images they generate. \cite{NIPS2014_5423}
 This gives GANs complete control over what its generated images look like.
-
 However, this is not desirable in simulated prosthetic vision where we want to simulate visual experiences which we \emph{cannot} fully control.
 GANs must instead be used to generate \emph{instructions} to simulated electrodes, which produce a simulated prosthetic vision render indepenendtly from the GAN.
 A useful GAN implementation for simulated prosthetic vision should therefore \emph{not} be based on direct pixel manipulation (as is typically the case).
 
+To our knowledge, GANs have not previously been applied to derive image processing algorithms for prosthetic vision, and thus research on this topic is scant.
+While neural network architectures have been applied to prosthetic vision to construct new algorithms \cite{mace_simulated_2015,ge_spiking_2017,sanchez-garcia_structural_2018}, these have typically been object detection networks involved in segmentation-based processing.
+There has also been growing interest in using machine learning recognition algorithms for transformative techniques in prosthetic vision. \cite{chichilnisky_eduardo-jose_smart_2018}
+With continuous improvements in the capacity of hardware to support advanced processing \cite{moore_cramming_1998}, it is possible that emergent research in using machine learning to produce flexible, trainable algorithms could improve the utility of a cortical visual prosthesis.
+
+
+
 \clearpage
 
-\chapter{Problem Summary}
-\label{sec:org5a32aca}
-
-Cortical visual prostheses are a promising enabling technology for the blind.
-As the development of these prostheses is still in early stages, it is still not precisely known what type of vision implantees will be able to achieve with a prosthesis.
-However, early studies of cortical stimulation seem to suggest that the visual percepts produced will be highly variable and difficult to control.
-Whilst there have been many progressions in image processing algorithms in simulated prosthetic vision, the ability of these algorithms to translate to the diverse range of \emph{in vivo} phosphenes is unclear.
-This is because many of these algorithms are based on conceptions of the appearance of phosphenes which we do not know if we can replicate, particularly between different people.
-There is therefore a gap in the literature between how image processing algorithms could be derived flexibly for different types of phosphene maps with different phosphene properties.
-Modern advances in machine learning have demonstrated success in using GANs to generate novel imagery and perform image processing tasks.
-As these methods have not been applied to prosthetic vision before, preliminary studies which assess the feasibility of using machine learning methods to address the perceptual limitations of phosphenes may be greatly informative.
-
 \chapter{Aims and Hypothesis}
-\label{sec:org5885224}
+\label{sec:orgcb12cee}
 
 \section*{Research Questions}
-\label{sec:org997b38a}
+\label{sec:orge608a3e}
 
 \begin{enumerate}
 \item Can GANs be used to train a neural network to produce phosphene patterns representing digits, given different simulated properties of prosthetic vision and, if so, how could this be implemented?
@@ -669,7 +666,7 @@ Given that the usefulness of an image processing method is highly subjective and
 Generating images of single digits is well-described in literature of traditional GANs, and the a digit recognition task is both focused and concrete.
 
 \section*{Aims and Hypothesis}
-\label{sec:org257d1c5}
+\label{sec:orgb2592c6}
 
 \begin{description}
 \item[{Aim 1}] Develop a preliminary software implementation of a GAN training architecture for generating phosphene patterns, which could be applied to different phosphene simulations with minimal modification. This was the primary aim.
@@ -687,30 +684,32 @@ Aim 2 relies on the implementation produced by Aim 1, and can be hypothesis-test
 \end{enumerate}
 
 \part{Methods}
-\label{sec:orgb192d5f}
+\label{sec:org3cf1445}
 \chapter{Generative Adversarial Network Architecture}
-\label{sec:org2215c34}
-\section*{Development Context}
-\label{sec:orgef7490b}
+\label{sec:orge602128}
+\label{orgb801cd0}
 
-The code for this project was written by the author using the Python programming language and accompanying package dependencies listed in Appendix \ref{org4f65a1b}.
-All code written during the project is made available on a public GitHub repository listed in Appendix \ref{orgd21b09b}; several small code snippets have also been included.
+\section*{Development Context}
+\label{sec:orgf6cf7ae}
+
+The code for this project was written by the author using the Python programming language and accompanying package dependencies listed in Appendix \ref{org9e17d4d}.
+All code written during the project is made available on a public GitHub repository listed in Appendix \ref{org3f322c2}; several small code snippets have also been included.
 All code was developed on a Windows 10 personal computer, and executed both on the development computer and remotely on the M3 multi-modal Australian ScienceS Imaging and Visualization Environment (MASSIVE) high-performance-computing (HPC) platform. \cite{Goscinski2014}
 
 \section*{Architecture Overview}
-\label{sec:org59c255e}
+\label{sec:org528071c}
 
-A high-level overview of the implemented GAN training architecture is provided in Figure \ref{fig:orgf8a7f92}.
+A high-level overview of the implemented GAN training architecture is provided in Figure \ref{orgfd7b1c9}.
 
-\#+begin\textsubscript{sidewaysfigure}
-\begin{figure}[htbp]
-\centering
+\begin{sidewaysfigure}
+\begin{center}
 \includegraphics[width=.9\linewidth]{images/methods_training_architecture.png}
-\caption[Overview of GAN training architecture implementation]{\label{fig:orgf8a7f92}
+\end{center}
+\caption[Overview of GAN training architecture implementation]{\label{orgfd7b1c9}
 Overview of our GAN training architecture implementation demonstrating the flow of data through the architecture. Real images of handwritten digits and "fake" images produced by a \emph{Generator} (red) are supplied to a \emph{Discriminator} and subsequently trained on its output. In this architecture, the \emph{Generator} and \emph{Discriminator} are dynamically updated with each image sample, whereas the \emph{Simulator} and \emph{Modifier} are static (indicated by locks).}
-\end{figure}
+\end{sidewaysfigure}
 
-The overarching goal of this architecture is to train the \emph{Generator} (which is initialised to produce random noise before training) to generate simulation \emph{encodings} for any specified \emph{Simulator} which result in phosphene patterns that look like digits.
+The overarching goal of this architecture is to train the \emph{Generator} neural network (which is initialised to produce random noise before training) to generate simulation \emph{encodings} for any specified \emph{Simulator} which result in phosphene patterns that look like digits.
 
 The flow of data through the training process proceeds as:
 \begin{enumerate}
@@ -724,10 +723,10 @@ Once a \emph{Simulator} is chosen, it is used for the duration of training.
 \item The \emph{Discriminator} takes the real images and the modified simulated prosthetic images and produces predictions whether the digit is real (and what digit it is), or whether it is fake.
 \item The predictions of the \emph{Discriminator} are used to adjust the properties of the \emph{Generator} and the \emph{Discriminator} to perform their tasks.
 The \emph{Generator} wants the \emph{Discriminator} to classify its generated images as real digits; it therefore compares the \emph{Discriminator}'s actual predictions to a hypothetical case in which the \emph{Discriminator} predicted all the generated images were real, and uses the difference to rebalance its internal weights.
-The \emph{Discriminator} wants to correctly classify the real images as real, and the generated images as fake; it therefore compares it's output with a hypothetical case in which its predications are all correct, and likewise uses the difference to rebalance its internal weights.
+The \emph{Discriminator} wants to correctly classify the real images as real, and the generated images as fake; it therefore compares its output with a hypothetical case in which its predications are all correct, and likewise uses the difference to rebalance its internal weights.
 \end{enumerate}
 
-As with classical GAN architectures, the \emph{Generator} and \emph{Discriminator} participate in a zero-sum game wherle each network has opposing goals; the \emph{Generator} aiming to fool the \emph{Discriminator} into thinking the \emph{Simulator}'s odified output is real, and the \emph{Discriminator} aiming to identity the \emph{Generator}'s fakes amongst the real samples.
+As with classical GAN architectures, the \emph{Generator} and \emph{Discriminator} participate in a zero-sum game where each network has opposing goals; the \emph{Generator} aiming to fool the \emph{Discriminator} into thinking the \emph{Simulator}'s odified output is real, and the \emph{Discriminator} aiming to identity the \emph{Generator}'s fakes amongst the real samples.
 This architecture closely follows classical GAN architectures, except with the novel additions of the \emph{Simulator} and \emph{Modifier} steps.
 These two steps differentiate this GAN architecture from traditional GANs, which usually have full pixel-access to the generated images; in this architecture, the GAN instead produces image-agnostic encodings that are supplied to the simulator.
 The decoupling of the GAN from the generated image pixels allows the GAN to be applied to this simulated prosthetic vision task for different types of simulators, which can be readily substituted.
@@ -735,8 +734,8 @@ The decoupling of the GAN from the generated image pixels allows the GAN to be a
 This basic process is repeated many times over many digit image samples to slowly optimise the \emph{Generator} to produce useful simulator encodings.
 Each step of this process is discussed in further detail in the sections below.
 
-\section*{Real Images}
-\label{sec:orgfdcb8b8}
+\section*{Real Images and Image Categories}
+\label{sec:org2b79f03}
 
 The \emph{Generator} begins training as a naive neural network with no conception of what digits are or what they look like.
 In order for the architecture to train the \emph{Generator} to produce digit-like encodings, the \emph{Discriminator} must be provided samples of what real digits actually look like.
@@ -758,187 +757,159 @@ A series of adjustments were therefore performed on the real images to mitigate 
 In order to more faithfully simulate a single unilateral cortical prosthetic vision device (which only stimulates half the visual fields), we restricted simulations to a single half of the image (the right visual field).
 We conducted the same adjustment to the MNIST digits by scaling each images' width by half and aligning the result with the right image edge.
 Each MNIST image's pixel value was also normalised between -1 and 1 (from 0 to 255) and the entire image upscaled to a resolution of 48x48 pixels to equal the pixel resolution of simulated images.
-Figure \ref{fig:org72b2a17} shows a number of the original samples from the MNIST dataset, and the samples after this preprocessing step was applied.
+Figure \ref{fig:orgb3d4da0} shows a number of the original samples from the MNIST dataset, and the samples after this preprocessing step was applied.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[height=0.7\textheight]{./images/methods_mnist.png}
-\caption[A subset of MNIST real handwritten digit samples before and after preprocessing]{\label{fig:org72b2a17}
+\caption[A subset of MNIST real handwritten digit samples before and after preprocessing]{\label{fig:orgb3d4da0}
 16 randomly-selected digits from the MNIST handwritten digit dataset, before (A) and after (B) preprocessing (realignment and normalisation) was applied.}
 \end{figure}
 
-\section*{Image Category}
-\label{sec:org15ec6fd}
-
 The MNIST digit dataset includes a digit label for each handwritten data image in the range 0-9 inclusive.
-These image categories are simply encoded as an integer corresponding to their digit label.
-As integers (i.e. a numerical datatype), these image categories are suitable for direct input into the \emph{Generator}.
+These image categories are simply encoded as integers corresponding to their digit label, and fed directly to the \emph{Generator}.
 
 \section*{\emph{Generator}}
-\label{sec:orged26344}
+\label{sec:org800a3cc}
 
-The \emph{Generator} is a neural network which:
-
-\begin{itemize}
-\item Takes a single digit in the range 0-9, and
-\item Returns instructions to each simulated electrode, as a vector of floating-point numerical values equal in length to the number of electrodes in the simulated prosthesis.
-\end{itemize}
-
-There is a notable difference in the \emph{Generator} network described above compared to traditional \emph{Generators} in GANs: the lack of a random seed input.
-This was an intentional choice.
-The use of a random input seed into \emph{Generator} networks in GAN architectures allows it to output multi-modal images - i.e. images which are similarly realistic, but possess slight image variations.
-This is often desirable, where we want GANs to produce many different novel images instead of just one.
-
-However, for use in simulated prosthetic vision, multi-modal output is a low priority.
-Firstly, the ability to incorporate multi-modality into a \emph{Generator} which does \emph{not} have direct access to its final render is not clear.
-Secondly, it may actually be desirable to limit the output to one "good" phosphene pattern per digit; in practice, subjects are likely to find it easier to learn one phosphene pattern per digit only rather than having to deal with many "similar" patterns with extra variable features.
-
-Because this is the first attempt at developing a GAN for our purpose, it is unknown what neural network architecture is best suited for this task.
-Our task consists of a simple mapping between 10 image categories (digit identities) to deterministic vectors as we purposefully removed the usual random seed input.
-We therefore used a neural network with a minimal number of hidden layers to reduce training times, depicted in Figure (TODO).
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{./images/generator.png}
-\caption{\label{fig:org2a803ae}
-Generator}
-\end{figure}
-
-The \emph{Generator} network consisted of:
-\begin{enumerate}
-\item An \emph{input} layer, containing a single neuron taking a digit from 0-9 as input.
-\item An \emph{embedding} layer, which maps the single categorical digit class into a 10-element continuous vector.
-\item A \emph{batch normalization} layer, which applies a normalisation for each mini-batch before feeding into the next layer.
-\item A \emph{leaky ReLU} layer, which applies a rectifier activation function to dampen negative values.
-\item A \emph{dense} layer, which outputs a vector of simulated electrode instructions for a specified number of electrodes.
-\item A \emph{sigmoid} layer, which applies a sigmoid activation function to constrain all output values between 0 and 1.
-\end{enumerate}
-
-My passing an image category (digit 0-9) into the \emph{Generator} as input, the \emph{Generator} therefore outputs a vector of simulated electrode instructions according to the specified number of electrodes.
-The simulated electrode instructions take the form of a vector of floating-point numbers between 0 and 1 inclusive, with the number of elements equalling the number of electrodes.
-Each floating-point number indicates the "brightness" at which an electrode should be activated to represent a particular image category (digit).
+The \emph{Generator} is a neural network which takes a single digit in the range 0-9, and returns a simulator encoding to be fed into the \emph{Simulator}.
+The simulator encoding is a vector (list) of numbers in the range 0-1, with one number for each simulated electrode in the \emph{Simulator}; each number specifies the strength with which its corresponding simulated electrode should be stimulated to produce a phosphene pattern.
 Notably, there is no information encoded about what electrode actually \emph{does}, nor where it is located; the \emph{Generator} network is effectively blind to these elements of the simulation.
 
-\section*{Renderer}
-\label{sec:orgcf6fc97}
+The \emph{Generator} neural network is illustrated in Figure \ref{fig:org89a253e} and consists of:
+\begin{enumerate}
+\item An input layer, containing a single neuron taking a digit from 0-9 as input.
+\item An embedding layer, which maps the single categorical digit class into a 10-element continuous vector.
+The embedding layer is passed through a batch normalisation step to normalise mini-batches of image samples, and a leaky rectified linear unit (ReLU) activation function to dampen negative values and stabilise the layer.
+\item A dense layer, which fully connects each neuron in the previous layer to output a vector of simulated electrode encodings.
+The dense layer is passed through a sigmoid activation function to constrain all outputs to lie between 0 and 1.
+\end{enumerate}
 
-The \emph{Renderer} is a custom simulation of prosthetic vision, which takes instructions for each "electrode" as input, and outputs the simulated render as a grayscale image.
-The \emph{Renderer} is a simulated stand-in for real implantees and their perception of vision through a CVP.
+This network was implemented using the machine learning package TensorFlow \cite{tensorflow2015-whitepaper}; the code for this network is shown in Appendix \ref{org3f322c2}.
 
-The \emph{Renderer} is essentially a 3D volume of pre-rendered 2D grayscale image slices, each slice corresponding to the visual percept of a single electrode.
-These pre-rendered grayscale slices allow each electrode to produce a distinct, unique percept; for example, one electrode in the \emph{Renderer} may produce a small phosphene located near the center of vision, while another may produce a much larger phosphene in the peripheries.
-When an instruction for each electrode is supplied, each slice in the 3D volume is weighted according to its value.
-The slices are then aggregated together by summing along the long axis, and clipping values between 0 and 1 to produce a final grayscale render.
-The final render is then rescaled between -1 and 1 before being supplied to the discriminator.
-This process is visualised in Figure (TODO).
+This network is simple with minimal hidden layers, which we justified as being sufficient for a digit-to-encoding task and suitable to reduce training times, given the time limitations of the project.
+There is a important difference in the \emph{Generator} network described above compared to traditional \emph{Generators} in GANs: the lack of a random numerical seed input.
+This was an intentional choice.
+The use of a random input seed into \emph{Generator} networks in traditional GAN architectures permits the production of multi-modal images - i.e. multiple image patterns for a single image category (such as more than one pattern for a digit 0).
+This is often desirable when we want GANs to produce many different novel images instead of just one; however, for use in simulated prosthetic vision, multi-modal output is a low priority.
+It is actually desirable to limit the output to one "good" phosphene pattern per digit; in practice, subjects are likely to find it easier to learn one phosphene pattern per digit only, rather than having to learn multiple patterns.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=.9\linewidth]{./images/methods_simulator.png}
-\caption{\label{fig:org46ba80e}
-Simulator}
+\includegraphics[height=0.5\textheight]{./images/generator.png}
+\caption[Schematic of the GAN Generator neural network]{\label{fig:org89a253e}
+Schematic of the GAN generator neural network; a digit class is supplied to an initial embedding layer, and fully connected to the output layer of neurons to produce the simulator encoding. bbb}
 \end{figure}
 
-Because the \emph{Renderer} base is a 3D volume of pre-rendered slices, different subjects can be simulated by using different pre-rendered volumes without requiring changes to the rendering process.
-In addition, the use of pre-rendered slices makes training much more efficient, as creating the render consists merely of bulk matrix operations which are easily vectorisable.
+\section*{Simulator}
+\label{sec:orgd940782}
 
-In order to generate test grids for use with training, two different means of generating pre-rendered slices were implemented:
+The \emph{Simulator} is a custom simulation of prosthetic vision, which takes instructions for simulated electrodes as input, and outputs the simulated render as a grayscale image.
+The \emph{Simulator} is a simulated stand-in for real implantees and their perception of vision through a CVP.
+
+The \emph{Simulator} itself is a 3D volume of pre-rendered 2D grayscale image slices (illustrated in Figure \ref{org4d2b31b}).
+Each slice corresponds to the visual percept of a single electrode.
+These pre-rendered grayscale slices allow each electrode to produce a distinct, unique percept; for example, one electrode in the \emph{Simulator} may produce a small phosphene located near the center of vision, while another may produce a much larger phosphene in the peripheries.
+The \emph{Simulator} takes the simulator encodings from the \emph{Generator} and weights each electrode's slice in the 3D volume according to its corresponding encoded strength.
+The slices are then aggregated together by summing along the last axis, and clipping values between 0 and 1 to produce a final grayscale render.
+The final render is then rescaled between -1 and 1 before being supplied to the discriminator.
+
+\begin{sidewaysfigure}
+\begin{center}
+\includegraphics[width=.9\linewidth]{./images/methods_simulator.png}
+\end{center}
+\caption[Illustration of the phosphene simulation process]{\label{org4d2b31b}
+Prosthetic vision is simulated by weighting each pre-rendered slice of a 3D volume by provided simulated encodings, and aggregating the weighted slices.}
+\end{sidewaysfigure}
+
+Because the \emph{Simulator} base is a 3D volume of pre-rendered slices, different subjects and their phosphene maps can be simulated by substituting different pre-rendered volumes without requiring any additional changes.
+In addition, the use of pre-rendered slices makes simulation efficient, as rendering images consists merely of bulk matrix operations which are easy to parallelise on graphics processing units (GPUs).
+
+In order to generate pre-rendered slices to test, we implemented two different types of phosphene maps:
 \begin{enumerate}
-\item Cartesian-spaced phosphenes, which maps electrodes to positions in a regular Cartesian plane and assigns the same size and strength to each phosphene.
-This was chosen as a basic control as this grid essentially approximates a normal (albeit low-resolution) pixel image.
-\item Polar-spaced phosphenes, which maps electrodes to positions in a regular Polar grid and assigns to each phosphene a size corresponding to its location, as given by the equation \(log(k \times (x^2 + y^2) + a)\) for parametrically-set values \(k\) and \(a\).
-This was chosen to more closely reflect the visual qualities of phosphenes known to appear to subjects from experimental trials of cortical stimulation.
+\item \textbf{Cartesian} maps, which place phosphenes in a regular Cartesian plane and assigns the same size and strength to each phosphene.
+This was chosen as a basic control as this map approximates a normal (albeit low-resolution) pixel image.
+\item \textbf{Polar} maps*, which place phosphenes in regular Polar grid and assigns each phosphene a size corresponding to its location, as given by a log-polar equation \(log(k \times (x^2 + y^2) + a)\) for parametric constants \(k\) and \(a\) (see Appendic \ref{org9b90117} for the code implementation).
+This was chosen to more closely reflect the visual qualities of phosphenes discussed in Section \ref{org0f0024e}.
 \end{enumerate}
 
-For each of the two implementations above, two optional flags were also added:
-\begin{enumerate}
-\item A randomising flag, which produces phosphenes at random locations instead of along a regular Cartesian or Polar grid.
-\item A half-flag, which constrains phosphenes to appear only in a single half of the visual fields (simulating a single implant, inserted into only one hemisphere of the brain).
-\end{enumerate}
+Both options constrained phosphenes in the right visual field.
+Each of the two options above also had the option of creating randomly-positioned phosphenes to reflect the randomness of \emph{in vivo} phosphene maps.
 
-The \emph{Renderer} can theoretically simulate any number of phosphenes, but for our purposes, we focused on phosphene grids containing 64 phosphenes only.
-This reflects a highly conservative estimate of the number of useful electrodes achievable by first-generation CVPs.
-
-
-These grids are illustrated in Figure (TODO).
+The \emph{Simulator} can theoretically simulate any number of phosphenes; we focused on phosphene maps containing 64, 144 and 576 phosphenes only to represent low, medium and high resolution phosphene maps.
+Examples of these phosphene maps are shown in Figure \ref{fig:orgfb16671}.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=.9\linewidth]{./images/methods_maps.png}
-\caption{\label{fig:org5f212fd}
-Maps}
+\includegraphics[height=0.4\textheight]{./images/methods_maps.png}
+\caption[Phosphene maps used in the prosthetic vision simulation]{\label{fig:orgfb16671}
+Phosphene maps used in the prosthetic vision simulation; regular and random Cartesian and Polar maps were modelled. Shown are four examples of maps with varying phosphene resolutions.}
 \end{figure}
 
 \section*{Modifier}
-\label{sec:orgd3a1fe8}
+\label{sec:orgc3d4fa9}
 
-In order for GANs to work effectively for the next step (feeding into the \emph{Discriminator}), the generated fake renders must have the capability of looking as close to the real images as possible.
-Because the generated renders necessarily create simulated phosphenes, there would usually be no chance of the renders actually looking like digits unless the rendering resolution (i.e. number of phosphenes) was fairly high (at least 27x27 pixels, the original MNIST digit resolution).
+In order for GANs to work effectively for the next step (feeding into the \emph{Discriminator}), the generated simulations must have the capability of looking as close to the real images as possible.
+Because the generated renders necessarily create simulated phosphenes, there would usually be no chance of the renders actually looking like digits unless the rendering resolution (i.e. number of phosphenes) is unrealistically high.
 To resolve this problem, a \emph{Modifier} network can be added in order to bring the domain of the generated renders closer to the domain of real handwritten digit images to simulate basic "inference" that humans might make.
-This amounts to simple "hole-filling" for most purposes - i.e. connecting spaces between phosphenes, as a human might be able to do, and outputting a new "inferred" image.
-In this sense, the \emph{Modifier} allows the computer to simulate the sort of inference a person might be able to make from simple phosphene dots into more cohesive outlines and forms.
+This amounts to simple "hole-filling" for most purposes - i.e. connecting spaces between phosphenes, as a human might be able to do, and outputting a new "inferred" image corresponding to a holistic outline and form.
 
-
-\begin{figure}[htbp]
-\centering
+\begin{sidewaysfigure}
+\begin{center}
 \includegraphics[width=.9\linewidth]{./images/methods_modifier.png}
-\caption{\label{fig:orge8e61da}
-Modifier}
-\end{figure}
+\end{center}
+\caption[Schematic of \emph{Modifier} architecture. ]{\label{org60a28ce}
+Schematic of \emph{Modifier} neural network architecture bring phosphene images closer to the domain of the real handwritten digits with simple inference.}
+\end{sidewaysfigure}
 
-For this project, the \emph{Modifier} consisted of a simple style-transfer GAN which mapped between phosphene images and "filled" forms.
-Style-transfer GANs are well-studied architectures, and the architecture of the \emph{Modifier} closely followed a basic style-transfer GAN architecture comprising:
+For this project, the \emph{Modifier} consisted of a simple style-transfer neural network which mapped between phosphene images and "filled" forms, illustrated in Figure \ref{org60a28ce} and listed in Appendix \ref{org2779a3c}.
+Style-transfer neural networks are well-studied architectures, and the training architecture of the \emph{Modifier} closely followed a traditional style-transfer GAN architecture comprising:
 \begin{enumerate}
 \item An \emph{input} layer, taking the entire 2D grayscale render image (reshaped as a 3D slice with a depth of 1).
 \item Multiple \emph{2D convolutional} layers (48, 96, 128 and 128 filters), each followed by a \emph{batch normalization} and a \emph{leaky ReLU} activation layer, which progressively downsample the image into extracted features.
 \item Two \emph{2D deconvolutional} layers (48 and 1 filter/s), which progressively upsample the extracted features into a new modified image render.
 The last layer is passed through a \(tanh\) activation function to remap the output between -1 and 1, as in the original render.
 \end{enumerate}
-This process is illustrated in Figure (TODO).
 
-In order to train the \emph{Modifier}, MNIST digits were passed under 4800 random polar grids of 64 phosphenes with a simple masking operation to generate pairs of phosphene images real digit images.
-These phosphene-real pairs were used to train the weights of the \emph{Modifier} network.
+In order to train the \emph{Modifier}, MNIST digits were passed under 4800 random polar grids of 64 phosphenes with a simple masking operation to generate pairs of phosphene images and corresponding real digit images.
+These phosphene-real pairs were used to train the weights of the \emph{Modifier} network so it could map between novel phosphene image and real-like digit image pairs.
 Once the \emph{Modifier} was trained, its weights were saved and frozen for subsequent use as a simple phoshene-to-forms image processor.
-Examples of the style transfer output of the trained \emph{Modifier} is shown in Figure (TODO).
+Examples of the style transfer output of the trained \emph{Modifier} is shown in Figure \ref{orge816f1b}.
 
-
-\begin{figure}[htbp]
-\centering
+\begin{sidewaysfigure}
+\begin{center}
 \includegraphics[width=.9\linewidth]{./images/methods_modifier_examples.png}
-\caption{\label{fig:orgacaac3b}
-Modifier}
-\end{figure}
+\end{center}
+\caption[Examples of passing phosphene images under the \emph{Modifier} network]{\label{orge816f1b}
+Examples of passing phosphene images under the \emph{Modifier} network: simulated phosphenes are shown in A, and their corresponding modified renders in B.}
+\end{sidewaysfigure}
 
 \section*{Discriminator}
-\label{sec:org5cd9f42}
+\label{sec:org0277fb9}
 
 The \emph{Discriminator} is the final major processing step of the GAN training architecture, and the major element involved in actually training the \emph{Generator}.
 The \emph{Discriminator} takes a modified rendered grayscale image, and outputs an 11-element vector of probabilities.
-The first ten elements correspond to the probability the \emph{Discriminator} believes the input image is a 0, 1, 2 etc.
-The final element corresponds to the probability the \emph{Discriminator} believes that the input image is not a digit at all, and is instead "garbage."
-The \emph{DIscriminator} is therefore a classifier which classifies images as either belonging to one of 10 digit classifications, or as being garbage instead.
+The first ten elements correspond to the probability the \emph{Discriminator} believes the input image is a 0, 1, 2 etc. until the digit 9.
+The final element corresponds to the probability the \emph{Discriminator} believes that the input image is not a digit at all, and is instead fake.
+The \emph{Discriminator} is therefore a classifier which classifies images as either belonging to one of 10 digit classifications, or as being fake instead.
 
-The \emph{Discriminator} itself is a convolutional neural network with a relatively small number of layers. It comprises:
+The \emph{Discriminator} itself is a convolutional neural network with a relatively small number of layers, illustrated in Figure \ref{orgb957cd2} and implemented in Appendix \ref{orgb4b9e1f}. It comprises:
 \begin{enumerate}
 \item An \emph{input} layer, taking the 2D grayscale modified render image (reshaped as a 3D slice with a depth of 1).
-\item Two \emph{2D convolutional} layers (64 and 128 filters), each followed by a \emph{leaky ReLU} activation function and a 25\% \emph{dropout} layer (randomly discarding 25\% of prior inputs, to protect against overfitting)
-\item A \emph{flatten} and a \emph{dense} layer, to output an 11-element vector, which is then passed through a \emph{softmax} activation function to ensure all probabilities add to 1.
+\item Two \emph{2D convolutional} layers (64 and 128 filters), each followed by a \emph{leaky ReLU} activation function and a 25\% \emph{dropout} layer (randomly discarding 25\% of prior inputs to improve the robustness of the network).
+\item A \emph{flatten} and a \emph{dense} layer, to output an 11-element vector, which is then passed through a \emph{softmax} activation function to normalise all probabilities to sum to 1.
 \end{enumerate}
-This process is illustrated in Figure (TODO).
 
-
-\begin{figure}[htbp]
-\centering
+\begin{sidewaysfigure}
+\begin{center}
 \includegraphics[width=.9\linewidth]{./images/methods_discriminator.png}
-\caption{\label{fig:org054406b}
-discriminator}
-\end{figure}
-
-
-The 11-element vector of probabilities output by the \emph{Discriminator} is then used to train the \emph{Generator} and \emph{Discriminator} itself through their respective loss functions.
+\end{center}
+\caption[Schematic of \emph{Discriminator} architecture]{\label{orgb957cd2}
+Schematic of the \emph{Discriminator} convolutional neural network architecture which classifies images into probabilities of belong to each digit class, or being fake.}
+\end{sidewaysfigure}
 
 \section*{Loss Functions and Training}
-\label{sec:org6fe21c7}
+\label{sec:org717b5d3}
 
 Once an image, generated or real, has passed through to the \emph{Discriminator} to output probabilities, these probabilities can then be used as the basis for adjusting the \emph{Generator} and \emph{Discriminator} to optimise them toward their respective goals.
 This is the foundational basis of any GAN training architecture.
@@ -951,59 +922,64 @@ The \emph{Discriminator}'s goal is to correctly classify real handwritten digits
 The \emph{loss} of the \emph{Discriminator} is therefore given by the sum of categorical cross-entropies between:
 \begin{enumerate}
 \item A one-hot vector corresponding to the real digit class of real images, and the predicted output of real images, and:
-\item A one-hot vector corresponding to the "garbage" class, and the predicted output of images from modifier renders produced by the \emph{Generator}.
+\item A one-hot vector corresponding to the fake class, and the predicted output of images from modifier renders produced by the \emph{Generator} and \emph{Simulator}.
 \end{enumerate}
 
-These two losses are backpropagated through the network for each image sample and the weights within the \emph{Generator} and \emph{Discriminator} networks are updated according to their respective gradients over their loss function.
-For this project, the optimiser for gradient descent used was the Adam optimiser with a learning rate between 0.0001 and 0.01.
+These two losses are backpropagated through the network for each image sample and the weights within the \emph{Generator} and \emph{Discriminator} networks are optimised according to their respective gradients over their loss function.
+For this project, the optimiser for gradient descent used was the Adam optimiser \cite{1412.6980} with a learning rate between of 0.001.
 
-\section*{Performing Training}
-\label{sec:org155c290}
+\section*{Performing Training and Qualitative Assessment}
+\label{sec:orgdf5280d}
 
-Training was performed in batches of 500 MNIST images, over all 60,000 images for up to 30 or 40 epochs.
-All training was performed on the M3 MASSIVE high-performance-computing service, and required approximately 10 hours to complete training for a single specified grid.
+Training was performed in batches of 500 MNIST images, over all 60,000 images for up to 30 to 50 epochs (repetitions of processing all 60,000 images).
+All training was performed on the M3 MASSIVE high-performance-computing service, and required approximately 12 minutes per epoch.
 The weights of the \emph{Generator} and intermediate phosphene render results were saved after each epoch to permit early stopping and reuse of any epochs renders.
-Overall, the training was conducted on over 100 different grids during development; 11 of which were randomly chosen for primarily validation in the psychophysics experiment.
+Overall, the training was conducted on over 100 different grids during development; 11 of which were randomly chosen for primary validation in the psychophysics experiment.
 Qualitative results of training were evaluated to guide development at multiple stages during the development process.
 
+The trained phosphene patterns were qualitatively assessed for:
+
+\begin{enumerate}
+\item Variation over training epochs
+\item Variation over different phosphene map resolutions
+\item Variation over different phosphene map arrangements (regular and random polar and cartesian maps)
+\item Variation over different digits
+\end{enumerate}
+
 \chapter{Psychophysics Experiment}
-\label{sec:org15bbe07}
+\label{sec:orga9e58f6}
 \section*{Development}
-\label{sec:orga9566f1}
+\label{sec:org4fcd049}
 
 A psychophysics experiment was developed in order to perform preliminary validation of the GAN prototype discussed prior.
 Ethics approval was obtained prior from the Monash University Human Research Ethics Committee to conduct prosthetic vision simulations in normal-sighted indiiduals for the development of a bionic eye (MUHREC Project Number 12525).
-The psychophysics experiment was coded by the author using the Python programming language and the Psychopy psychophysics software package, and is included in the Appendix.
+The psychophysics experiment was coded by the author using the Python programming language and the Psychopy psychophysics software package \cite{Peirce2019}, and is included in the repository listed in Appendix \ref{org3f322c2}.
 
 \section*{Recruitment}
-\label{sec:org3f32e8f}
+\label{sec:orga7831b3}
 
-11 participants (9 male, 2 female; ages 21-40) with normal or corrected-to-normal vision were recruited from students and staff at Monash University on a volunteer basis.
-Participants were briefed on the purpose and conduct of the experiment and signed a consent form for the experiment.
+11 participants (9 male, 2 female; ages 21-40) with normal or corrected-to-normal vision were recruited from students and staff at Monash University on a volunteer basis with a poster advertisement consistent with the ethics approval for this project.
+Participants were briefed on the purpose and conduct of the experiment and signed a consent form for participation.
 
 \section*{Setting}
-\label{sec:org8861e17}
+\label{sec:orgeb88a0a}
 
 Psychophysics experiments were held in a single darkened room at Monash University for all participants.
-The room contained a table, a chair, a computer, and a chin-rest mounted on the table.
+The room contained a table, a chair, a computer, headphones, and a chin-rest mounted on the table.
 Other items, including office stationery and books, were present in the room but were not significant for the experiment and not interacted with by participants.
 During the experiment, the lights were switched off, the blinds were shut, the door closed and the participant instructed to silence their mobile device, leaving the computer monitor as the only major source of light.
-The computer monitor's brighness and contrast were kept the same for all participants.
+The computer monitor's brightness and contrast were adjusted at the beginning of experimentation and were the same for all participants.
 Participants were allowed to adjust the height of the chair, and vertical height of the chin-rest (but not the horizontal distance from the monitor) as comfortable.
 All participants used the same pair of headphones, sanitised between each use, and were allowed to adjust the volume of the headphones as comfortable for their hearing level.
 
-\begin{itemize}
-\item[{$\square$}] TODO: photograph of setup?
-\end{itemize}
-
 \section*{Conduct}
-\label{sec:orgf375e6d}
+\label{sec:orgb68eb8b}
 
 Prior to the psychophysics experiment commencement, a random grid was allocated to each participant.
-The experiment consisted of a single approximately one-hour session for each participant.
+The experiment consisted of a single 60 to 90 minute session for each participant.
+All sessions concluded after 90 minutes whether the experiment was complete or not.
 At the start of the experiment, the participant was asked to sit on a chair in front of a computer screen.
 The participant was then asked to rest their chin in a chin rest approximately an arms length away from the computer screen.
-The horizontal distance between the chin rest and the computer screen was the same for each participant; participants were allowed to adjust the vertical height of the chinrest within a range of several centimetres to suit their sitting height.
 The participant was then given a pair of headphones to wear, and the volume was adjusted for the participant's comfort.
 The experimental trial blocks, beginning with an example block, were then commenced.
 
@@ -1011,141 +987,142 @@ The experimental trial blocks, beginning with an example block, were then commen
 \begin{center}
 \includegraphics[width=.9\linewidth]{./images/method_psychophysics.png}
 \end{center}
-\caption{\label{orgb989c69}
-Psychophysics}
+\caption[Flowchart of psychophysics experiment.]{\label{org3d8c578}
+Flowchart of the conducted psychophysics experiment. Participants completed both a control block (A) and a test block (B) of digit classification trials with auditory feedback.}
 \end{sidewaysfigure}
 
 
 \subsection*{Trials and Trial Blocks}
-\label{sec:org0bbf856}
+\label{sec:org31d78b2}
 
-A \emph{trial block} for this experiment consisted of an uninterrupted set of classification trials, interspersed with grey screens which participants were instructed they could use to take a short pause.
-A \emph{trial} for this experiment consisted of an uninterrupted set of phosphene-represented digit \emph{cues} which the participant was asked to identify.
-A \emph{cue} for this experiment consisted of a single black screen with a phosphene pattern located in center.
-A \emph{condition} for this experiment consisted of either the control condition (a brightness-based mask over phosphenes) or the test condition (the trained \emph{Generator} for the grid allocated to the participant).
+The experiment consisted of a basic digit classification task, divided into \textbf{cues} (single phosphene pattern to classify), \textbf{trials} (streams of consecutive digits to classify) and \textbf{trial blocks} (consecutive digits to clasify with rest in between).
 
-Each experimental trial block consisted of 12 trials; each trial consisted of 20 phosphene representations of digits which a participant was asked to classify.
+These are defined as:
+\begin{description}
+\item[{Trial block}] an uninterrupted set of classification trials, interspersed with grey screens which participants were instructed they could use to take a short pause.
+\item[{Trial}] an uninterrupted set of phosphene-represented digit \emph{cues} which the participant was asked to identify.
+\item[{Cue}] a single black screen with a phosphene pattern located in the central quarter of the screen.
+\end{description}
+
+A \textbf{condition} for this experiment consisted of either the control condition (a brightness-based mask over phosphenes, where the phosphene map is placed directly over the digits and projected through the map) or the test condition (the trained \emph{Generator} for the grid allocated to the participant).
+The digit images used as the underlying basis for the controls were white Arial sans-serif digits on black backgrounds, aligned to the right border of the image as with the MNIST digits; these are included in the code repository listed in Appendix \ref{org3f322c2}.
+
+Each experimental trial block consisted of 12 to 20 trials; each trial consisted of 20 to 25 phosphene representations of digits which a participant was asked to classify, and participants performed either 2 or 4 blocks depending on time constraints; exact numbers of trials are listed in Section \ref{orgfc6280b}.
 At the start of a trial, the participant would be shown a grey progress screen, instructing them to press any key to continue.
-At a keypress, the participant would be shown the first cue, and the program would await a digit keypress from the participant.
-When the participant pressed a digit, they would immediately hear audio feedback simultaneously playing a tone indicating if they were correct (high) or incorrect (low), and a voice telling them what the true digit was.
+At a keypress, the participant would be shown the first cue, and the program would await a digit keypress (0-9 on the number pad) from the participant.
+When the participant pressed a digit, they would immediately hear audio feedback simultaneously playing a tone indicating if they were correct (high) or incorrect (low), and an English voice telling them what the true digit was.
 The next cue would then immediately be shown, and the program would await the next digit keypress.
-This would repeat 20 times.
+This would repeat 20-25 times to conclude one trial.
 At the conclusion of a trial, another grey progress screen would be shown, and the trial process would again repeat.
 At the conclusion of a trial block, the participant would be given a short break before the next trial block was begun.
-
-4 participants conducted 2 trials blocks; one for each condition, one after the other.
-5 participants conducted 4 trials blocks; two for each condition, interleaved.
-The condition participants started with was balanced between both conditions for both scenarios above.
+The condition participants started with was balanced between both conditions for both scenarios above; participants performing 4 blocks performed the two conditions interleaved.
 
 Prior to the commencement of the trial blocks, the participant was given an example trial block to familiarise themself with the procedure of the experiment.
-The example trial block consisted of an identical format to the trial blocks above, but contained only 2 trials of 10 digits each.
-
+The example trial block consisted of an identical format to the trial blocks above, but contained only 2 trials of 10 digits each, for 1 single block.
 
 \section*{Analysis}
-\label{sec:orgf960171}
+\label{sec:orgd7fc323}
 
-All 11 participants' data were included for analysis.
+Results of the psychophysics experiment were first analysed with regards to the mean overall accuracy of digit recognition for each condition, both pooled across participants and within each participant.
 
-To statistically address the second aim of this project and its corresponding hypothesis, the classification data was modelled using a logistic regression model, including the effects of:
+To statistically address the second aim of this project and its corresponding hypothesis and to also incorporate learning effects over time, the classification data was modelled using a logistic regression model, including the effects of:
 \begin{itemize}
 \item Condition, the primary variable of interest.
-\item Cue, trial and trial block and their corresponding interaction effects, which we expected to reflect a training effect.
+\item Cue, trial and trial block and their corresponding interaction effects, which we expected to reflect participant's ability to learn patterns over repeated trials.
 \item Digit class, which may reflect intrinsic differences between digits' abilities to be represented in arbitrary grids.
 \item Participant, which was expected to reflect inter-individual variation.
 \end{itemize}
 
+Effects with a p-value below 0.05 were considered significant.
+
+In addition, we briefly analysed:
+\begin{itemize}
+\item Differenced in duration spent classifying digits, a possible confounder, and
+\item Learning effects by condition, to see if the test versus control condition affected learning.
+\end{itemize}
+
 \part{Results}
-\label{sec:org8be684a}
-\chapter*{Results Overview}
-\label{sec:org6efdb20}
-The results are divided into:
-
-\begin{enumerate}
-\item Training results, showing qualitative phosphene patterns and training statistics of digit encoders produced by training, and
-\item Experimental results, derived from participants' performance during the psychophysics experiment described in the previous section.
-\end{enumerate}
-
+\label{sec:org04b5b41}
 \chapter{Training Results}
-\label{sec:org4732778}
+\label{sec:orgec54af5}
 
-The GAN training architecture described in Section <> was tested on a large variety of phosphene grids varying in phosphene location, sizing, regularity and resolution.
-We were successful in applying the training process to different types of phosphene grids, which varied primarily in spatial distribution, phosphene size and phosphene resolution.
 We have selected a representative sample of different simulated grid properties to highlight several general features of the training results.
-The output here is appraised qualitatively for a broad range of grids, with statistical validation done for a small samples of low-resolution grids in the following section.
-A number of additional figures are included in the Appendix as supplementary material.
+The output here is appraised qualitatively for a broad range of grids, with statistical validation done for a small samples of low-resolution grids in Section \ref{orgf46dd67}.
+The qualitative output of all training runs is included in the code repository in Appendix \ref{org3f322c2}.
 
 \section*{Variation over Epochs}
-\label{sec:orge37288a}
+\label{sec:org64df809}
 
 Phosphene patterns initially improved with epochs, but drifted away from recognisable patterns as the number of epochs increased further.
 This effect permeated all runs of the training architecture for every grid, and the epoch at which digits appeared "best" varied considerably.
-Figure \ref{fig:org40bc733} demonstrates the evolution of the generated phosphene pattern for the digit 4 for a regular cartesian grid of 576 phosphenes.
+Figure \ref{fig:org440d270} demonstrates the evolution of the generated phosphene pattern for the digit 4 for a regular cartesian grid of 576 phosphenes.
 Although the phosphene pattern approaches several different depictions of a 4 at epochs 6, epoch 20 and epoch 39, it does not stabilise at a particular point but continues to attempt to reconfigure itself.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=.9\linewidth]{./images/results_over_epochs_576.png}
-\caption{\label{fig:org40bc733}
+\includegraphics[height=\textheight]{./images/results_over_epochs_576.png}
+\caption{\label{fig:org440d270}
 Phosphene patterns generated for the digit 4 for a regular cartesian grid of 576 phosphenes. The digit form approaches a recognisable digit 4 until approximately epoch 20, before the subsequently drifting away.}
 \end{figure}
 
 \section*{Variation over Resolution}
-\label{sec:org2b33961}
+\label{sec:org2f76742}
 
 In general, phosphene forms more closely resembled digits at higher phosphene resolutions.
 At the lowest resolution tested (64 phosphenes), phosphenes ceased to resemble digits even for the most simple grid, the regular Cartesian grid.
-The phosphene patterns generated for a regular Cartesian grid of 64, 144 and 576 phosphenes at 2, 4 and 8 epochs for the digit 0 is shown in Figure \ref{fig:org1f82f03}.
+The phosphene patterns generated for a regular Cartesian grid of 64, 144 and 576 phosphenes at 2, 4 and 8 epochs for the digit 0 is shown in Figure \ref{fig:org9801c6b}.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./images/results_different_resolution.png}
-\caption{\label{fig:org1f82f03}
+\caption{\label{fig:org9801c6b}
 Phosphene patterns generated for different phosphene resolutions of a regular Cartesian grid for the digit 0. The first column shows the phosphene locations and relative sizes; the second, third and fourth columns show the simulated patterns at the 2nd, 4th and 8th epoch respectively.}
 \end{figure}
 
 \section*{Variation over Grid Arrangements}
-\label{sec:org94aef67}
+\label{sec:org96c3a0b}
 
 Phosphene patterns were successfully generated for both cartesian and polar grids with regularly and randomly spaced phoshenes.
 However, the appearance of these phosphene patterns were often non-optimal at high-resolutions, and non-recognisable at low-resolutions.
-Figure \ref{fig:orgd021777} shows the generated phosphene patterns for a grid of 576 phosphenes at 10, 20 ad 30 epochs for the digit 6.
+Figure \ref{fig:org61b7a6e} shows the generated phosphene patterns for a grid of 576 phosphenes at 10, 20 ad 30 epochs for the digit 6.
 Note that the polar grids have considerably larger phosphenes in general (particularly at the peripheries), leading to greater difficulty for the training architecture in producing \emph{any} recognisable forms.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./images/results_different_grids_576.png}
-\caption{\label{fig:orgd021777}
+\caption{\label{fig:org61b7a6e}
 Phosphene patterns generated for the digit 6 for 4 different grid arrangements with 576 phosphenes at 10, 20 and 30 epochs with the base phosphene map on the left for comparison.}
 \end{figure}
 
 \section*{Variation over Digits}
-\label{sec:org55810b8}
+\label{sec:orgfba3624}
 
 The ability to generate phosphene patterns resembling digits varied dramatically for different resolutions and arrangements of grids.
-Figure \ref{fig:orgdcf4885} shows the generated phosphene patterns at the 16th epoch for a regular cartesian grid of 576 phosphenes, the highest resolution and simplest arrangement tested.
+Figure \ref{fig:orgdf768e3} shows the generated phosphene patterns at the 16th epoch for a regular cartesian grid of 576 phosphenes, the highest resolution and simplest arrangement tested.
 Phosphene patterns at this stage were recognisable, though there are notable imperfections such as interrupted lines.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./images/results_over_digits_576.png}
-\caption{\label{fig:orgdcf4885}
+\caption{\label{fig:orgdf768e3}
 Phosphene patterns generated for each digit 0-9 for a regular cartesian grid of 576 phosphenes at the 16th epoch.}
 \end{figure}
 
 \chapter{Experimental Results}
-\label{sec:orgf6b54b9}
+\label{sec:org79d81d6}
+\label{orgf46dd67}
 
 \section*{Grid Selection}
-\label{sec:org6f657b1}
+\label{sec:orgc16c626}
 
 While the most recognisable phosphene patterns were produced using regular cartesian grids at higher resolution of 576 phosphenes, these simulations are not the primary area of interest for simulated prosthetic vision where grids are irregular and expected to be much lower resolution.
 We therefore selected the lowest resolution grids (64 phosphenes) with randomly-arranged polar phosphenes which best reflected the current reality of CVP capabilities.
 Due to time constraints, we were not able to refine the GAN architecture further and often the digit patterns produced at these low resolutions did not look like digits.
 However, we proceeded with the experiment given that we still wished to determine whether participants found these generate patterns easier to discern than a simple control.
-The grids, phosphene patterns and control patterns in this experiment are shown in Appendix <>.
 
 \section*{Participant Trial Characteristics}
-\label{sec:orgd9ad76c}
+\label{sec:orgce7698f}
+\label{orgfc6280b}
 
 All participants provided at least one complete block each of digit recognition data for both the control processor and the trained encoder for their grid.
 The first four participants provided two trial blocks of data with each block containing 20 trials of 25 digit cues.
@@ -1153,13 +1130,13 @@ After the first four participants, we shifted the number of digits per block int
 The first participant to try this arrangement was unable to complete the four blocks in the allotted time, so the number of trials per block was reduced to 12.
 One additional participant after this change were unable to complete the two extra blocks in the allotted time, so only the data from the first two blocks was used as with the first five participants.
 
-The characteristics of the trials for each participant are summarised in Table \ref{tab:orgd31cb00}.
+The characteristics of the trials for each participant are summarised in Table \ref{tab:orgbd750d6}.
 
 \begin{table}[htbp]
-\caption{\label{tab:orgd31cb00}
+\caption{\label{tab:orgbd750d6}
 Characteristics of trials for each participant. Control indicates the direct masking processor, and Test indicates the trained phosphene patterns using the GAN architecture.}
 \centering
-\tiny
+\footnotesize
 \begin{tabu} to \textwidth {XlXXXXX}
 Participant & Trials x Cues per Block & Block 1 & Block 2 & Block 3 & Block 4 & Total Cues\\
 \hline
@@ -1178,42 +1155,43 @@ Participant & Trials x Cues per Block & Block 1 & Block 2 & Block 3 & Block 4 & 
 \end{table}
 
 \section*{Overall Accuracy}
-\label{sec:orgc4ae88c}
-
+\label{sec:org95f4ba9}
 \subsection*{Pooled}
-\label{sec:org3817451}
+\label{sec:orgd5a50b6}
 
-The mean digit recognition accuracy of the test group was higher on average (75.7\%) than the mean accuracy of the control group (59.8\%).
-Figure \ref{fig:orgca85631} compares the mean digit recognition accuracy for each condition over the pooled participant data.
+The mean digit recognition accuracy of the test group was higher on average (75.7\%, standard error of mean 3.75\%) than the mean accuracy of the control group (59.8\%, standard error of mean 4.17\%).
+Figure \ref{fig:org7ecb866} compares the mean digit recognition accuracy for each condition over the pooled participant data.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./images/results_mean_accuracy_overall.png}
-\caption{\label{fig:orgca85631}
-Mean digit recognition accuracy by condition, pooled participant data.}
+\caption[Mean digit recognition accuracy by condition, pooled participant data]{\label{fig:org7ecb866}
+Mean digit recognition accuracy by condition, pooled participant data. Error bars show standard error of means.}
 \end{figure}
 
-
 \subsection*{By Participant}
-\label{sec:orga52618e}
+\label{sec:org1072578}
 
 Of 11 participants, 9 participants performed better with the trained processor than the control processor despite variations between participants of baseline performance.
-Figure \ref{fig:org91d345c} compares the mean digit recognition accuracy for each condition, stratified by participant.
+Figure \ref{fig:org33174bf} compares the mean digit recognition accuracy for each condition, stratified by participant.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./images/results_mean_accuracy_by_participant.png}
-\caption{\label{fig:org91d345c}
+\caption{\label{fig:org33174bf}
 Mean digit recognition accuracy by participant and condition.}
 \end{figure}
 
 \section*{Statistical Effects}
-\label{sec:org9ec4717}
+\label{sec:orgea5abe4}
 
-The correctness of participant's digit classification was modelled using logistic regression. These results are summarised in Table \ref{tab:orgf82c920}.
+The correctness of participant's digit classification was modelled using logistic regression. These results are summarised in Table \ref{tab:orgc04280b}.
+The test condition significantly improved classification accuracy in this linear regression model (p < 0.001); trial (p < 0.001) and block (p < 0.001) and its interaction effect (p < 0.05) also significantly improved performance.
+There was significant inter-individual variation in baseline performance (p < 0.001).
+Several digits were significantly associated with higher classification accuracy including digits 1, 4 and 7 (p < 0.001).
 
 \begin{table}[htbp]
-\caption{\label{tab:orgf82c920}
+\caption{\label{tab:orgc04280b}
 Predictors of a correct digit classification modelled as a logistic regression. P-values below 0.05, 0.01 and 0.001 are marked with (\texttt{*}), (\texttt{**}) and (\texttt{***}) respectively.}
 \centering
 \scriptsize
@@ -1257,49 +1235,48 @@ digit: 9 & 0.065778 & 0.5451 & \\
 \end{tabu}
 \end{table}
 
-Figure \ref{fig:org497e4bb} plots the same data on a scatter plot.
+Figure \ref{fig:org02653fe} plots the same data on a scatter plot.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./images/statistical_effects.png}
-\caption{\label{fig:org497e4bb}
+\caption{\label{fig:org02653fe}
 Predictors of a correct response in a logistic regression model. Error bars indiate 95\% confidence intervals.}
 \end{figure}
 
 \section*{Response Time}
-\label{sec:orgadada79}
+\label{sec:orgde154c9}
 
-The mean response time for a single digit was 2.6 seconds for the trained processor, versus 3.3 seconds for the trained processor.
-Figure \ref{fig:org28fab1b} shows the response time per cue for each participant.
+The mean response time for a single digit was 2.6 (SEM 0.32 seconds) seconds for the trained processor, versus 3.3 seconds for the trained processor.
+Figure \ref{fig:orgfb5ca63} shows the response time per cue for each participant.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./images/response_time_by_participant.png}
-\caption{\label{fig:org28fab1b}
+\caption{\label{fig:orgfb5ca63}
 Response time per cue by participant. Error bars show standard deviation.}
 \end{figure}
 
 \section*{Learning Effects}
-\label{sec:orge6df518}
+\label{sec:orgabbfc39}
 
-Figure \ref{fig:orgae82828} shows the a rolling average with a windows size of 50 over pooled trial blocks for each condition and participant.
+Figure \ref{fig:org07ddf12} shows the a rolling average with a windows size of 50 over pooled trial blocks for each condition and participant.
 Participants performed with similar accuracies at the start of trial blocks, and both condition displayed a prominent learning effect.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./images/learning_curves.png}
-\caption{\label{fig:orgae82828}
+\caption{\label{fig:org07ddf12}
 Rolling average of accuracy over pooled trial blocks by condition and participant.}
 \end{figure}
 
-\begin{itemize}
-\item[{$\square$}] TODO Needs more rigor, but not exactly sure how best to numerically compare it. Will think about it.
-\end{itemize}
-
 \part{Discussion}
-\label{sec:org422953c}
-\chapter{Aim 1: Development of GAN Training Architecture}
-\label{sec:orga42ea3b}
+\label{sec:org6e7dc44}
+\chapter{Aims}
+\label{sec:orgdae6927}
+
+The GAN training architecture described in Section \ref{orgb801cd0}  was tested on a large variety of phosphene grids varying in phosphene location, sizing, regularity and resolution.
+We were successful in applying the training process to different types of phosphene grids, which varied primarily in spatial distribution, phosphene size and phosphene resolution.
 
 A prototype GAN training architecture was successfully developed and was capable of producing phosphene encodings for different simulated grid properties.
 We have approached this by implementing independent Rendering and Modification steps inside the GAN training architecture, and by allowing the Renderer be supplied different simulated phosphenes for each electrode.
@@ -1309,18 +1286,21 @@ Unfortunately, the output of this GAN training architecture does not always rese
 Because this difficulty was present even in a regular Cartesian grid (which approximates pixels at higher resolutions), this is likely due to more than just intrinsic difficulties in representing digits in a grid.
 Clearly, there is still a significant portion of work required before this training architecture can be considered usable for its intended purpose.
 
+The biggest issue confronting the GAN training architecture was stability; phosphene forms did not converge over epochs, as demonstrated by Figure 8.1, and indeed drifted.
+While we made our best effort to align the domains of generated images with real images by using a modifier and preprocessing techniques, this was clearly not enough.
+It is not clear whether this limitation will severely impact on the ability of GANs to be applied to simulated prosthetic vision, as there may be other methods of combatting issue; however we were not able to do so.
+
+At low resolutions, is was also clear that phosphene patterns were nigh unrepresentable on some grids, due to the inherent distribution of phosphenes on the grid themselves.
+This may be telling that GANs are not suitable to the problem of low-resolution phosphene grids, but may still be useful to tailor phosphene patterns for higher-resolution (but distorted) grids.
+
+Figure 8.3 display roughly equivalent forms over the different types of phosphene grids; this is encouraging, though we note that these did not exactly resemble digits.
+This effect was notable for all qualitative results - while forms looked similar across grids, these appeared to exhibit merely general features of digits (such as the circle of a six with a vertical line) rather than holistically combining into digits themselves.
+This is a known problem with GANs \cite{NIPS2014_5423}, which may become too focused on minutiae and lose larger forms.
+Figure 8.4 demonstrated that some digits were additionally much harder to represent (such as an 8), even in a simple Cartesian grid.
+This is likely due to the fineness detail of the training data after preprocessing, and could possibly be mitigated by further thickening lines in the training data samples.
+
 Due to the time limitations of this project, we proceeded with the psychophysics evaluation despite not achieving particularly "good-looking" digits.
 Although the phosphene forms did not look like digits, it was still possible that people might find them easier to learn than the control.
-
-\begin{itemize}
-\item Write about stability!!
-\begin{itemize}
-\item Training data limits
-\end{itemize}
-\end{itemize}
-
-\chapter{Aim 2: Psychophysics Evaluation}
-\label{sec:org17fb1ea}
 
 Participants achieved a greater overall digit classification accuracy with the trained processer versus the brightness-based control.
 This effect was statistically significant when analysed using a multiple logistic regression, supporting the hypothesis that the trained processor confers better digit classification accuracy than the brightness-based control.
@@ -1329,11 +1309,12 @@ Notably, participant performance at the beginning of each trial block was simila
 This suggests that the trained processor phosphene forms looked no more like digits than the control processor.
 
 It therefore appears that the better participant performance was due to a better ability to learn and distinguish the phosphene forms, rather than the the ability to find the phosphene forms immediately recognisable.
-
+We did not statistically assess the learning effect of condition as the qualitative results displayed in Figure 9.5 were sufficient information for guiding its use as a preliminary validation measure.
+We emphasise that the primary contribution of this project lies in Aim 1 - the development phase - with the statistical results merely hoping to guide further development in the future.
 
 
 \chapter{Implications}
-\label{sec:orgd530fbe}
+\label{sec:orgd9da367}
 
 To our knowledge, this is the first attempt at tailoring phosphene patterns to specific grids through an automated process.
 Although previous research has demonstrated how image processing techniques can be applied to simulated prosthetic vision, these techniques are often coupled with the simulations they run in.
@@ -1367,10 +1348,10 @@ We have demonstrated how a GAN can be implemented to perform a phosphene generat
 The GAN was not robust against all different simulated properties.
 
 \chapter{Limitations}
-\label{sec:orge40dad7}
+\label{sec:orgfc500d0}
 
 \section*{Simulated Prosthetic Vision}
-\label{sec:org4363826}
+\label{sec:orgb922ca9}
 
 One of the criticisms highlighted in the Background section was the difficulty of dealing with differences between simulated prosthetic vision and prosthetic vision \emph{in vivo}.
 While this project addresses one of these differences - coping with different \emph{spatial} phosphene properties - many differences remain for which the translation of techniques from simulated space to \emph{in vivo} space is unclear.
@@ -1393,19 +1374,15 @@ This feature could, however, be modelled in a future experiment with greater res
 The results presented here should therefore still be considered within the context of simulated prosthetic vision and all its caveats, as it primarily focused on addressing one particular issue of simulated prosthetic vision rather than all.
 
 \section*{Experimental Features}
-\label{sec:org01b8480}
+\label{sec:org8b00412}
 
 The sample size of the psychophysics experiment used in this project was notably small with 11 participants only.
 The rationale for this sample size was that it served as an intermediate checkpoint to point-out weaknesses in the current architecture and guide further development.
 The investment required for recruiting and conducting the experiment on more participants was not justified by the status of the GAN implementation as an early prototype.
 However, should the prototype be further developed, it is important to validate in a greater number of participants.
 
-\begin{itemize}
-\item Somehow talk sbout simulated
-\end{itemize}
-
 \section*{Choice of Task}
-\label{sec:orga87eff9}
+\label{sec:org11605df}
 
 The digit recognition task in this experiment was chosen to optimise data collection so as many data samples could be collected as possible from each participant.
 The task - recognising a single digit known to belong to the class of 0-9 - is therefore extremely simple and somewhat contrived.
@@ -1416,18 +1393,13 @@ However, the reality is that natural visual tasks are of greatest interest to fu
 Whilst in early development, the use of simple, constrained tasks is crucial to directly highlight strengths and weaknesses of image processing techniques, these must eventually be tested in more natural environments.
 This project is not yet at that stage.
 
-\begin{itemize}
-\item ALSO comment on qualitative limitations - e.g. requirement for training/resources,
-\item Maybe also comment on choice of comparison?
-\end{itemize}
-
 \chapter{Future Directions}
-\label{sec:org9806fc4}
+\label{sec:orga42134b}
 
 Given that this is a prototypical implementation, it is important that the results of this work can be used to improve research on the use of GANs in simulated prosthetic vision even though the early results are not conclusive.
 
 \section*{Training Data}
-\label{sec:org60bf5d4}
+\label{sec:orgfe1805b}
 
 We used MNIST digits as the source of real digits for our training implementation and modified them slightly to suit the visual properties of our simulation.
 We also attempted to bring the renders closer to the domain of MNIST digits using a style-transfer network to "fill holes" in the phosphene and extract forms.
@@ -1445,7 +1417,7 @@ A potential source of outline data is the Google Quick, Draw! Dataset, which con
 As the ability to substitute different forms of training data is one of the benefits of using GANs, this could potentially provide further information on whether GANs are justified for simulated prosthetic vision.
 
 \section*{Grid Evaluation}
-\label{sec:org428afa2}
+\label{sec:orgaf360aa}
 
 This project faced major difficulties in creating recognisable phosphene patterns for low-resolution distorted grids.
 Part of this difficulty is due to intrinsic limitations on \emph{what} can be represented on grids with a small quantity of phosphenes.
@@ -1457,7 +1429,7 @@ There is scant literature on the use of image processing techniques for grid res
 However, given that first-generation CVPs are only designed to produce up to a maximum of 473 phosphenes (with most implants far below this number), being able to quantify phosphene grids' representability would be useful for early \emph{in vivo} experiments.
 
 \chapter{Conclusion}
-\label{sec:orgf502389}
+\label{sec:org870f29d}
 
 This project has explored how generative adversarial networks (GANs) may be used to generate phosphene patterns for arbitrary simulated properties of prosthetic vision, and to our knowledge is the first attempt at addressing phosphene pattern generation decoupled from simulation properties. 
 We developed a prototypical software implementation of a GAN training architecture to generate phosphene patterns of digits, and tested whether these helped people recognise digits in a psychophysics experiment compared to a mask-based control.
@@ -1469,10 +1441,10 @@ This project provides useful information on potential targets for improving a GA
 
 \begin{appendices}
 \part{Appendices}
-\label{sec:orge8718fe}
+\label{sec:org0b93641}
 \chapter{Selected Package Dependencies}
-\label{sec:orgb71f5d1}
-\label{org4f65a1b}
+\label{sec:orgb5d788d}
+\label{org9e17d4d}
 
 A selected number of direct dependencies of the code implementation of this project and their version numbers are listed below.
 A full listing of dependent packages, including indirect dependencies, is available from the file \texttt{requirements.txt} in the linked GitHub repository.
@@ -1480,7 +1452,7 @@ A full listing of dependent packages, including indirect dependencies, is availa
 \linespread{1.1}
 \thispagestyle{empty}
 \begin{table}[htbp]
-\caption[Selected package dependencies for the project.]{\label{tab:org951ca31}
+\caption[Selected package dependencies for the project.]{\label{tab:org7ef73ca}
 Selected package dependencies for the code written in this project.}
 \centering
 \small
@@ -1523,8 +1495,8 @@ wxPython & 4.0.6\\
 \end{table}
 
 \chapter{Selected Code}
-\label{sec:orgc03a85c}
-\label{orgd21b09b}
+\label{sec:orgccef79a}
+\label{org3f322c2}
 
 The entire codebase is available from \url{https://github.com/wjmn/bmedsc-exploratory}.
 
@@ -1541,10 +1513,12 @@ This codebase includes all code written during the course of this project, inclu
 As the codebase is too large to include in hardcopy, only a few small, selected snippets are reproduced here where relevant.
 
 \section*{Models}
-\label{sec:org5a791f1}
+\label{sec:org01aeec6}
+
+Each of the below shows the code implementation of each of the neural networks involved in the GAN training architecture.
 
 \subsection*{Generator}
-\label{sec:org6f4d288}
+\label{sec:org5e2edc3}
 
 \begin{small}
 \begin{verbatim}
@@ -1566,9 +1540,10 @@ def generator_basic():
 \end{small}
 
 \subsection*{Modifier}
-\label{sec:org1ce59bf}
+\label{sec:org07eef5c}
+\label{org2779a3c}
 
-\begin{small}
+\begin{footnotesize}
 \begin{verbatim}
 from tensorflow.keras import Sequential, Model
 from tensorflow.keras.layers import *
@@ -1604,10 +1579,11 @@ def modifier():
    
     return model
 \end{verbatim}
-\end{small}
+\end{footnotesize}
 
 \subsection*{Discriminator}
-\label{sec:orge42e4f5}
+\label{sec:orgd37fee3}
+\label{orgb4b9e1f}
 
 \begin{small}
 \begin{verbatim}
@@ -1633,16 +1609,167 @@ def discriminator_basic():
 \end{verbatim}
 \end{small}
 
-\chapter{Psychophysics Ethics Approval}
-\label{sec:org53c535b}
-\chapter{Psychophysics Explanatory Statement}
-\label{sec:org1301812}
+\section*{Grids}
+\label{sec:org7ddd91f}
+
+Each of the below shows the code implementation of the Cartesian and Polar phosphene map generators; these inherit from an Abstract base class implementation included in the GitHub repository as it is too long to reproduce here..
+\subsection*{Cartesian Grid}
+\label{sec:org47c63e5}
+
+\begin{footnotesize}
+\begin{verbatim}
+class CartesianGrid(AbstractGrid):
+
+    def __init__(
+            self,
+            x_phosphenes: int,
+            y_phosphenes: int,
+            x_render: int,
+            y_render: int,
+            half: bool = False,
+            random: bool = False
+    ) -> None:
+        """ Create a cartesian grid of phosphenes (regularly sized).
+
+        :param x_phosphenes: the number of phosphenes in the x dimension.
+        :param y_phosphenes: the number of phosphenes in the y dimension.
+        :param x_render: the number of pixels in the x dimension of the render.
+        :param y_render: the number of pixels in the y dimension of the render.
+        :param half: whether to only fill the right-half of the render (default False).
+        :param random: Whether to randomise the locations of phosphenes (default False).
+        """
+
+        self._set_id()
+        self.grid_type = GridType.CARTESIAN
+        self.num_phosphenes = x_phosphenes * y_phosphenes
+        self.render_shape = (x_render, y_render)
+        self.half = half
+        self.random = random
+
+        if random:
+            self.locations = np.random.rand(x_phosphenes * y_phosphenes, 2)
+        else:
+            self.locations = np.array([
+                (x / (x_phosphenes - 1), y / (y_phosphenes - 1))
+                for x in range(x_phosphenes)
+                for y in range(y_phosphenes)
+            ])
+
+        if half:
+            self.locations[:, 0] = self.locations[:, 0] + 1 / 2
+
+        self.sizes = np.array([
+            ((x_render // x_phosphenes) // 2,
+             (y_render // y_phosphenes) // 2)
+            for x in range(x_phosphenes)
+            for y in range(y_phosphenes)
+        ])
+
+        self.strengths = np.array([
+            1
+            for x in range(x_phosphenes)
+            for y in range(y_phosphenes)
+        ])
+
+        self.volume = self.prerender_volume(
+            x_render,
+            y_render,
+        )
+
+\end{verbatim}
+\end{footnotesize}
+
+\subsection*{Polar Grid}
+\label{sec:org445c191}
+\label{org9b90117}
+
+\begin{footnotesize}
+\begin{verbatim}
+class PolarGrid(AbstractGrid):
+
+    def __init__(
+            self,
+            n_theta: int,
+            n_radius: int,
+            x_render: int,
+            y_render: int,
+            half: bool = False,
+            random: bool = False,
+    ) -> None:
+        """ Create a polar grid of phosphenes (size varies with eccentricity).
+
+        :param n_theta: number of angles in the grid.
+        :param n_radius: number of radii in the grid.
+        :param x_render: the number of pixels in the x dimension of the render.
+        :param y_render: the number of pixels in the y dimension of the render.
+        :param half: whether to fill the right-half of the render (default False)
+        :param random: whether to randomise the locations of phosphenes (default False).
+        """
+
+        self._set_id()
+        self.grid_type = GridType.POLAR
+        self.num_phosphenes = n_theta * n_radius
+        self.render_shape = (x_render, y_render)
+        self.half = half
+        self.random = random
+
+        if random:
+            self.locations = np.random.rand( n_theta * n_radius, 2 )
+            if half:
+                self.locations[:, 0] = self.locations[:, 0] + 1 / 2
+        else:
+            self.locations = np.array([
+                (0.5 + (i_radius / n_radius * np.cos(self.i_angle(i_theta, n_theta, half))) / 2,
+                 0.5 + (i_radius / n_radius * np.sin(self.i_angle(i_theta, n_theta, half))) / 2,)
+                for i_radius in range(1, n_radius + 1)
+                for i_theta in range(n_theta)
+            ])
+
+        k = x_render / 2 + y_render / 2
+        a = e * (x_render + y_render) / 32
+
+        self.sizes = np.array([
+            (np.log(k * ((x - 0.5) ** 2 + (y - 0.5) ** 2) + a),
+             np.log(k * ((x - 0.5) ** 2 + (y - 0.5) ** 2) + a))
+            for (x, y) in self.locations
+        ])
+
+        self.strengths = np.array([
+            1
+            for _ in range(n_theta)
+            for _ in range(n_radius)
+        ])
+
+        self.volume = self.prerender_volume(
+            x_render,
+            y_render,
+        )
+
+    def i_angle(self, i_theta: float, n_theta: float, half: bool = False) -> float:
+        """ Calculates the angle for angle of index i in range n.
+        """
+        if half:
+            angle = (np.pi / (n_theta - 1) * i_theta) - (np.pi / 2)
+        else:
+            angle = 2 * np.pi / n_theta * i_theta
+        return angle
+\end{verbatim}
+\end{footnotesize}
+
 \chapter{Supplementary Qualitative Results}
-\label{sec:orgaa57c0d}
-\chapter{Supplementary Training Curves}
-\label{sec:org5894d6c}
+\label{sec:org9371f13}
+
+Below are several randomly selected additional qualitative training results; qualitative results from all training runs can be found in the code repository listed in Appendix \ref{org3f322c2}.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{./images/example_appendix.png}
+\caption[Supplemental qualitative results.]{\label{fig:orgd500b1b}
+Supplemental qualitative results of phosphene pattern outputs for the trained architecture, randomly sampled; patterns are shown in rows of 10, each correspoding to the output of digits 0 - 9 respectively.}
+\end{figure}
+
 \part{References}
-\label{sec:orgf1329ba}
+\label{sec:org9675f0b}
 \bibliographystyle{vancouver}
 \bibliography{refs}
 \end{appendices}

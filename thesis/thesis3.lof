@@ -12,29 +12,27 @@
 \contentsline {figure}{\numberline {4.5}{\ignorespaces Example of conveying information temporally through phosphenes}}{36}{figure.caption.37}% 
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Overview of GAN training architecture implementation}}{45}{figure.caption.44}% 
+\contentsline {figure}{\numberline {6.2}{\ignorespaces A subset of MNIST real handwritten digit samples before and after preprocessing}}{49}{figure.caption.46}% 
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Schematic of the GAN Generator neural network}}{51}{figure.caption.48}% 
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Illustration of the phosphene simulation process}}{53}{figure.caption.50}% 
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Phosphene maps used in the prosthetic vision simulation}}{54}{figure.caption.51}% 
+\contentsline {figure}{\numberline {6.6}{\ignorespaces Schematic of \emph {Modifier} architecture. }}{56}{figure.caption.53}% 
+\contentsline {figure}{\numberline {6.7}{\ignorespaces Examples of passing phosphene images under the \emph {Modifier} network}}{58}{figure.caption.54}% 
+\contentsline {figure}{\numberline {6.8}{\ignorespaces Schematic of \emph {Discriminator} architecture}}{59}{figure.caption.56}% 
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {7.1}{\ignorespaces Overview of GAN training architecture implementation}}{45}{figure.caption.44}% 
-\contentsline {figure}{\numberline {7.2}{\ignorespaces A subset of MNIST real handwritten digit samples before and after preprocessing}}{48}{figure.caption.46}% 
-\contentsline {figure}{\numberline {7.3}{\ignorespaces Generator\relax }}{50}{figure.caption.49}% 
-\contentsline {figure}{\numberline {7.4}{\ignorespaces Simulator\relax }}{52}{figure.caption.51}% 
-\contentsline {figure}{\numberline {7.5}{\ignorespaces Maps\relax }}{53}{figure.caption.52}% 
-\contentsline {figure}{\numberline {7.6}{\ignorespaces Modifier\relax }}{54}{figure.caption.54}% 
-\contentsline {figure}{\numberline {7.7}{\ignorespaces Modifier\relax }}{55}{figure.caption.55}% 
-\contentsline {figure}{\numberline {7.8}{\ignorespaces discriminator\relax }}{56}{figure.caption.57}% 
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Flowchart of psychophysics experiment.}}{64}{figure.caption.63}% 
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {8.1}{\ignorespaces Psychophysics\relax }}{61}{figure.caption.64}% 
+\contentsline {figure}{\numberline {8.1}{\ignorespaces Phosphene patterns generated for the digit 4 for a regular cartesian grid of 576 phosphenes. The digit form approaches a recognisable digit 4 until approximately epoch 20, before the subsequently drifting away.\relax }}{69}{figure.caption.67}% 
+\contentsline {figure}{\numberline {8.2}{\ignorespaces Phosphene patterns generated for different phosphene resolutions of a regular Cartesian grid for the digit 0. The first column shows the phosphene locations and relative sizes; the second, third and fourth columns show the simulated patterns at the 2nd, 4th and 8th epoch respectively.\relax }}{70}{figure.caption.69}% 
+\contentsline {figure}{\numberline {8.3}{\ignorespaces Phosphene patterns generated for the digit 6 for 4 different grid arrangements with 576 phosphenes at 10, 20 and 30 epochs with the base phosphene map on the left for comparison.\relax }}{71}{figure.caption.71}% 
+\contentsline {figure}{\numberline {8.4}{\ignorespaces Phosphene patterns generated for each digit 0-9 for a regular cartesian grid of 576 phosphenes at the 16th epoch.\relax }}{72}{figure.caption.73}% 
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {9.1}{\ignorespaces Phosphene patterns generated for the digit 4 for a regular cartesian grid of 576 phosphenes. The digit form approaches a recognisable digit 4 until approximately epoch 20, before the subsequently drifting away.\relax }}{67}{figure.caption.69}% 
-\contentsline {figure}{\numberline {9.2}{\ignorespaces Phosphene patterns generated for different phosphene resolutions of a regular Cartesian grid for the digit 0. The first column shows the phosphene locations and relative sizes; the second, third and fourth columns show the simulated patterns at the 2nd, 4th and 8th epoch respectively.\relax }}{68}{figure.caption.71}% 
-\contentsline {figure}{\numberline {9.3}{\ignorespaces Phosphene patterns generated for the digit 6 for 4 different grid arrangements with 576 phosphenes at 10, 20 and 30 epochs with the base phosphene map on the left for comparison.\relax }}{69}{figure.caption.73}% 
-\contentsline {figure}{\numberline {9.4}{\ignorespaces Phosphene patterns generated for each digit 0-9 for a regular cartesian grid of 576 phosphenes at the 16th epoch.\relax }}{70}{figure.caption.75}% 
-\addvspace {10\p@ }
-\contentsline {figure}{\numberline {10.1}{\ignorespaces Mean digit recognition accuracy by condition, pooled participant data.\relax }}{73}{figure.caption.81}% 
-\contentsline {figure}{\numberline {10.2}{\ignorespaces Mean digit recognition accuracy by participant and condition.\relax }}{74}{figure.caption.83}% 
-\contentsline {figure}{\numberline {10.3}{\ignorespaces Predictors of a correct response in a logistic regression model. Error bars indiate 95\% confidence intervals.\relax }}{74}{figure.caption.86}% 
-\contentsline {figure}{\numberline {10.4}{\ignorespaces Response time per cue by participant. Error bars show standard deviation.\relax }}{76}{figure.caption.88}% 
-\contentsline {figure}{\numberline {10.5}{\ignorespaces Rolling average of accuracy over pooled trial blocks by condition and participant.\relax }}{77}{figure.caption.90}% 
-\addvspace {10\p@ }
+\contentsline {figure}{\numberline {9.1}{\ignorespaces Mean digit recognition accuracy by condition, pooled participant data}}{75}{figure.caption.79}% 
+\contentsline {figure}{\numberline {9.2}{\ignorespaces Mean digit recognition accuracy by participant and condition.\relax }}{76}{figure.caption.81}% 
+\contentsline {figure}{\numberline {9.3}{\ignorespaces Predictors of a correct response in a logistic regression model. Error bars indiate 95\% confidence intervals.\relax }}{78}{figure.caption.84}% 
+\contentsline {figure}{\numberline {9.4}{\ignorespaces Response time per cue by participant. Error bars show standard deviation.\relax }}{78}{figure.caption.86}% 
+\contentsline {figure}{\numberline {9.5}{\ignorespaces Rolling average of accuracy over pooled trial blocks by condition and participant.\relax }}{79}{figure.caption.88}% 
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
@@ -43,6 +41,4 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\addvspace {10\p@ }
+\contentsline {figure}{\numberline {C.1}{\ignorespaces Supplemental qualitative results.}}{103}{figure.caption.102}% 
