@@ -2,7 +2,8 @@
 
 * Context
 
-This is a version-controlled repository of work during my honours year.
+This is a version-controlled repository of work during my honours year. The main portion of work is 
+kept in the directory =05-massive=; the remaining directories contain primarily exploratory work.
 
 Originally, I kept the writing and code in separate repositories, but I have now
 merged them into this single repository.
@@ -74,7 +75,7 @@ Not optimised for real-time - intended to produce some static graphics only.
 
 ** =03-psychophysics=
 
-This is the main part of my project and consists of work leading up to a basic
+Work leading up to a basic
 psychophysics experiment for (currently) digit recognition with different
 processors and renderers.
 
